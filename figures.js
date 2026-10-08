@@ -20,10 +20,14 @@
       "<title>" + xe(label) + "</title>" + body + "</svg>";
   }
   function txt(x, y, s, size, color, anchor, weight, extra) {
+    var lines = String(s).split("\n");
+    var inner = lines.map(function (l, i) {
+      return i === 0 ? xe(l) : '<tspan x="' + x + '" dy="1.15em">' + xe(l) + "</tspan>";
+    }).join("");
     return '<text x="' + x + '" y="' + y + '" fill="' + (color || C.ink) +
       '" font-family="Arial, Helvetica, sans-serif" font-size="' + (size || 18) +
       '" font-weight="' + (weight || 400) + '" text-anchor="' + (anchor || "middle") + '"' +
-      (extra ? " " + extra : "") + ">" + xe(s) + "</text>";
+      (extra ? " " + extra : "") + ">" + inner + "</text>";
   }
   function ln(x1, y1, x2, y2, color, width, dash) {
     return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 +
@@ -92,6 +96,47 @@
       out += ln(x, y - 7, x, y + 7, color || C.ink, 2);
     }
     return out;
+  }
+
+  /* One shared frame for the economics graphs: pale panel + labelled arrow axes.
+     Data coordinates are fractions 0-1 of the plotting area, so every curve is
+     tuned by eye against the same box. */
+  function econFrame(ylab, xlab) {
+    var g = {
+      ox: 96, oy: 252, w: 480, h: 204,
+      X: function (f) { return 96 + f * 480; },
+      Y: function (f) { return 252 - f * 204; }
+    };
+    g.base = panel(12, 12, 696, 276, C.pale) +
+      arrow(g.ox, g.oy, g.ox, g.oy - g.h, C.ink, 3) +
+      arrow(g.ox, g.oy, g.ox + g.w, g.oy, C.ink, 3) +
+      txt(g.ox, g.oy - g.h - 12, ylab || "Price (L$)", 15, C.muted, "start", 700) +
+      txt(g.ox + 240, g.oy + 38, xlab || "Quantity", 15, C.muted, "middle", 700);
+    return g;
+  }
+  /* a small two-panel frame for side-by-side economics graphs */
+  function econMini(x0, title, col) {
+    var m = {
+      ox: x0 + 52, oy: 236, w: 244, h: 156,
+      X: function (f) { return x0 + 52 + f * 244; },
+      Y: function (f) { return 236 - f * 156; }
+    };
+    m.base = panel(x0, 26, 322, 248, C.pale) +
+      txt(x0 + 161, 52, title, 16, col || C.muted, "middle", 700) +
+      arrow(m.ox, m.oy, m.ox, m.oy - m.h, C.ink, 2.5) +
+      arrow(m.ox, m.oy, m.ox + m.w, m.oy, C.ink, 2.5);
+    return m;
+  }
+  function econCurve(pts, X, Y, color, width, dash) {
+    var d = "";
+    pts.forEach(function (p, i) { d += (i ? " L" : "M") + X(p[0]) + " " + Y(p[1]); });
+    return path(d, color, width || 4, "none", dash);
+  }
+  function econGuide(g, fx, fy, xLab, yLab) {
+    return ln(g.ox, g.Y(fy), g.X(fx), g.Y(fy), C.muted, 2, "6,6") +
+      ln(g.X(fx), g.oy, g.X(fx), g.Y(fy), C.muted, 2, "6,6") +
+      (yLab ? txt(g.ox - 8, g.Y(fy) + 5, yLab, 13, C.muted, "end", 700) : "") +
+      (xLab ? txt(g.X(fx), g.oy + 18, xLab, 13, C.muted, "middle", 700) : "");
   }
 
   var FIG = {
@@ -840,6 +885,568 @@
         arrow(360, 212, 360, 166, C.blue, 4) + txt(387, 197, "upthrust", 15, C.blue, "start", 700) +
         txt(360, 269, "Archimedes’ principle: upthrust equals the weight of displaced fluid.", 16, C.muted, "middle", 600);
       return svg("Boat floating at the waterline with weight downward and buoyant upthrust upward", b);
+    }
+,
+    /* ECONOMICS --------------------------------------------------------- */
+    "econ-demand-supply": function () {
+      var g = econFrame("Price (L$)", "Quantity (bags)"), b = g.base;
+      b += econCurve([[0.04, 0.86], [0.46, 0.38], [0.92, 0.06]], g.X, g.Y, C.blue);
+      b += econCurve([[0.08, 0.08], [0.46, 0.38], [0.90, 0.80]], g.X, g.Y, C.red);
+      b += econGuide(g, 0.46, 0.38, "80 bags", "60");
+      b += dot(g.X(0.46), g.Y(0.38), 7, C.gold) + txt(g.X(0.50), g.Y(0.38) - 12, "E — the market clears here", 15, "#8a5a00", "start", 700);
+      b += txt(g.X(0.07), g.Y(0.88) - 8, "D", 19, C.blue, "middle", 700) + txt(g.X(0.89), g.Y(0.84) - 8, "S", 19, C.red, "middle", 700);
+      b += txt(g.X(0.50), g.Y(0.15), "at L$60, 80 bags:\nno shortage, no surplus", 14, C.muted, "start");
+      return svg("Demand and supply curves meeting at the equilibrium price and quantity", b);
+    },
+    "econ-shift-vs-movement": function () {
+      var a = econMini(14, "Price rises: a movement ALONG D");
+      var out = a.base;
+      out += econCurve([[0.06, 0.94], [0.95, 0.05]], a.X, a.Y, C.blue, 3.5);
+      out += dot(a.X(0.68), a.Y(0.30), 5, C.ink) + dot(a.X(0.34), a.Y(0.64), 5, C.ink);
+      out += arrow(a.X(0.38), a.Y(0.60) + 2, a.X(0.64), a.Y(0.34) + 2, C.red, 3);
+      out += txt(a.X(0.72), a.Y(0.24), "A", 15, C.ink, "middle", 700) + txt(a.X(0.30), a.Y(0.66) + 18, "B", 15, C.ink, "middle", 700);
+      out += txt(a.ox + 122, a.oy + 22, "Quantity", 13, C.muted) + txt(a.ox - 20, a.oy - 80, "P", 14, C.muted, "middle", 700);
+      var s = econMini(384, "Income rises: D shifts to D₂");
+      out += s.base;
+      out += econCurve([[0.06, 0.94], [0.62, 0.06]], s.X, s.Y, C.blue, 3.5);
+      out += econCurve([[0.38, 0.94], [0.94, 0.06]], s.X, s.Y, C.teal, 3.5);
+      out += arrow(s.X(0.28), s.Y(0.46), s.X(0.60), s.Y(0.46), C.red, 3);
+      out += txt(s.X(0.62) + 8, s.Y(0.10), "D", 15, C.blue, "start", 700) + txt(s.X(0.94) + 8, s.Y(0.10), "D₂", 15, C.teal, "start", 700);
+      out += txt(s.ox + 122, s.oy + 22, "Quantity", 13, C.muted) + txt(s.ox - 20, s.oy - 80, "P", 14, C.muted, "middle", 700);
+      out += txt(360, 292, "a movement follows a price change; a shift follows a change in any other factor", 14, C.muted);
+      return svg("A movement along a demand curve contrasted with a rightward shift of the curve", out, "0 0 720 300");
+    },
+    "econ-price-controls": function () {
+      function graph(x0, title) {
+        var g = econMini(x0, title), b = g.base;
+        b += econCurve([[0.08, 0.92], [0.50, 0.52], [0.94, 0.08]], g.X, g.Y, C.blue, 3);
+        b += econCurve([[0.10, 0.08], [0.50, 0.52], [0.92, 0.90]], g.X, g.Y, C.red, 3);
+        b += dot(g.X(0.50), g.Y(0.52), 5, C.gold) + txt(g.X(0.56), g.Y(0.52) - 8, "E", 14, "#8a5a00", "start", 700);
+        return { g: g, b: b };
+      }
+      var fl = graph(14, "Price floor ABOVE E");
+      var out = fl.b;
+      out += ln(fl.g.X(0.04), fl.g.Y(0.74), fl.g.X(0.98), fl.g.Y(0.74), C.red, 3, "9,5");
+      out += txt(fl.g.X(0.16), fl.g.Y(0.74) - 8, "floor", 15, C.red, "middle", 700);
+      out += arrow(fl.g.X(0.28), fl.g.Y(0.74) + 44, fl.g.X(0.72), fl.g.Y(0.74) + 44, C.red, 3, true);
+      out += txt(fl.g.X(0.50), fl.g.Y(0.74) + 38, "surplus (S > D)", 15, C.red, "middle", 700);
+      var ce = graph(384, "Price ceiling BELOW E");
+      out += ce.b;
+      out += ln(ce.g.X(0.04), ce.g.Y(0.30), ce.g.X(0.98), ce.g.Y(0.30), C.teal, 3, "9,5");
+      out += txt(ce.g.X(0.16), ce.g.Y(0.30) - 8, "ceiling", 15, C.teal, "middle", 700);
+      out += arrow(ce.g.X(0.28), ce.g.Y(0.30) + 44, ce.g.X(0.72), ce.g.Y(0.30) + 44, C.teal, 3, true);
+      out += txt(ce.g.X(0.50), ce.g.Y(0.30) + 38, "shortage (D > S)", 15, C.teal, "middle", 700);
+      out += txt(360, 292, "a price fixed above equilibrium gluts the market; one fixed below it empties the shelves", 14, C.muted);
+      return svg("A price floor above equilibrium creating a surplus and a ceiling below it creating a shortage", out, "0 0 720 300");
+    },
+    "econ-scarcity-choice": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      b += rect(240, 26, 240, 52, C.blueP, C.blue, 3, 10) + txt(360, 58, "Income: L$1 600 a week", 18, C.blue, "middle", 700);
+      b += arrow(310, 78, 180, 128, C.ink, 3) + arrow(410, 78, 540, 128, C.ink, 3);
+      b += rect(52, 128, 240, 58, C.tealP, C.teal, 3, 10) + txt(172, 152, "Rice + kerosene", 17, C.teal, "middle", 700) + txt(172, 174, "L$900 + L$500 = L$1 400", 15, C.ink);
+      b += rect(428, 128, 240, 58, C.goldP, C.gold, 3, 10) + txt(548, 152, "Transport", 17, "#8a5a00", "middle", 700) + txt(548, 174, "needs L$400", 15, C.ink);
+      b += txt(172, 208, "CHOSEN — the most pressing wants", 14, C.teal, "middle", 700);
+      b += txt(548, 208, "GIVEN UP — only L$200 remains", 14, "#8a5a00", "middle", 700);
+      b += arrow(428, 230, 292, 230, C.red, 3) + txt(360, 222, "opportunity cost: L$400 of transport forgone", 15, C.red, "middle", 700);
+      b += txt(360, 268, "Scarcity forces a choice, and every real choice carries a forgone alternative.", 15, C.muted, "middle");
+      return svg("A family's scarce income branching into chosen needs and a given-up want, marking the opportunity cost", b);
+    },
+    "econ-systems-spectrum": function () {
+      var b = panel(12, 40, 696, 230, "#fbfdff");
+      b += txt(80, 78, "PURE MARKET", 17, C.blue, "middle", 700) + txt(360, 78, "MIXED", 17, C.teal, "middle", 700) + txt(640, 78, "COMMAND", 17, C.red, "middle", 700);
+      b += ln(80, 142, 340, 142, C.blue, 9) + ln(340, 142, 540, 142, C.teal, 9) + ln(540, 142, 640, 142, C.red, 9);
+      b += dot(80, 142, 8, C.blue) + dot(360, 142, 8, C.teal) + dot(640, 142, 8, C.red);
+      b += txt(80, 168, "prices decide everything", 13, C.muted) + txt(360, 168, "prices guide, the state protects", 13, C.muted) + txt(640, 168, "the state decides everything", 13, C.muted);
+      b += txt(80, 120, "private property", 13, C.blue) + txt(640, 120, "state property", 13, C.red);
+      b += arrow(380, 142, 480, 200, C.teal, 3);
+      b += rect(430, 196, 256, 60, C.tealP, C.teal, 2.5, 10);
+      b += txt(558, 220, "LIBERIA — a mixed economy:", 15, C.teal, "middle", 700) + txt(558, 242, "markets plus public schools, clinics and roads", 13, C.ink, "middle");
+      return svg("A spectrum of economic systems from pure market through mixed to command, with Liberia marked as mixed", b);
+    },
+    "econ-ppc": function () {
+      var g = econFrame("Rice (tonnes)", "Cassava (tonnes)"), b = g.base;
+      b += path("M" + g.X(0.0) + " " + g.Y(0.98) + " Q" + g.X(0.52) + " " + g.Y(0.78) + " " + g.X(0.98) + " " + g.Y(0.02), C.blue, 4);
+      b += txt(g.ox - 8, g.Y(0.98) - 6, "100", 14, C.blue, "end", 700) + txt(g.X(0.98), g.oy + 18, "60", 14, C.blue, "middle", 700);
+      b += dot(g.X(0.30), g.Y(0.42), 6, C.teal) + txt(g.X(0.30), g.Y(0.42) + 24, "A — idle land and labour\n(inside: more of BOTH is possible)", 13.5, C.teal, "middle", 700);
+      b += dot(g.X(0.52), g.Y(0.77), 6, C.green) + txt(g.X(0.54) + 8, g.Y(0.77) - 8, "B — all resources fully used", 14, C.green, "start", 700);
+      b += dot(g.X(0.80), g.Y(0.88), 6, C.red) + txt(g.X(0.80), g.Y(0.88) - 14, "X — beyond today's means", 14, C.red, "middle", 700);
+      b += arrow(g.X(0.46), g.Y(0.66), g.X(0.62), g.Y(0.52), C.gold, 3);
+      b += txt(g.X(0.40), g.Y(0.52), "more cassava =\nrice given up", 13.5, "#8a5a00", "middle", 700);
+      return svg("A bowed-out production possibility curve between rice and cassava with points inside, on and beyond it", b);
+    },
+    "econ-diminishing-returns": function () {
+      var mp = [40, 50, 40, 25, 15, 2], ox = 110, oy = 244, bw = 74, gap = 18, sc = 3.4, b = panel(12, 12, 696, 276, C.pale);
+      b += arrow(ox, oy, ox, oy - 196, C.ink, 3) + arrow(ox, oy, ox + 560, oy, C.ink, 3);
+      b += txt(ox - 76, oy - 96, "extra bags\nof rice", 14, C.muted, "middle", 700) + txt(ox + 280, oy + 38, "workers on the same piece of land", 15, C.muted, "middle", 700);
+      for (var i = 0; i < 6; i++) {
+        var hpx = mp[i] * sc, x = ox + 20 + i * (bw + gap);
+        b += rect(x, oy - hpx, bw, hpx, mp[i] >= 40 ? C.goldP : C.blueP, mp[i] >= 40 ? C.gold : C.blue, 2.5, 6);
+        b += txt(x + bw / 2, oy - hpx - 8, String(mp[i]), 15, C.ink, "middle", 700);
+        b += txt(x + bw / 2, oy + 18, "worker " + (i + 1), 13, C.muted);
+      }
+      b += txt(ox + 372, oy - 170, "the 2nd worker adds 50 bags,\nbut by the 6th only 2 —\ndiminishing returns on fixed land", 15, C.red, "middle", 700);
+      b += txt(ox + 280, 32, "marginal product of each added worker", 16, C.muted, "middle", 700);
+      return svg("Bars of the marginal product of each extra worker rising at first then falling to show diminishing returns", b);
+    },
+    "econ-utility": function () {
+      var tu = [20, 35, 45, 52, 52], mu = [20, 15, 10, 7, 0], out = "";
+      var a = econMini(14, "TOTAL utility rises to a peak");
+      out += a.base + econCurve(tu.map(function (v, i) { return [0.06 + i * 0.24, v / 56]; }), a.X, a.Y, C.blue, 3.5);
+      tu.forEach(function (v, i) { out += dot(a.X(0.06 + i * 0.24), a.Y(v / 56), 4.5, C.blue) + txt(a.X(0.06 + i * 0.24), a.Y(v / 56) - 9, String(v), 12.5, C.blue, "middle", 700); });
+      out += txt(a.ox + 122, a.oy + 22, "cups", 13, C.muted) + txt(a.ox - 26, a.oy - 84, "TU", 14, C.muted, "middle", 700);
+      var s = econMini(384, "MARGINAL utility falls to zero");
+      out += s.base + econCurve(mu.map(function (v, i) { return [0.06 + i * 0.24, v / 56]; }), s.X, s.Y, C.red, 3.5);
+      mu.forEach(function (v, i) { out += dot(s.X(0.06 + i * 0.24), s.Y(v / 56), 4.5, C.red) + txt(s.X(0.06 + i * 0.24), s.Y(v / 56) - 9, String(v), 12.5, C.red, "middle", 700); });
+      out += txt(s.X(0.62), s.Y(0.10) - 8, "MU = 0 → TU at its maximum", 13, C.muted, "middle", 700);
+      out += txt(s.ox + 122, s.oy + 22, "cups", 13, C.muted) + txt(s.ox - 26, s.oy - 84, "MU", 14, C.muted, "middle", 700);
+      out += txt(360, 292, "as MU falls, TU rises more and more slowly — the two curves tell one story", 14, C.muted);
+      return svg("Total utility rising to a peak while marginal utility falls to zero", out, "0 0 720 300");
+    },
+    "econ-indifference": function () {
+      var g = econFrame("Oil (bottles)", "Rice (bags)"), b = g.base;
+      b += ln(g.X(0), g.Y(1), g.X(0.87), g.Y(0), C.ink, 3.5);
+      b += txt(g.ox - 8, g.Y(1) - 4, "6", 14, C.muted, "end", 700) + txt(g.X(0.87), g.oy + 18, "4", 14, C.muted, "middle", 700);
+      b += txt(g.X(0.06), g.Y(0.82), "budget line — L$1 200; rice L$300, oil L$200", 13.5, C.muted, "start");
+      b += path("M" + g.X(0.10) + " " + g.Y(0.92) + " Q" + g.X(0.34) + " " + g.Y(0.38) + " " + g.X(0.90) + " " + g.Y(0.22), C.teal, 4);
+      b += dot(g.X(0.435), g.Y(0.50), 7, C.gold) + txt(g.X(0.435) + 14, g.Y(0.50) - 8, "E — 2 bags of rice,\n3 bottles of oil:\nthe best she can do", 14, "#8a5a00", "start", 700);
+      b += txt(g.X(0.80), g.Y(0.40), "indifference curve —\nequal satisfaction\nall along it", 13.5, C.teal, "middle", 700);
+      return svg("A budget line touching an indifference curve at the consumer's best combination", b);
+    },
+    "econ-consumer-surplus": function () {
+      var g = econFrame("Price (L$)", "bags of rice"), b = g.base;
+      b += poly(g.X(0) + "," + g.Y(0.98) + " " + g.X(0) + "," + g.Y(0.55) + " " + g.X(0.46) + "," + g.Y(0.55), C.goldP, "none", 0);
+      b += econCurve([[0, 0.98], [0.80, 0.10]], g.X, g.Y, C.blue);
+      b += txt(g.X(0.80) + 10, g.Y(0.10) + 4, "D — willingness to pay", 14, C.blue, "start", 700);
+      b += ln(g.X(0), g.Y(0.55), g.X(0.66), g.Y(0.55), C.red, 3, "9,5") + txt(g.X(0.55), g.Y(0.55) + 20, "price actually paid: L$600", 14, C.red, "middle", 700);
+      b += txt(g.X(0.155), g.Y(0.74), "consumer surplus:\nwilling to pay L$900,\npays only L$600", 13.5, "#8a5a00", "middle", 700);
+      b += econGuide(g, 0.46, 0.55, "bags bought", "");
+      b += dot(g.X(0.46), g.Y(0.55), 6, C.ink);
+      return svg("The consumer surplus triangle shaded under the demand curve above the market price", b);
+    },
+    "econ-charts-panels": function () {
+      var out = "", i;
+      var a = panel(14, 26, 214, 248, C.pale) + txt(121, 52, "Bar chart", 16, C.muted, "middle", 700);
+      var cols = [[C.blueP, C.blue], [C.tealP, C.teal], [C.goldP, C.gold], [C.redP, C.red]], hs = [96, 140, 66, 116];
+      for (i = 0; i < 4; i++) { a += rect(52 + i * 40, 232 - hs[i], 26, hs[i], cols[i][0], cols[i][1], 2.5, 5); }
+      a += ln(42, 232, 208, 232, C.ink, 2.5) + txt(121, 256, "compare prices\nacross markets", 13, C.muted);
+      var s = panel(252, 26, 214, 248, C.pale) + txt(359, 52, "Pie chart", 16, C.muted, "middle", 700);
+      var parts = [[140, C.blue], [90, C.teal], [70, C.gold], [60, C.red]], ang = -Math.PI / 2, cx = 359, cy = 146, r = 60;
+      parts.forEach(function (pp) {
+        var a2 = ang + pp[0] * Math.PI / 180;
+        var d = "M" + cx + " " + cy + " L" + (cx + r * Math.cos(ang)).toFixed(1) + " " + (cy + r * Math.sin(ang)).toFixed(1) +
+                " A" + r + " " + r + " 0 0 1 " + (cx + r * Math.cos(a2)).toFixed(1) + " " + (cy + r * Math.sin(a2)).toFixed(1) + " Z";
+        s += '<path d="' + d + '" fill="' + pp[1] + '" fill-opacity="0.4" stroke="' + pp[1] + '" stroke-width="2"/>';
+        ang = a2;
+      });
+      s += txt(359, 256, "show how a budget\nbreaks into shares", 13, C.muted);
+      var t = panel(490, 26, 216, 248, C.pale) + txt(598, 52, "Line graph", 16, C.muted, "middle", 700);
+      var pts = [[534, 212], [570, 184], [606, 192], [642, 146], [678, 122]], d = "";
+      pts.forEach(function (pp, j) { d += (j ? " L" : "M") + pp[0] + " " + pp[1]; });
+      t += ln(524, 224, 692, 224, C.ink, 2.5) + path(d, C.blue, 3.5);
+      pts.forEach(function (pp) { t += dot(pp[0], pp[1], 4, C.blue); });
+      t += txt(598, 256, "follow prices\nmonth by month", 13, C.muted);
+      out = a + s + t;
+      return svg("Three small panels showing when to choose a bar chart, a pie chart and a line graph", out, "0 0 720 300");
+    },
+    "econ-pie-budget": function () {
+      var parts = [
+        { n: "Rent", d: 120, c: C.blue, p: C.blueP },
+        { n: "Food", d: 90, c: C.teal, p: C.tealP },
+        { n: "Transport", d: 60, c: C.gold, p: C.goldP },
+        { n: "School fees", d: 45, c: C.red, p: C.redP },
+        { n: "Savings", d: 45, c: C.green, p: "#e1f3e6" }
+      ];
+      var cx = 250, cy = 158, r = 100, ang = -Math.PI / 2, b = panel(12, 12, 696, 276, "#fbfdff");
+      parts.forEach(function (pp) {
+        var a2 = ang + pp.d * Math.PI / 180;
+        var dd = "M" + cx + " " + cy + " L" + (cx + r * Math.cos(ang)).toFixed(1) + " " + (cy + r * Math.sin(ang)).toFixed(1) +
+                 " A" + r + " " + r + " 0 0 1 " + (cx + r * Math.cos(a2)).toFixed(1) + " " + (cy + r * Math.sin(a2)).toFixed(1) + " Z";
+        b += '<path d="' + dd + '" fill="' + pp.p + '" stroke="' + pp.c + '" stroke-width="2.5"/>';
+        var mid = (ang + a2) / 2;
+        b += txt(cx + 60 * Math.cos(mid), cy + 60 * Math.sin(mid) + 5, pp.d + "°", 13.5, C.ink, "middle", 700);
+        ang = a2;
+      });
+      b += txt(cx, 46, "a family budget of L$180 000", 16, C.muted, "middle", 700);
+      parts.forEach(function (pp, i) {
+        var y = 88 + i * 42;
+        b += rect(420, y - 16, 22, 22, pp.p, pp.c, 2, 4) + txt(452, y + 1, pp.n, 16, C.ink, "start", 700) +
+             txt(626, y + 1, pp.d + "° = " + Math.round(pp.d / 3.6) + "%", 14, C.muted, "start");
+      });
+      return svg("A pie chart of a family budget with sectors for rent, food, transport, school fees and savings", b);
+    },
+    "econ-frequency-histogram": function () {
+      var b = panel(12, 12, 696, 276, C.pale);
+      var ox = 110, oy = 240, hs = [30, 80, 120, 96, 44, 20], labels = ["10-20", "20-30", "30-40", "40-50", "50-60", "60-70"], bw = 74, gap = 4;
+      b += arrow(ox, oy, ox, oy - 168, C.ink, 2.5) + ln(ox, oy, ox + 500, oy, C.ink, 2.5);
+      b += txt(ox - 72, oy - 84, "households", 14, C.muted, "middle", 700) + txt(ox + 250, oy + 38, "weekly income band (L$ 000)", 15, C.muted, "middle", 700);
+      hs.forEach(function (v, i) {
+        b += rect(ox + 12 + i * (bw + gap), oy - v * 1.3, bw, v * 1.3, i === 2 ? C.goldP : C.blueP, i === 2 ? C.gold : C.blue, 2.5);
+        b += txt(ox + 12 + i * (bw + gap) + bw / 2, oy - v * 1.3 - 8, String(v), 14, C.ink, "middle", 700);
+        b += txt(ox + 12 + i * (bw + gap) + bw / 2, oy + 17, labels[i], 12, C.muted);
+      });
+      b += txt(ox + 250, 32, "a frequency distribution — the modal band (30-40) stands tallest", 16, C.muted, "middle", 700);
+      return svg("A histogram of household income bands with the modal band highlighted", b);
+    },
+    "econ-business-forms": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var forms = [
+        ["SOLE PROPRIETOR", "one owner, all the risk", C.green, "#e1f3e6"],
+        ["PARTNERSHIP", "2-20 owners, shared risk", C.teal, C.tealP],
+        ["COOPERATIVE", "members own it together", C.gold, C.goldP],
+        ["PRIVATE COMPANY", "shares, limited liability", C.blue, C.blueP],
+        ["PUBLIC COMPANY", "sells shares to all", C.red, C.redP]
+      ];
+      forms.forEach(function (f, i) {
+        var x = 40 + i * 133;
+        b += rect(x, 136, 120, 66, f[3], f[2], 2.5, 10);
+        b += txt(x + 60, 160, f[0], 10.5, f[2], "middle", 700);
+        b += txt(x + 60, 184, f[1], 9.5, C.muted, "middle");
+        if (i < 4) b += arrow(x + 120, 169, x + 133, 169, C.line, 2.5);
+      });
+      b += txt(360, 62, "from one person's shop to the corporation:\ncapital, risk and control spread wider at each step", 16, C.muted, "middle", 700);
+      b += txt(360, 248, "all five trade in Liberia — the market stall, the law firm, the farmers' cooperative, the bank, the mining company", 13, C.muted, "middle");
+      return svg("The forms of business organisation from sole proprietor to public company", b);
+    },
+    "econ-capital-sources": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      b += rect(258, 116, 204, 64, C.blueP, C.blue, 3, 12) + txt(360, 143, "THE BUSINESS", 16, C.blue, "middle", 700) + txt(360, 166, "every form needs capital", 13, C.muted, "middle");
+      var spokes = [
+        [100, 52, "Own savings", "the founder's money", C.teal],
+        [360, 56, "Bank loan", "repaid with interest", C.red],
+        [622, 52, "Selling shares", "companies only", C.blue],
+        [100, 252, "Retained profit", "plough earnings back", C.gold],
+        [360, 266, "Cooperative fund", "members pool resources", C.green],
+        [622, 252, "Partner / investor", "shares risk and reward", C.purple]
+      ];
+      spokes.forEach(function (s) {
+        b += ln(360, 148, s[0], s[1] + (s[1] < 150 ? 24 : -24), "#c3d0de", 2.5);
+        b += rect(s[0] - 104, s[1] - 24, 208, 46, "#ffffff", s[4], 2.5, 10);
+        b += txt(s[0], s[1] - 3, s[2], 14.5, C.ink, "middle", 700);
+        b += txt(s[0], s[1] + 15, s[3], 12, C.muted, "middle");
+      });
+      return svg("The main sources of business capital arranged as spokes around the business", b);
+    },
+    "econ-production-stages": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var stages = [
+        ["PRIMARY", "take from nature", "farming, fishing, mining", C.teal, C.tealP],
+        ["SECONDARY", "make and build", "milling, processing, building", C.blue, C.blueP],
+        ["TERTIARY", "services", "trading, transport, banking", C.gold, C.goldP]
+      ];
+      stages.forEach(function (s, i) {
+        var x = 44 + i * 232;
+        b += rect(x, 84, 196, 118, s[4], s[3], 3, 12);
+        b += txt(x + 98, 118, s[0], 18, s[3], "middle", 700);
+        b += txt(x + 98, 144, s[1], 13.5, C.muted, "middle");
+        b += txt(x + 98, 174, s[2], 13.5, C.ink, "middle");
+        if (i < 2) b += arrow(x + 196, 144, x + 232, 144, C.ink, 3);
+      });
+      b += txt(360, 42, "how production moves through the economy", 16, C.muted, "middle", 700);
+      b += txt(360, 244, "rice: grown (primary) → milled (secondary) → sold at Red Light (tertiary)", 15, C.muted, "middle");
+      return svg("The three stages of production flowing from primary through secondary to tertiary", b);
+    },
+    "econ-channel": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var steps = [
+        ["FARMER", "Bong County", "L$250", C.green, "#e1f3e6"],
+        ["WHOLESALER", "trucks 300 bags", "L$600", C.teal, C.tealP],
+        ["RETAILER", "city market stall", "L$1 000", C.gold, C.goldP],
+        ["CONSUMER", "Monrovia table", "L$1 400", C.red, C.redP]
+      ];
+      steps.forEach(function (s, i) {
+        var x = 30 + i * 174;
+        b += rect(x, 94, 142, 104, s[4], s[3], 3, 12);
+        b += txt(x + 71, 124, s[0], 14.5, s[3], "middle", 700);
+        b += txt(x + 71, 148, s[1], 12.5, C.muted, "middle");
+        b += txt(x + 71, 180, s[2] + " / bag", 16.5, C.ink, "middle", 700);
+        if (i < 3) b += arrow(x + 142, 146, x + 174, 146, C.ink, 3);
+      });
+      b += txt(360, 44, "the pepper chain: every stage adds cost AND value", 16, C.muted, "middle", 700);
+      b += txt(360, 240, "the marketing margin of L$1 150 pays for transport, storage, finance and risk", 15, C.muted, "middle");
+      return svg("The channel of distribution from farmer through wholesaler and retailer to consumer with rising prices", b);
+    },
+    "econ-elastic-panels": function () {
+      var a = econMini(14, "INELASTIC: small ΔQ");
+      var out = a.base;
+      out += econCurve([[0.32, 0.96], [0.56, 0.04]], a.X, a.Y, C.blue, 4);
+      out += txt(a.X(0.62), a.Y(0.20), "D", 16, C.blue, "start", 700);
+      out += ln(a.X(0.04), a.Y(0.66), a.X(0.98), a.Y(0.66), C.muted, 2, "6,6") + ln(a.X(0.04), a.Y(0.44), a.X(0.98), a.Y(0.44), C.muted, 2, "6,6");
+      out += txt(a.ox - 8, a.Y(0.66) + 5, "P₁", 13, C.muted, "end", 700) + txt(a.ox - 8, a.Y(0.44) + 5, "P₂", 13, C.muted, "end", 700);
+      out += arrow(a.X(0.36), a.Y(0.66) + 44, a.X(0.44), a.Y(0.66) + 44, C.blue, 3, true) + txt(a.X(0.40), a.Y(0.66) + 38, "tiny ΔQ", 13, C.blue, "middle", 700);
+      out += txt(a.ox + 122, a.oy + 26, "salt, medicine, kerosene", 12.5, C.muted);
+      var s2 = econMini(384, "ELASTIC: large ΔQ");
+      out += s2.base;
+      out += econCurve([[0.14, 0.80], [0.98, 0.52]], s2.X, s2.Y, C.red, 4);
+      out += txt(s2.X(0.98) + 8, s2.Y(0.52), "D", 16, C.red, "start", 700);
+      out += ln(s2.X(0.04), s2.Y(0.66), s2.X(0.98), s2.Y(0.66), C.muted, 2, "6,6") + ln(s2.X(0.04), s2.Y(0.44), s2.X(0.98), s2.Y(0.44), C.muted, 2, "6,6");
+      out += txt(s2.ox - 8, s2.Y(0.66) + 5, "P₁", 13, C.muted, "end", 700) + txt(s2.ox - 8, s2.Y(0.44) + 5, "P₂", 13, C.muted, "end", 700);
+      out += arrow(s2.X(0.18), s2.Y(0.66) + 44, s2.X(0.78), s2.Y(0.66) + 44, C.red, 3, true) + txt(s2.X(0.48), s2.Y(0.66) + 38, "huge ΔQ", 13, C.red, "middle", 700);
+      out += txt(s2.ox + 122, s2.oy + 26, "phones, perfumes, luxuries", 12.5, C.muted);
+      out += txt(360, 292, "the same price rise: necessities barely notice, non-essentials lose crowds of buyers", 14, C.muted);
+      return svg("Steep inelastic and flat elastic demand curves facing the same price rise", out, "0 0 720 300");
+    },
+    "econ-revenue-rectangles": function () {
+      var g = econFrame("Price (L$)", "units sold"), b = g.base;
+      b += rect(g.X(0), g.Y(0.60), g.X(0.50) - g.X(0), g.oy - g.Y(0.60), C.blueP, C.blue, 2, 0, 0.65);
+      b += rect(g.X(0), g.Y(0.78), g.X(0.30) - g.X(0), g.oy - g.Y(0.78), C.goldP, C.gold, 2, 0, 0.65);
+      b += econCurve([[0.05, 0.95], [0.95, 0.05]], g.X, g.Y, C.blue, 4) + txt(g.X(0.95) + 8, g.Y(0.05), "D", 17, C.blue, "start", 700);
+      b += dot(g.X(0.30), g.Y(0.78), 5, "#8a5a00") + dot(g.X(0.50), g.Y(0.60), 5, C.blue);
+      b += econGuide(g, 0.30, 0.78, "180", "60") + econGuide(g, 0.50, 0.60, "200", "50");
+      b += txt(g.X(0.15), g.Y(0.34), "after:\n60 × 180\n= L$10 800", 14, "#8a5a00", "middle", 700);
+      b += txt(g.X(0.50) - 10, g.Y(0.30), "before:\n50 × 200\n= L$10 000", 14, C.blue, "middle", 700);
+      b += txt(g.X(0.50), g.Y(1.0) + 6, "price up, revenue UP — demand here is inelastic", 15, C.muted, "middle", 700);
+      return svg("Total revenue rectangles before and after a price rise under inelastic demand", b);
+    },
+    "econ-perfect-competition": function () {
+      var g = econFrame("Price, cost (L$)", "output"), b = g.base;
+      b += path("M" + g.X(0.18) + " " + g.Y(0.05) + " Q" + g.X(0.40) + " " + g.Y(0.40) + " " + g.X(0.90) + " " + g.Y(0.95), C.red, 4) + txt(g.X(0.90) + 6, g.Y(0.95), "MC", 16, C.red, "start", 700);
+      b += ln(g.X(0.02), g.Y(0.52), g.X(0.98), g.Y(0.52), C.blue, 4) + txt(g.X(0.28), g.Y(0.52) - 10, "P = AR = MR = L$40 — set by the market", 14.5, C.blue, "middle", 700);
+      b += dot(g.X(0.42), g.Y(0.52), 7, C.gold);
+      b += ln(g.X(0.42), g.Y(0.52), g.X(0.42), g.oy, C.muted, 2, "6,6") + txt(g.X(0.42), g.oy + 18, "Q*", 14, "#8a5a00", "middle", 700);
+      b += txt(g.X(0.62), g.Y(0.34), "produce where MC = MR;\nany less wastes profit,\nany more destroys it", 14, C.ink, "middle", 700);
+      return svg("Perfect competition: the firm faces a flat price line and sells where marginal cost equals marginal revenue", b);
+    },
+    "econ-monopoly": function () {
+      var g = econFrame("Price, cost (L$)", "output"), b = g.base;
+      b += econCurve([[0.05, 0.92], [0.85, 0.10]], g.X, g.Y, C.blue, 4) + txt(g.X(0.85) + 8, g.Y(0.10), "AR (demand)", 14, C.blue, "start", 700);
+      b += econCurve([[0.05, 0.92], [0.47, 0.06]], g.X, g.Y, C.red, 4) + txt(g.X(0.49) + 6, g.Y(0.06) + 12, "MR — half as steep", 14, C.red, "start", 700);
+      b += path("M" + g.X(0.14) + " " + g.Y(0.06) + " Q" + g.X(0.28) + " " + g.Y(0.30) + " " + g.X(0.82) + " " + g.Y(0.90), C.teal, 4) + txt(g.X(0.82) + 6, g.Y(0.90), "MC", 15, C.teal, "start", 700);
+      b += dot(g.X(0.30), g.Y(0.44), 6, C.ink) + txt(g.X(0.34), g.Y(0.44) - 8, "MC = MR sets output", 13.5, C.ink, "start", 700);
+      b += econGuide(g, 0.30, 0.44, "Qm", "");
+      b += ln(g.X(0.30), g.Y(0.44), g.X(0.30), g.Y(0.62), C.muted, 2, "6,6");
+      b += ln(g.ox, g.Y(0.62), g.X(0.30), g.Y(0.62), C.muted, 2, "6,6");
+      b += txt(g.ox - 8, g.Y(0.62) + 5, "Pm", 14, "#8a5a00", "end", 700);
+      b += dot(g.X(0.30), g.Y(0.62), 6, C.gold) + txt(g.X(0.15), g.Y(0.74), "then read the price\nUP to the AR curve", 13.5, "#8a5a00", "middle", 700);
+      return svg("Monopoly: marginal revenue lies below demand, output is set at MC equals MR and price read off demand", b);
+    },
+    "econ-cost-curves": function () {
+      var g = econFrame("Cost per unit (L$)", "output per day"), b = g.base;
+      b += path("M" + g.X(0.04) + " " + g.Y(0.92) + " Q" + g.X(0.28) + " " + g.Y(0.28) + " " + g.X(0.46) + " " + g.Y(0.30) + " T" + g.X(0.97) + " " + g.Y(0.93), C.blue, 4) + txt(g.X(0.08), g.Y(0.86) + 6, "AC", 17, C.blue, "start", 700);
+      b += path("M" + g.X(0.08) + " " + g.Y(0.40) + " Q" + g.X(0.30) + " " + g.Y(0.16) + " " + g.X(0.46) + " " + g.Y(0.30) + " T" + g.X(0.99) + " " + g.Y(0.98), C.red, 4) + txt(g.X(0.95), g.Y(0.97) - 6, "MC", 17, C.red, "middle", 700);
+      b += dot(g.X(0.46), g.Y(0.30), 7, C.gold) + txt(g.X(0.46), g.Y(0.30) + 24, "AC lowest here —\nMC crosses it", 13.5, "#8a5a00", "middle", 700);
+      b += txt(g.X(0.30), g.Y(0.60), "MC below AC:\npulls AC down", 13.5, C.ink, "middle", 700);
+      b += txt(g.X(0.72), g.Y(0.60), "MC above AC:\npushes AC up", 13.5, C.ink, "middle", 700);
+      return svg("A U-shaped average cost curve with marginal cost cutting it at its lowest point", b);
+    },
+    "econ-total-costs": function () {
+      var g = econFrame("Total cost (L$ 000)", "loaves per day"), b = g.base;
+      b += ln(g.X(0), g.Y(0.30), g.X(1), g.Y(0.30), C.gold, 4) + txt(g.X(0.82), g.Y(0.30) - 10, "TFC = 40 — fixed even at zero output", 13.5, "#8a5a00", "middle", 700);
+      b += path("M" + g.X(0) + " " + g.Y(0.0) + " Q" + g.X(0.40) + " " + g.Y(0.28) + " " + g.X(0.99) + " " + g.Y(0.64), C.red, 4) + txt(g.X(0.99) - 6, g.Y(0.64) + 26, "TVC — rises with output", 13.5, C.red, "end", 700);
+      b += path("M" + g.X(0) + " " + g.Y(0.30) + " Q" + g.X(0.40) + " " + g.Y(0.58) + " " + g.X(0.99) + " " + g.Y(0.94), C.blue, 4) + txt(g.X(0.92), g.Y(0.94) - 8, "TC = TFC + TVC", 14, C.blue, "middle", 700);
+      b += arrow(g.X(0.60), g.Y(0.44), g.X(0.60), g.Y(0.315), C.muted, 2.5) + txt(g.X(0.65), g.Y(0.38), "same gap everywhere = TFC", 12.5, C.muted, "start");
+      return svg("Fixed cost flat, variable cost rising from the origin, and total cost parallel above it", b);
+    },
+    "econ-pyramid": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var rows = [["0-14", 92], ["15-24", 70], ["25-39", 62], ["40-54", 40], ["55-64", 22], ["65+", 14]];
+      var cx = 300, sc = 1.9, Y0 = 244;
+      b += txt(cx, 40, "a young population — Liberia's shape", 16, C.muted, "middle", 700);
+      rows.forEach(function (r, i) {
+        var y = Y0 - (i + 1) * 29, wpx = r[1] * sc;
+        b += rect(cx - wpx - 4, y, wpx, 24, C.blueP, C.blue, 2, 4);
+        b += rect(cx + 4, y, wpx * 0.95, 24, C.redP, C.red, 2, 4);
+        b += txt(cx + wpx + 40, y + 17, r[0], 13.5, C.muted, "start", 700);
+      });
+      b += ln(cx, Y0, cx, Y0 - 6 * 29 - 6, C.line, 2);
+      b += txt(cx - 96, Y0 + 18, "boys and men", 13.5, C.blue, "middle", 700) + txt(cx + 96, Y0 + 18, "girls and women", 13.5, C.red, "middle", 700);
+      b += txt(cx + 366, 120, "the wide base:\nmany children,\nso one worker\ncarries about one\ndependant", 14, C.muted, "middle");
+      return svg("A population pyramid with a wide base of young dependants narrowing with age", b);
+    },
+    "econ-malthus": function () {
+      var g = econFrame("people / food", "years"), b = g.base;
+      b += path("M" + g.X(0.02) + " " + g.Y(0.10) + " Q" + g.X(0.42) + " " + g.Y(0.20) + " " + g.X(0.99) + " " + g.Y(0.98), C.red, 4);
+      b += txt(g.X(0.84), g.Y(0.80), "population:\n2, 4, 8, 16 …\n(geometric)", 14.5, C.red, "middle", 700);
+      b += ln(g.X(0.02), g.Y(0.10), g.X(0.99), g.Y(0.55), C.blue, 4);
+      b += txt(g.X(0.60), g.Y(0.33), "food: 2, 3, 4, 5 … (arithmetic)", 14.5, C.blue, "middle", 700);
+      b += dot(g.X(0.30), g.Y(0.235), 6, C.ink) + txt(g.X(0.33), g.Y(0.235) - 10, "past the crossing,\nwants outrun food", 13.5, C.ink, "start", 700);
+      return svg("Malthus: population growing geometrically outruns food growing arithmetically", b);
+    },
+    "econ-poverty-cycle": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var cx = 360, cy = 150, nodes = ["Low income", "Low saving", "Low investment", "Little capital", "Low productivity"], pts = [];
+      nodes.forEach(function (n, i) {
+        var a = -Math.PI / 2 + i * 2 * Math.PI / 5;
+        pts.push([cx + 186 * Math.cos(a), cy + 92 * Math.sin(a), n]);
+      });
+      for (var i = 0; i < 5; i++) {
+        var j = (i + 1) % 5, dx = pts[j][0] - pts[i][0], dy = pts[j][1] - pts[i][1];
+        b += arrow(pts[i][0] + dx * 0.30, pts[i][1] + dy * 0.30, pts[i][0] + dx * 0.70, pts[i][1] + dy * 0.70, C.red, 2.5);
+      }
+      pts.forEach(function (p) {
+        b += rect(p[0] - 82, p[1] - 19, 164, 38, C.redP, C.red, 2.5, 10) + txt(p[0], p[1] + 5, p[2], 14.5, C.ink, "middle", 700);
+      });
+      b += txt(cx, cy - 6, "the vicious\ncircle of poverty", 16, C.ink, "middle", 700) + txt(cx, cy + 34, "break it with savings,\ncredit and aid", 13, C.muted, "middle");
+      return svg("The vicious circle of poverty looping between low income, saving, investment, capital and productivity", b);
+    },
+    "econ-growth-vs-development": function () {
+      var out = panel(14, 26, 330, 248, C.pale) + txt(179, 54, "GROWTH — a bigger pie", 16, C.muted, "middle", 700);
+      out += circ(130, 156, 50, C.blueP, C.blue, 3) + txt(130, 161, "GDP", 16, C.blue, "middle", 700);
+      out += arrow(186, 156, 216, 156, C.blue, 3);
+      out += circ(244, 156, 64, C.blueP, C.blue, 3) + txt(244, 161, "GDP+7%", 15, C.blue, "middle", 700);
+      out += txt(179, 248, "output rises — even from one mine", 13.5, C.muted);
+      out += panel(376, 26, 330, 248, C.pale) + txt(541, 54, "DEVELOPMENT — better lives", 16, C.muted, "middle", 700);
+      out += circ(468, 156, 50, C.tealP, C.teal, 3) + txt(468, 161, "GDP", 16, C.teal, "middle", 700);
+      out += arrow(524, 156, 552, 156, C.teal, 3);
+      [["literacy ↑", 106], ["clinics ↑", 138], ["jobs ↑", 170], ["clean water ↑", 202]].forEach(function (r) {
+        out += rect(562, r[1] - 12, 128, 24, "#ffffff", C.teal, 2, 7) + txt(626, r[1] + 5, r[0], 13, C.ink, "middle", 700);
+      });
+      out += txt(541, 248, "income AND health, schooling, work", 13.5, C.muted);
+      return svg("Economic growth as a bigger pie contrasted with development as rising literacy, clinics, jobs and clean water", out, "0 0 720 300");
+    },
+    "econ-circular-flow": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      b += rect(56, 36, 200, 56, C.blueP, C.blue, 3, 12) + txt(156, 60, "HOUSEHOLDS", 16, C.blue, "middle", 700) + txt(156, 80, "own the factors", 12.5, C.muted, "middle");
+      b += rect(464, 36, 200, 56, C.tealP, C.teal, 3, 12) + txt(564, 60, "FIRMS", 16, C.teal, "middle", 700) + txt(564, 80, "produce the goods", 12.5, C.muted, "middle");
+      b += rect(56, 210, 200, 50, C.goldP, C.gold, 3, 12) + txt(156, 231, "factor market", 15, "#8a5a00", "middle", 700) + txt(156, 249, "land, labour, capital", 12.5, C.muted, "middle");
+      b += rect(464, 210, 200, 50, C.redP, C.red, 3, 12) + txt(564, 231, "goods market", 15, C.red, "middle", 700) + txt(564, 249, "food, clothes, phones", 12.5, C.muted, "middle");
+      b += arrow(256, 52, 464, 52, C.ink, 3) + txt(360, 44, "factors: labour, land, capital", 13.5, C.ink, "middle", 700);
+      b += arrow(464, 108, 256, 108, C.red, 3) + txt(360, 100, "income back: wages, rent, interest, profit", 13.5, C.red, "middle", 700);
+      b += arrow(564, 210, 564, 92, C.teal, 3) + txt(580, 156, "goods and\nservices", 13, C.teal, "start", 700);
+      b += arrow(156, 92, 256, 210, C.blue, 3) + txt(178, 156, "spending:\nL$ flows out,\ngoods come home", 13, C.blue, "start", 700);
+      b += arrow(256, 248, 464, 248, C.muted, 3) + txt(360, 266, "every L$ spent by a household becomes income to someone else", 13.5, C.muted, "middle", 700);
+      return svg("The circular flow of income between households and firms through factor and goods markets", b);
+    },
+    "econ-value-added-chain": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var steps = [
+        ["CASSAVA", "farmer", "L$200 000", "+200 000", C.green, "#e1f3e6"],
+        ["GARI", "miller", "L$340 000", "+140 000", C.teal, C.tealP],
+        ["PACKAGED GARI", "processor", "L$500 000", "+160 000", C.blue, C.blueP]
+      ];
+      steps.forEach(function (s, i) {
+        var x = 40 + i * 234;
+        b += rect(x, 88, 198, 118, s[5], s[4], 3, 12);
+        b += txt(x + 99, 116, s[0], 15.5, s[4], "middle", 700);
+        b += txt(x + 99, 140, s[1], 12.5, C.muted, "middle");
+        b += txt(x + 99, 166, "sells at " + s[2], 14.5, C.ink, "middle", 700);
+        b += txt(x + 99, 190, "value added " + s[3], 13.5, s[4], "middle", 700);
+        if (i < 2) b += arrow(x + 198, 148, x + 234, 148, C.ink, 3);
+      });
+      b += txt(360, 44, "count each stage's ADDED value only", 16, C.muted, "middle", 700);
+      b += txt(360, 240, "200 000 + 140 000 + 160 000 = L$500 000 — the value of the final good, counted once", 15, C.muted, "middle");
+      return svg("The value added chain from cassava to gari to packaged gari summing to the final value", b);
+    },
+    "econ-credit-multiplier": function () {
+      var b = panel(12, 12, 696, 276, C.pale);
+      var banks = [10, 8, 6.4, 5.1, 4.1], names = "ABCDE", ox = 108, oy = 232, bw = 86, gap = 22, sc = 15.5;
+      b += arrow(ox - 16, oy, ox - 16, oy - 176, C.ink, 2.5) + ln(ox - 16, oy, ox + 546, oy, C.ink, 2.5);
+      b += txt(ox - 72, oy - 88, "deposits\n(L$ m)", 13.5, C.muted, "middle", 700);
+      banks.forEach(function (v, i) {
+        var hpx = v * sc, x = ox + i * (bw + gap);
+        b += rect(x, oy - hpx, bw, hpx, i === 0 ? C.goldP : C.blueP, i === 0 ? C.gold : C.blue, 2.5, 6);
+        b += txt(x + bw / 2, oy - hpx - 8, String(v), 14.5, C.ink, "middle", 700);
+        b += txt(x + bw / 2, oy + 17, "bank " + names[i], 12.5, C.muted);
+        if (i < banks.length - 1) b += arrow(x + bw, oy - hpx + 4, x + bw + gap, oy - banks[i + 1] * sc + 4, C.muted, 2);
+      });
+      b += rect(560, 46, 136, 66, C.tealP, C.teal, 2.5, 10);
+      b += txt(628, 72, "total: L$50m", 15, C.teal, "middle", 700) + txt(628, 92, "multiplier × 5", 13, C.muted, "middle");
+      b += txt(360, 30, "L$10m new deposit, 20% kept in reserve each round", 16, C.muted, "middle", 700);
+      b += txt(360, 266, "each bank keeps 20% and lends 80% — the rounds shrink but add up to five times the first", 13.5, C.muted, "middle");
+      return svg("The credit multiplier: shrinking deposit rounds from bank A to bank E summing to five times the first deposit", b);
+    },
+    "econ-inflation-line": function () {
+      var g = econFrame("price index", "year"), b = g.base;
+      var pts = [[0.02, 0.02], [0.27, 0.16], [0.52, 0.22], [0.77, 0.62], [1.0, 0.95]];
+      b += ln(g.X(0), g.Y(0.02), g.X(1), g.Y(0.02), C.muted, 2, "6,6") + txt(g.ox - 8, g.Y(0.02) + 4, "100", 13, C.muted, "end", 700);
+      b += econCurve(pts, g.X, g.Y, C.red, 4);
+      var labs = ["100", "118", "124", "145", "168"];
+      pts.forEach(function (p, i) { b += dot(g.X(p[0]), g.Y(p[1]), 5, C.red) + txt(g.X(p[0]), g.Y(p[1]) - 12, labs[i], 13, C.red, "middle", 700); });
+      b += txt(g.X(0.60), g.Y(0.50), "the cost-of-living index: what cost\nL$4 000 in the base year costs L$6 720", 14, C.ink, "middle", 700);
+      return svg("A rising line graph of the consumer price index from the base year 100 to 168", b);
+    },
+    "econ-comparative": function () {
+      var a = econMini(14, "LIBERIA"), out = a.base;
+      out += ln(a.X(0), a.Y(0.92), a.X(0.95), a.Y(0.46), C.blue, 4);
+      out += txt(a.ox - 10, a.Y(0.92) - 4, "20 rubber", 13, C.muted, "end") + txt(a.X(0.95), a.oy + 16, "10 rice", 13, C.muted, "middle");
+      out += txt(a.ox + 122, a.oy + 26, "1 rice costs 2 rubber", 13, C.blue, "middle", 700);
+      out += txt(a.ox - 26, a.oy - 78, "R", 13, C.muted, "middle", 700);
+      var s2 = econMini(384, "NEIGHBOUR"), out2 = s2.base;
+      out2 += ln(s2.X(0), s2.Y(0.60), s2.X(0.95), s2.Y(0.46), C.teal, 4);
+      out2 += txt(s2.ox - 10, s2.Y(0.60) - 4, "12 rubber", 13, C.muted, "end") + txt(s2.X(0.95), s2.oy + 16, "8 rice", 13, C.muted, "middle");
+      out2 += txt(s2.ox + 122, s2.oy + 26, "1 rice costs 1.5 rubber", 13, C.teal, "middle", 700);
+      out2 += txt(s2.ox - 26, s2.oy - 78, "R", 13, C.muted, "middle", 700);
+      return svg("Two production possibility lines with different slopes: the basis of comparative advantage",
+        out + out2 + txt(360, 292, "Liberia gives up less rice for rubber; the neighbour gives up less rubber for rice — specialise and trade", 14, C.muted),
+        "0 0 720 300");
+    },
+    "econ-tot-line": function () {
+      var g = econFrame("terms of trade", "year"), b = g.base;
+      b += ln(g.X(0), g.Y(0.62), g.X(1), g.Y(0.62), C.muted, 2, "6,6") + txt(g.ox - 8, g.Y(0.62) + 4, "100", 13, C.muted, "end", 700) + txt(g.X(0.5), g.Y(0.62) - 10, "base year = 100", 12.5, C.muted);
+      var pts = [[0.02, 0.62], [0.26, 0.55], [0.50, 0.50], [0.74, 0.42], [1.0, 0.33]];
+      b += econCurve(pts, g.X, g.Y, C.red, 4);
+      var labs = ["100", "95", "90", "85", "80"];
+      pts.forEach(function (p, i) { b += dot(g.X(p[0]), g.Y(p[1]), 5, C.red) + txt(g.X(p[0]), g.Y(p[1]) - 12, labs[i], 13, C.red, "middle", 700); });
+      b += txt(g.X(0.52), g.Y(0.18), "export prices lag import prices —\nevery machine costs more tonnes of rubber", 14, C.ink, "middle", 700);
+      return svg("A terms of trade index falling from 100 to 80", b);
+    },
+    "econ-tax-rates": function () {
+      var g = econFrame("average rate of tax", "income"), b = g.base;
+      b += path("M" + g.X(0.0) + " " + g.Y(0.06) + " Q" + g.X(0.55) + " " + g.Y(0.34) + " " + g.X(0.98) + " " + g.Y(0.88), C.teal, 4) + txt(g.X(0.70), g.Y(0.80), "progressive —\nthe rich pay a rising share", 13.5, C.teal, "middle", 700);
+      b += ln(g.X(0), g.Y(0.42), g.X(0.98), g.Y(0.42), C.blue, 4) + txt(g.X(0.28), g.Y(0.42) - 10, "proportional — one flat share for all", 13.5, C.blue, "middle", 700);
+      b += path("M" + g.X(0.0) + " " + g.Y(0.84) + " Q" + g.X(0.55) + " " + g.Y(0.55) + " " + g.X(0.98) + " " + g.Y(0.22), C.red, 4) + txt(g.X(0.20), g.Y(0.78), "regressive —\nthe poor pay a bigger share", 13.5, C.red, "middle", 700);
+      return svg("Progressive, proportional and regressive average tax rates against income", b);
+    },
+    "econ-budget-bars": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff"), oy = 238, sc = 1.7;
+      b += arrow(120, oy, 120, oy - 190, C.ink, 2.5) + ln(120, oy, 560, oy, C.ink, 2.5);
+      b += txt(58, oy - 92, "L$ billion", 14, C.muted, "middle", 700);
+      b += rect(160, oy - 85 * sc, 120, 85 * sc, C.tealP, C.teal, 3, 8) + txt(220, oy - 85 * sc - 12, "85", 20, C.teal, "middle", 700) + txt(220, oy + 22, "revenue", 15, C.ink, "middle", 700);
+      b += rect(340, oy - 102 * sc, 120, 102 * sc, C.redP, C.red, 3, 8) + txt(400, oy - 102 * sc - 12, "102", 20, C.red, "middle", 700) + txt(400, oy + 22, "expenditure", 15, C.ink, "middle", 700);
+      b += arrow(530, oy - 85 * sc, 530, oy - 102 * sc, C.red, 3, true);
+      b += txt(546, oy - 93 * sc, "deficit: L$17bn\n(≈ 16.7% of spending) —\nbridged by borrowing", 14, C.red, "start", 700);
+      b += txt(330, 34, "the government's budget position", 16, C.muted, "middle", 700);
+      return svg("Bars of government revenue and expenditure with the deficit bracket between them", b);
+    },
+    "econ-stages": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff");
+      var steps = [
+        ["FREE TRADE AREA", "no internal tariffs", C.blue, C.blueP],
+        ["CUSTOMS UNION", "+ common external tariff", C.teal, C.tealP],
+        ["COMMON MARKET", "+ free labour and capital", C.gold, C.goldP],
+        ["ECONOMIC UNION", "+ shared policies, one bank", C.red, C.redP]
+      ];
+      steps.forEach(function (s, i) {
+        var x = 42 + i * 168, y = 224 - i * 46;
+        b += rect(x, y - 52, 152, 52, s[3], s[2], 3, 8);
+        b += txt(x + 76, y - 31, s[0], 12, s[2], "middle", 700);
+        b += txt(x + 76, y - 12, s[1], 10.5, C.muted, "middle");
+      });
+      b += arrow(46, 242, 646, 242, C.ink, 3);
+      b += txt(360, 262, "each stage climbs: freer trade, deeper sharing of decisions", 14, C.muted, "middle");
+      b += txt(360, 34, "the ladder of economic integration", 16, C.muted, "middle", 700);
+      return svg("The staircase of integration stages from free trade area up to economic union", b);
+    },
+    "econ-value-added-bars": function () {
+      var b = panel(12, 12, 696, 276, "#fbfdff"), oy = 236, sc = 0.40;
+      b += arrow(110, oy, 110, oy - 190, C.ink, 2.5) + ln(110, oy, 590, oy, C.ink, 2.5);
+      b += txt(40, oy - 88, "US$ per\ntonne", 14, C.muted, "middle", 700);
+      b += rect(150, oy - 60 * sc, 120, 60 * sc, C.blueP, C.blue, 3, 8) + txt(210, oy - 60 * sc - 12, "60", 19, C.blue, "middle", 700) + txt(210, oy + 22, "raw ore exported", 15, C.ink, "middle", 700);
+      b += rect(370, oy - 420 * sc, 120, 420 * sc, C.goldP, C.gold, 3, 8) + txt(430, oy - 420 * sc - 12, "420", 19, "#8a5a00", "middle", 700) + txt(430, oy + 22, "processed steel", 15, C.ink, "middle", 700);
+      b += arrow(270, oy - 80 * sc, 370, oy - 120 * sc, C.teal, 3);
+      b += txt(330, oy - 88 * sc - 36, "7× the value\nwhen processed", 14.5, C.teal, "middle", 700);
+      b += txt(320, 40, "value addition — the case for processing Liberia's resources at home", 16, C.muted, "middle", 700);
+      return svg("Bars comparing raw iron ore at 60 dollars a tonne with processed steel at 420 dollars", b);
+    },
+    "econ-crops-bars": function () {
+      var crops = [
+        ["cassava", 520, C.blue, C.blueP], ["rice", 260, C.blue, C.blueP],
+        ["plantain", 200, C.blue, C.blueP], ["rubber", 95, C.gold, C.goldP],
+        ["cocoa", 30, C.gold, C.goldP], ["coffee", 8, C.gold, C.goldP]
+      ];
+      var b = panel(12, 12, 696, 276, C.pale), ox = 118, oy = 238, sc = 0.27, bw = 68, gap = 26;
+      b += arrow(ox, oy, ox, oy - 172, C.ink, 2.5) + ln(ox, oy, ox + 520, oy, C.ink, 2.5);
+      b += txt(ox - 74, oy - 86, "'000 t\na year", 14, C.muted, "middle", 700);
+      crops.forEach(function (c, i) {
+        var hpx = Math.max(c[1] * sc, 4), x = ox + 22 + i * (bw + gap);
+        b += rect(x, oy - hpx, bw, hpx, c[3], c[2], 2.5, 6);
+        b += txt(x + bw / 2, oy - hpx - 8, String(c[1]), 14.5, C.ink, "middle", 700);
+        b += txt(x + bw / 2, oy + 17, c[0], 13, C.muted, "middle");
+      });
+      b += rect(508, 40, 16, 16, C.blueP, C.blue, 2, 4) + txt(532, 53, "food crops", 13.5, C.ink, "start", 700);
+      b += rect(608, 40, 16, 16, C.goldP, C.gold, 2, 4) + txt(632, 53, "cash crops", 13.5, C.ink, "start", 700);
+      b += txt(340, 40, "Liberia's fields and plantations, roughly, in '000 tonnes a year", 16, C.muted, "middle", 700);
+      b += txt(340, 268, "food crops fill the country's plate; rubber, cocoa and coffee pay in export cash", 14, C.muted, "middle");
+      return svg("Bars of Liberia's leading crops: cassava, rice and plantain ahead of rubber, cocoa and coffee", b);
     }
   };
 

@@ -8,8 +8,10 @@
    because the renderer escapes them.
 
    Uses the SS_CURRICULUM unit shape so GEN_SS renders it unchanged, plus the
-   optional `worked` field (calculations with steps) which GEN_SS renders only
-   when present:
+   optional calculation and problem banks which GEN_SS renders only when
+   present (giving Economics the same exercise treatment as Mathematics,
+   Physics and Chemistry: worked calculations, word problems and challenge
+   questions):
      grade · period · sem · icon · title · subtitle · outcomes[] · objectives[]
      · note · focus[] · terms[]{t,d,x} · facts[]{q,a} · tf[]{s,a,why}
      · sort{title,groups[]{name,items}}
@@ -17,6 +19,8 @@
      · casestudy{title,text,questions[]{q,a}}
      · project{title,brief,steps[],criteria[]}
      · worked[]{q,steps[],a} · apply[]{q,a}
+     · word[]{q,a} (8 word problems in Liberian contexts, like GEN_MA's word[])
+     · challenge[]{q,a} (4 reasoning questions, like GEN_MA's challenge[])
      · activities[] · materials[] · assessment[]
 
    Per the project rule the digital research links listed in the source guide
@@ -72,6 +76,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Scarcity, Choice and Opportunity Cost — Worked"},
     {k:"p", t:"The chain runs in one direction and every part of it must appear in the answer: **unlimited wants** meet **scarce resources**, so **choice** is forced, a **scale of preference** ranks the wants, and every choice carries an **opportunity cost** — the value of the next best alternative forgone. Note the exact wording: opportunity cost is the next best alternative, not every alternative, and it is the value of that alternative, not of the thing chosen."},
+    {k:"fig", f:"econ-scarcity-choice", cap:"Scarcity forces a **choice**; the true cost of a choice is the **opportunity cost** — the next best thing given up."},
     {k:"num", items:[
       "**A scale of preference.** A household has L$10 000 and wants: school fees L$6 000, rice L$3 000, medicine L$2 000, new cloth L$4 000, a radio L$2 500. Ranked: fees, rice, medicine, cloth, radio. Buying the first three spends L$11 000 — more than the household has — so medicine must wait, and the family buys fees and rice for L$9 000.",
       "**The opportunity cost of that choice.** Having bought the fees and the rice, the next best alternative the household gives up is the medicine, so the opportunity cost is **L$2 000 of medicine**, not the cloth and the radio as well.",
@@ -102,6 +107,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Economic Systems in Full"},
     {k:"p", t:"**Capitalism (free enterprise, the market economy)** rests on five features: **private ownership** of the means of production; **free enterprise**, so anyone may start a business; the **profit motive** as the driving force; the **price mechanism**, in which price is the signal that tells producers what to make and consumers what to buy; and **competition** among sellers. Its advantages are efficiency, because unprofitable firms die; variety, because producers court the consumer; incentive, because the reward follows the effort; and freedom of choice. Its disadvantages are inequality, since rewards follow ownership; **market failure** — the market will not supply street lights, roads or defence, which all use and none will pay for; monopoly, where the strong crush the weak and then raise the price; instability of boom and slump; and the neglect of merit goods such as schools, which the poor cannot buy."},
+    {k:"fig", f:"econ-systems-spectrum", cap:"Systems spread from the **pure market** through the **mixed** economy to the **command** economy; Liberia sits in the middle."},
     {k:"p", t:"**Socialism (a planned or command economy)** rests on **state ownership** of the means of production, **central planning** in which a planning board sets the targets, production for **social welfare** rather than profit, and the absence of competition. Its advantages are equality, the absence of wasteful competition and advertising, planned stability without boom and slump, and the supply of essential goods whether or not they pay. Its disadvantages are the loss of incentive where reward does not follow effort, bureaucracy and delay, shortage and queueing where the planners misjudge demand, absence of consumer choice, and the concentration of economic and political power in the same hands."},
     {k:"p", t:"The **mixed economy** takes the market for what it does well and the state for what the market cannot do: private firms produce the consumer goods while the state provides roads, ports, power, schools, hospitals and defence, regulates prices and standards, and taxes and spends to correct inequality. **Liberia practises the mixed economy** — private traders, farmers and companies operate freely beside state enterprises and state regulation. Be ready to give Liberian instances of each side: private commerce and the concessions on one side, the public schools, the public hospitals and the statutory corporations on the other."},
     {k:"rule"},
@@ -232,6 +238,22 @@ var EC_CURRICULUM = [
     {q:"Suggest one advantage Liberia gains from operating a mixed economy rather than pure capitalism.", a:"Government can provide schools, clinics and roads that the private sector would find unprofitable, so essential services reach poor and rural citizens who could not pay market prices."},
     {q:"How does the concept of opportunity cost help a student decide whether to leave school and trade?", a:"The immediate income from trading must be weighed against the higher lifetime earnings and opportunities the completed education would bring; the forgone qualification is the real opportunity cost of leaving."}
   ],
+  word:[
+    {q:"Korto earns L$250 an hour selling pepper at Red Light market. She closes her stand for 3 hours to attend her daughter's school meeting. What is the opportunity cost of the meeting in money terms?", a:"3 × L$250 = L$750 — the sales income she gave up."},
+    {q:"A family in Paynesville has L$1 600 for the week. Rice costs L$900 and kerosene L$500. If they buy both, how much remains toward the L$400 transport they also need?", a:"1 600 − (900 + 500) = L$200 — only half the transport need; scarcity still forces a choice."},
+    {q:"Musu has L$5 000. A textbook costs L$3 500 and a phone costs L$4 500. If she buys the phone, what is her opportunity cost?", a:"The textbook — the next best alternative she gives up, worth L$3 500."},
+    {q:"A carpenter can build 2 chairs for L$4 000 or repair a roof for L$3 200 in the same day. What does each chair cost him in roof money?", a:"3 200 ÷ 2 = L$1 600 of roof work given up per chair."},
+    {q:"Bendu lists her wants: fees L$8 000, a dress L$6 000, a radio L$4 000. Her income is L$10 000. On her scale of preference fees come first and the radio last. Which want is sacrificed, and why?", a:"The radio — 8 000 + 6 000 = L$14 000 already exceeds L$10 000, so the lowest-ranked want on the scale of preference is dropped."},
+    {q:"The government has L$40 million. A rural road costs L$40 million and a hospital wing also costs L$40 million. If it builds the road, name the opportunity cost.", a:"The hospital wing — the next best alternative forgone."},
+    {q:"A shopper switches from imported rice at L$3 200 a bag to country rice at L$2 600. How much does she save on 4 bags?", a:"(3 200 − 2 600) × 4 = 600 × 4 = L$2 400 saved."},
+    {q:"A school fee rises from L$12 000 to L$15 000 while family income stays at L$60 000. What percentage of income now goes to the fee, and what was it before?", a:"Now: 15 000 ÷ 60 000 × 100 = 25%; before: 12 000 ÷ 60 000 × 100 = 20% — less is left for every other want."}
+  ],
+  challenge:[
+    {q:"Water is essential and gold is not, yet gold costs more. What does this tell you about how scarcity, not usefulness alone, sets price?", a:"Usefulness gives a good value, but price also depends on scarcity: gold is rare, so obtaining a little more is costly, while water is usually abundant, so one more litre is cheap. Where water becomes scarce — a dry-season village — its value rises sharply."},
+    {q:"A learner says a rich family no longer faces the economic problem. Use a numbered example to show why this is wrong.", a:"Even with L$100 000, wants exceed means: fees L$40 000, a car L$50 000 and a trip L$30 000 total L$120 000. Scarcity of income — and of time — still forces choice, so opportunity cost never disappears."},
+    {q:"“Free education” is announced in Monrovia. From the economist's view, is the schooling really free?", a:"No. The classrooms, teachers and materials could have served elsewhere — the opportunity cost is the clinic or road not built. “Free” only means the pupil does not pay the price; society still pays the cost."},
+    {q:"Liberia keeps a mixed economy. Give one reason a pure market economy and one reason a pure command economy would each struggle to answer “for whom to produce”.", a:"In a pure market economy output goes only to those with money to pay, so the poor may go hungry; in a pure command economy officials fix shares by plan, which can ignore real wants and create shortages. Mixing lets prices guide most goods while the state protects basic needs."}
+  ],
   activities:[
     "Give the origin and definitions of Economics",
     "Explore the basic concepts: scarcity, choice, scale of preference, needs, wants and opportunity cost",
@@ -292,6 +314,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"Some demand curves slope upward, against the law: goods of **snob appeal (Veblen goods)** bought because they are expensive, **Giffen goods** on which the poor spend more as the price rises, and shares bought in the expectation of further rises — discuss the reasons for this abnormal behaviour. A **price ceiling** is a legal maximum price set below equilibrium, as with rent control: it helps buyers but creates shortages and queues. A **price floor** is a legal minimum set above equilibrium, as with a farm support price: it helps producers but creates a surplus. Demonstrate the effects of both in the market."},
     {k:"h3", t:"A Demand and Supply Schedule Worked End to End"},
     {k:"p", t:"The paper regularly gives a schedule and asks for the equilibrium, the surplus at one price and the shortage at another. Set it out exactly as below — the table itself earns marks before a word is written."},
+    {k:"fig", f:"econ-demand-supply", cap:"Where the **demand** and **supply** curves cross, the market clears at one price and one quantity."},
     {k:"table", head:["Price (L$)","Quantity demanded (bags)","Quantity supplied (bags)","The market's condition"], rows:[
      ["2 000","100","500","Surplus of 400 bags — sellers cut the price"],
      ["1 750","150","450","Surplus of 300 bags — the price still falls"],
@@ -308,6 +331,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Movement Against Shift — the Distinction that Carries the Marks"},
     {k:"p", t:"A **movement along** the curve is caused **only** by a change in the good's **own price**: price L$1 000 to L$750 moves the buyer down the same demand curve from 300 to 350 bags. A **shift of** the whole curve is caused by **anything else**, and at the same price a different quantity is now bought or offered. Confusing the two is the most common error in this unit — the candidate who writes 'the demand curve shifts when the price of rice rises' loses the mark at once."},
+    {k:"fig", f:"econ-shift-vs-movement", cap:"A price change causes a **movement along** the curve; any other factor **shifts** the whole curve."},
     {k:"table", head:["Shifts the DEMAND curve","Direction","Shifts the SUPPLY curve","Direction"], rows:[
      ["Income rises (a normal good)","Right — more at every price","Cost of production falls (cheaper fuel, fertiliser)","Right — more at every price"],
      ["Income falls, or the good is inferior and income rises","Left","Cost of production rises (dearer fuel, a new tax)","Left"],
@@ -335,6 +359,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Price Control — What Each Ceiling and Floor Does"},
     {k:"p", t:"A **price ceiling (maximum price)** is fixed by law **below** the equilibrium price to protect the consumer — rent control, a controlled price for rice or fuel, a controlled fare. Its consequences follow in order and each is worth a mark: a **shortage**, because quantity demanded now exceeds quantity supplied; **queues and waiting**, as buyers compete for what little there is; **rationing**, formal by coupon or informal by favouritism; a **black market**, where the good is sold illegally above the legal price; **hoarding**, as sellers withhold stock to sell later at the higher illegal price; and **a fall in quality**, since the seller who cannot raise the price cuts corners instead. The remedy is not the ceiling alone but an increase in supply."},
+    {k:"fig", f:"econ-price-controls", cap:"A **ceiling below** the equilibrium makes a shortage; a **floor above** it makes a surplus."},
     {k:"p", t:"A **price floor (minimum price)** is fixed **above** the equilibrium price to protect the producer — a farm support price, a minimum wage. Its consequences: a **surplus**, because quantity supplied now exceeds quantity demanded; **unsold stock** that the government must buy and store, or that perishes; **cost to the treasury** of buying and storing the surplus; **a fall in demand** as buyers turn to substitutes; and, for a minimum wage, **unemployment** as employers hire fewer workers. In each case the answer must state which side of equilibrium the control sits on, then give the consequences in order — a control drawn on the wrong side of the equilibrium scores nothing."},
     {k:"rule"},
     {k:"h3", t:"Consumer's and Producer's Surplus"},
@@ -466,6 +491,22 @@ var EC_CURRICULUM = [
     {q:"During Ramadan the demand for certain foods rises. Explain the effect on price using the correct terms.", a:"Taste and seasonal need are non-price factors, so the demand curve shifts right. At the old price a shortage appears, and price rises to a new higher equilibrium."},
     {q:"Why do traders sometimes hoard goods when they expect prices to rise?", a:"Expectation of a higher future price reduces present supply as traders withhold stock, shifting the supply curve left and raising the current price — which brings forward the very rise they expected."}
   ],
+  word:[
+    {q:"In Duala market, at L$40 a bag, traders demand 120 bags of pepper but supply only 60. Calculate the shortage.", a:"120 − 60 = 60 bags short."},
+    {q:"At L$80, demand falls to 50 bags while supply rises to 110. Calculate the surplus.", a:"110 − 50 = 60 bags surplus."},
+    {q:"A seller moves 80 bags of rice at L$60 each. Calculate his total revenue.", a:"TR = 80 × L$60 = L$4 800."},
+    {q:"The price of palm oil rises from L$200 to L$230 a bottle. Calculate the percentage change in price.", a:"(30 ÷ 200) × 100 = 15% rise."},
+    {q:"Quantity demanded of fish rises from 80 to 100 cartons after a price fall. Calculate the percentage change in quantity.", a:"(20 ÷ 80) × 100 = 25% rise."},
+    {q:"Three buyers at Waterside demand 15, 22 and 8 phones at L$900 each. What is the market demand at that price?", a:"15 + 22 + 8 = 45 phones."},
+    {q:"At equilibrium, 300 loaves sell at L$50. If a price ceiling of L$40 raises demand to 350 and cuts supply to 250, what shortage appears?", a:"350 − 250 = 100 loaves — the cost of fixing price below equilibrium."},
+    {q:"A trader cuts the price of lappa from L$500 to L$450 and sales rise from 60 to 75 pieces. Calculate the percentage fall in price and the percentage rise in quantity.", a:"Price: (50 ÷ 500) × 100 = 10% fall; quantity: (15 ÷ 60) × 100 = 25% rise."}
+  ],
+  challenge:[
+    {q:"A drought cuts the rice harvest in Lofa. With demand at 500 bags and supply falling from 500 to 350 at the old price, explain what happens and what restores balance.", a:"A shortage of 150 bags appears at the old price. Buyers compete for the scarce bags and bid the price upward until the quantity demanded falls and supply recovers to equality — the market re-clears at a higher equilibrium price."},
+    {q:"Musu says “when price rises, demand falls, so nobody buys”. Correct her using the difference between a movement along the curve and a shift of it.", a:"A rise in price does not kill demand; it causes a movement up the demand curve — the quantity demanded contracts. The whole demand curve falls only when a non-price factor changes, such as income, taste or the price of a substitute."},
+    {q:"A trader doubles his price from L$25 to L$50 and daily sales fall from 200 to 90 cups. Is he better off? Show the figures.", a:"Before: TR = 200 × 25 = L$5 000. After: TR = 90 × 50 = L$4 500. He is L$500 worse off a day — the quantity lost (55%) outweighed the price gained (100% of a small base); raising price cut his revenue."},
+    {q:"During exam week the demand for snacks near a school doubles, but supply cannot adjust for a month. Tell the story from the old equilibrium to the new one.", a:"The demand curve shifts right. At the old price a shortage appears and sellers ration informally; the price is bid up, which coaxes out a little extra supply, until a new equilibrium is reached at a higher price and a somewhat higher quantity."}
+  ],
   activities:[
     "Discuss the laws of demand and supply and apply them to consumption and production",
     "Group work analysing demand and supply by factors and types",
@@ -525,6 +566,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"The Production Possibility Curve — a Worked Schedule"},
     {k:"p", t:"The curve is drawn from a schedule of the maximum combinations two goods can reach when all resources are fully and efficiently employed. Take an economy producing rice and cassava:"},
+    {k:"fig", f:"econ-ppc", cap:"Points **on** the PPC use everything available; **inside** wastes, **beyond** is impossible — moving along it measures the **opportunity cost**."},
     {k:"table", head:["Combination","Rice (thousand bags)","Cassava (thousand tonnes)","What the point means"], rows:[
      ["A","0","500","All resources in cassava"],
      ["B","100","475","Some resources moved to rice"],
@@ -539,6 +581,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"The Law of Diminishing Returns — Worked"},
     {k:"p", t:"The law states that as more units of a **variable** factor are added to a **fixed** factor, total output rises, but after a point the **extra** output from each additional unit falls. It holds only in the **short run**, when at least one input cannot be changed, and only when the technique does not change. Work it on one hectare of rice land with labour as the variable factor:"},
+    {k:"fig", f:"econ-diminishing-returns", cap:"Adding workers to fixed land first raises the **marginal product**; after a point every added worker brings **less**."},
     {k:"table", head:["Workers","Total product (bags)","Marginal product","Average product","Stage"], rows:[
      ["1","10","10","10.0","Increasing returns"],
      ["2","25","15","12.5","Increasing returns"],
@@ -676,6 +719,22 @@ var EC_CURRICULUM = [
     {q:"Why is investment in education described as investment in human capital?", a:"Education raises the skill and productivity of labour in the same way that a machine raises the productivity of a factory, so it increases future output and is a cost incurred now for a return later."},
     {q:"A rubber plantation is idle because of a lack of buyers. Where does this place the economy on its production possibility curve?", a:"Inside the curve, because a resource is unemployed. The economy is producing less than its capacity allows and could increase output without giving anything up."}
   ],
+  word:[
+    {q:"A rice farm yields 40 bags with 1 worker and 90 bags with 2 workers. Calculate the marginal product of the second worker.", a:"90 − 40 = 50 bags."},
+    {q:"A plantation produces 155 bags with 4 workers. Calculate the average product per worker.", a:"155 ÷ 4 = 38.75 bags per worker."},
+    {q:"Hiring a fifth worker raises output from 155 to 170 bags. Find the marginal product of the fifth worker.", a:"170 − 155 = 15 bags."},
+    {q:"A hulling machine costs L$120 000 and lasts 5 years. Calculate the annual depreciation.", a:"120 000 ÷ 5 = L$24 000 per year."},
+    {q:"A docker in Buchanan earns L$450 a day for 24 days. Calculate his wage for the month.", a:"450 × 24 = L$10 800."},
+    {q:"Cassava output rises from 200 to 240 bags after better tools arrive. Calculate the percentage increase.", a:"(40 ÷ 200) × 100 = 20% increase."},
+    {q:"An economy can produce 100 tonnes of rice or 60 tonnes of cassava. What is the opportunity cost of one tonne of cassava?", a:"100 ÷ 60 = 1.67 tonnes of rice per tonne of cassava."},
+    {q:"A landlord receives L$6 000 a month for farmland and L$9 000 for shop space. What is his total rent for the year?", a:"(6 000 + 9 000) × 12 = 15 000 × 12 = L$180 000."}
+  ],
+  challenge:[
+    {q:"Output with 5 workers is 170 bags, and a sixth worker raises it only to 172 bags. What does this pattern illustrate, and why does it happen on a fixed piece of land?", a:"Diminishing returns: equal additions of labour applied to a fixed factor add smaller and smaller amounts of extra output, because each new worker has less land and fewer tools to work with. Marginal product falls even though total product is still rising."},
+    {q:"Kollie's peanut farm earns L$30 000 in sales. He pays L$12 000 to hired labour, L$5 000 interest on a loan, L$3 000 rent and L$4 000 for seed. What is left for the entrepreneur, and what is that reward called?", a:"Costs = 12 000 + 5 000 + 3 000 + 4 000 = L$24 000. Remaining = 30 000 − 24 000 = L$6 000 — profit, the reward of enterprise for organising the other factors and bearing the risk."},
+    {q:"A shoe workshop splits the work so one man cuts, one sews and one fits soles, and output rises from 10 to 22 pairs a day with the same three workers. Give two reasons division of labour can raise output like this, and one danger.", a:"Reasons: each worker becomes faster at one repeated task through practice, and no time is lost switching between tools and tasks. Danger: work becomes monotonous, or a single stoppage halts the whole line and a narrow specialist struggles if his one task disappears."},
+    {q:"Point A lies inside the production possibility curve and point B lies on it. Using rice and cassava, explain what each point says about the economy.", a:"Inside the curve (A) means resources are idle or wasted — unemployed labour or untilled land — so more of both crops is possible without giving anything up. On the curve (B) all resources are fully employed: more cassava requires giving up some rice, a real opportunity cost."}
+  ],
   activities:[
     "Brainstorm the meaning of production and its types",
     "Identify the factors of production, their importance and corresponding rewards",
@@ -728,6 +787,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"**Consumer surplus** is the difference between what a consumer is willing to pay for a good and what the consumer actually pays. If you would gladly pay 200 dollars for an umbrella but buy it at 120 dollars, your surplus is 80 dollars. On a diagram it is the area between the demand curve and the market price — the extra satisfaction consumers enjoy over and above their payment."},
     {k:"h3", t:"A Utility Schedule Worked"},
     {k:"p", t:"Every question on consumer behaviour begins with a schedule like this one. Compute **marginal utility** as the change in total utility from one unit to the next — never as total utility divided by the number of units."},
+    {k:"fig", f:"econ-utility", cap:"**Marginal utility** falls with each extra unit; when it reaches zero, **total utility** is at its peak."},
     {k:"table", head:["Cups of water drunk","Total utility (utils)","Marginal utility (utils)","What is happening"], rows:[
      ["1","40","40","The first cup to a thirsty traveller — the greatest satisfaction"],
      ["2","70","30","Still much wanted"],
@@ -752,10 +812,12 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"The Indifference Curve and the Budget Line"},
     {k:"p", t:"An **indifference curve** joins the combinations of two goods that give equal satisfaction. Its four characteristics must be stated with their reasons. It **slopes downward** because more of one good must be given up to have more of the other while satisfaction stays the same. It is **convex to the origin** because the **marginal rate of substitution falls** — the more rice a consumer already has, the less fish he will surrender for another plate. **Curves farther from the origin mean greater satisfaction**, since more of both goods is preferred to less. And **two indifference curves can never cross**: if they did, the point of crossing would give two different levels of satisfaction at once, which is a contradiction — draw the crossing case and prove it by naming the two bundles that would then be equal to the same bundle yet unequal to each other."},
+    {k:"fig", f:"econ-indifference", cap:"The consumer is best off where the **budget line** just touches the highest reachable **indifference curve**."},
     {k:"p", t:"The **budget line** shows the combinations just affordable with a given income at given prices. With L$20, rice at L$4 a plate and fish at L$2 a piece, the consumer can have 5 plates of rice and no fish, or 10 pieces of fish and no rice, or any straight-line combination between — 3 plates and 4 pieces, for instance. Its **slope is the ratio of the two prices** (4 ÷ 2 = 2), so he must give up 2 fish for every plate of rice. A rise in income shifts the line **outward, parallel**; a fall shifts it inward; a fall in the price of one good **rotates** it outward along that good's axis. **Consumer equilibrium** is the point where the budget line is **tangent** to the highest indifference curve it can reach — there the slope of the curve (the MRS) equals the slope of the line (the price ratio), which is the indifference-curve form of the equi-marginal rule."},
     {k:"rule"},
     {k:"h3", t:"Consumer Surplus in Numbers"},
     {k:"p", t:"**Consumer surplus** is the difference between what a consumer is willing to pay and what he actually pays. Take the water schedule above, with the consumer paying L$1 a cup: he would have paid L$4 for the first cup, L$3 for the second, L$2 for the third and L$1 for the fourth, spending L$4 in all while the satisfaction he receives is worth L$10 to him — so his surplus is **L$6**. On the demand diagram the surplus is the **area between the demand curve and the price line**: a fall in price enlarges it (the price line drops, so more area lies above it), a rise in price shrinks it, and a tax that raises the price transfers part of it from the consumer to the government. Use the concept to judge any price change: the consumer is better off when his surplus grows, and the paper often asks exactly this of a subsidy or a tax."},
+    {k:"fig", f:"econ-consumer-surplus", cap:"**Consumer surplus** is the wedge between what buyers were **willing to pay** and the price they actually pay."},
     {k:"rule"},
     {k:"h3", t:"Common Mistakes in This Unit"},
     {k:"bul", items:[
@@ -876,6 +938,22 @@ var EC_CURRICULUM = [
     {q:"How would a large fall in the price of rice affect a household's budget line and consumer surplus?", a:"The budget line pivots outward on the rice axis, so more of both goods becomes affordable. Consumer surplus rises because the household pays less than before for rice it was already willing to buy at the higher price."},
     {q:"A learner argues that a rational consumer should spend all income on the good giving the highest utility. Is this correct?", a:"No. Because marginal utility falls with consumption, satisfaction is maximised by spreading spending until the utility per dollar is equal across goods — the equi-marginal principle — not by concentrating on one good."}
   ],
+  word:[
+    {q:"Total utility after 3 cups of sugar-cane juice is 45 utils and after 4 cups is 52 utils. Calculate the marginal utility of the fourth cup.", a:"52 − 45 = 7 utils."},
+    {q:"The marginal utility of a fifth cup is zero. What does that tell you about total utility?", a:"Total utility is at its maximum at that point — one more cup would start to reduce it."},
+    {q:"A buyer at Waterside is willing to pay L$900 for a bag of rice but actually pays L$600. Calculate her consumer surplus.", a:"900 − 600 = L$300 consumer surplus."},
+    {q:"Good A gives marginal utility of 40 at a price of L$10; good B gives MU of 24 at L$8. Which gives more satisfaction per dollar?", a:"A: 40 ÷ 10 = 4 utils per L$; B: 24 ÷ 8 = 3 — good A is the better value per dollar."},
+    {q:"Income is L$1 200. Rice is L$300 a bag and oil L$200 a bottle. If she buys 2 bags of rice, how many bottles of oil can she still afford?", a:"Rice = 2 × 300 = 600; remaining 600 ÷ 200 = 3 bottles of oil."},
+    {q:"Total utilities for the first 3 balls of fufu are 20, 35 and 45 utils. Find the marginal utility of the second and third balls.", a:"2nd: 35 − 20 = 15 utils; 3rd: 45 − 35 = 10 utils — the extra satisfaction is already diminishing."},
+    {q:"A fan would pay L$600, L$450 and L$300 for the first three match tickets. The price is L$350 and he buys 2. Calculate his total consumer surplus.", a:"(600 − 350) + (450 − 350) = 250 + 100 = L$350."},
+    {q:"A shopper divides L$2 000 between drink at L$250 a bottle (MU 50) and pie at L$500 (MU 90). Compare 50 ÷ 250 = 0.20 with 90 ÷ 500 = 0.18 and say what a rational consumer does.", a:"Drink gives 0.20 utils per L$ against pie's 0.18, so shift spending toward drink and away from pie until the marginal utility per dollar is equal on both — the equi-marginal rule."}
+  ],
+  challenge:[
+    {q:"Why does a second bottle of cold water please you less at midday than the first, and what does that limit about what sellers can charge for it?", a:"The first bottle meets a strong want, so its marginal utility is high; once thirst is partly satisfied, the next bottle's MU falls. Buyers keep paying the price only while MU is at least the price — falling MU caps what sellers can charge for extra units."},
+    {q:"A hawker drops the price of bananas from L$100 to L$80 a bunch. Explain, using consumer surplus, why both old and new buyers gain.", a:"Old buyers gain L$20 more surplus on every bunch they already bought (100 − 80), and new buyers now enter because the price has fallen below their willingness to pay, each collecting surplus of their own. Total consumer surplus rises."},
+    {q:"Total utility rises 60, 70, 78, 82 utils across cups 2 to 5. Between which cups does the consumer gain most, and what law does the whole pattern show?", a:"Gains are 10, then 8, then 4 utils — largest earliest (cup 2 to 3) and shrinking every time. The pattern of falling marginal utility as consumption rises is the law of diminishing marginal utility."},
+    {q:"A learner claims the budget line never changes. Using income of L$2 400 with rice at L$400 a bag and oil at L$300 a bottle, show two different ways the line can move.", a:"(i) If income rises to L$3 000, the whole line shifts outward — the rice-only point moves from 6 to 7.5 bags. (ii) If income is unchanged but rice rises to L$600, the rice intercept falls to 4 bags and the line pivots inward on the rice axis."}
+  ],
   activities:[
     "Discuss the definition and concept of utility, utility maximisation, and total and marginal utility",
     "Group discussion on consumer behaviour relative to the consumer budget line",
@@ -932,6 +1010,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"Worked example — the community survey: 100 teenagers were interviewed about contraceptive knowledge. Of 50 girls, 25 had knowledge, used contraceptives consistently, were not pregnant and remained in school; 10 had no knowledge, got pregnant and dropped from school; 15 had knowledge, yet got pregnant but remained in school. Of 50 boys, 36 had knowledge of contraceptive use and had not impregnated any girl; 14 had no knowledge and had impregnated girls. Present these findings in a pie chart, and process the information to show the implication of the data for schooling and health."},
     {k:"h3", t:"Building a Frequency Distribution from Raw Data"},
     {k:"p", t:"The paper gives raw marks or ages and asks for a grouped table. Follow the five steps and the table builds itself. **Step 1 — find the range:** highest value minus lowest. For marks of 12 to 57 the range is 45. **Step 2 — choose the number of classes**, usually five to eight. **Step 3 — find the class interval:** range ÷ number of classes, rounded up — 45 ÷ 5 = 9, so use intervals of 10 for convenience. **Step 4 — set the class limits** so that every value falls in one class and none in two: 10-19, 20-29, 30-39, 40-49, 50-59. **Step 5 — tally** each observation into its class and total the tallies; the total must equal the number of observations, and if it does not, a value has been missed or counted twice."},
+    {k:"fig", f:"econ-frequency-histogram", cap:"Tabulating raw figures into **bands** turns a list into a picture; the tallest bar is the **modal band**."},
     {k:"table", head:["Marks","Tally","Frequency","Class mark (midpoint)"], rows:[
      ["10-19","///","3","14.5"],
      ["20-29","//// //","7","24.5"],
@@ -942,6 +1021,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Choosing the Right Chart — and Drawing It"},
     {k:"p", t:"The choice of chart follows from the nature of the data, and a question often asks which is appropriate before asking for the drawing itself."},
+    {k:"fig", f:"econ-charts-panels", cap:"**Bar** charts compare, **pies** share, **lines** track — the data decides the chart."},
     {k:"table", head:["Data to present","Best chart","Why"], rows:[
      ["Prices month by month for a year","Line graph","Shows the direction and steepness of the trend at a glance"],
      ["The number of learners in each of five classes","Simple bar chart","Compares separate totals by the height of equal-width bars"],
@@ -954,6 +1034,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"The Pie Chart Worked"},
     {k:"p", t:"A pie chart divides 360° in proportion to the parts. The formula is **angle = (item ÷ total) × 360°**. Take a household budget of L$20 000: food L$10 000, rent L$4 000, school fees L$3 000, transport L$2 000, other L$1 000. Food takes (10 000 ÷ 20 000) × 360 = **180°**; rent (4 000 ÷ 20 000) × 360 = **72°**; fees **54°**; transport **36°**; other **18°**. Check that the angles sum to 360 — 180 + 72 + 54 + 36 + 18 = 360 — and if they do not, an arithmetic slip has been made. Then draw the circle, mark the angles with a protractor from one radius, label each sector with its item and its percentage, and give the chart a title. The **percentage** column is (item ÷ total) × 100: food 50 %, rent 20 %, fees 15 %, transport 10 %, other 5 %."},
+    {k:"fig", f:"econ-pie-budget", cap:"Each slice's **angle = share × 360°**, so the whole pie is the whole budget."},
     {k:"rule"},
     {k:"h3", t:"Mean, Median and Mode — When Each Misleads"},
     {k:"p", t:"Take the weekly earnings in Liberian dollars of nine market women: 2 000, 2 200, 2 400, 2 500, 2 600, 2 800, 3 000, 3 200 and 25 000. The **mean** is 45 700 ÷ 9 = **L$5 078**; the **median** (the fifth of nine ordered values) is **L$2 600**; the **mode** — the value occurring most often — there is none, since no value repeats. The mean is dragged far above what eight of the nine actually earn by the single large figure; the median describes the typical trader far better. This is the point the examiner wants: **the mean uses every value but is pulled by extremes; the median ignores the size of the extremes and so describes a skewed set better; the mode is the most common value and is the only average usable for non-numeric data, but it may not exist or there may be several.** Choose the median for incomes, the mean for examination marks in a roughly even class, the mode for the most popular product or the commonest family size."},
@@ -1092,6 +1173,22 @@ var EC_CURRICULUM = [
     {q:"A government reports that average income has risen while most people feel poorer. How is this possible?", a:"If gains are concentrated among a few very high earners, the mean rises while the median — the typical income — may be unchanged or falling."},
     {q:"You must show the share of Liberia's exports made up by iron ore, rubber, gold and others. Which chart is best and why?", a:"A pie chart, because it displays each commodity as a proportion of total exports so the relative shares are seen at once."}
   ],
+  word:[
+    {q:"Daily cloth sales in Duala were L$120, L$150, L$180, L$200 and L$250 over 5 days. Find the mean daily sale.", a:"(120 + 150 + 180 + 200 + 250) ÷ 5 = 900 ÷ 5 = L$180."},
+    {q:"Find the median of these palm-wine sales: L$70, 30, 90, 50, 110.", a:"Ordered: 30, 50, 70, 90, 110 — the middle value is L$70."},
+    {q:"Find the median of L$400, 800, 1 000 and 1 400.", a:"The middle two are 800 and 1 000 — median = (800 + 1 000) ÷ 2 = L$900."},
+    {q:"Rice prices on five streets are L$2 500, 2 700, 2 700, 2 900 and 2 750. Find the mode.", a:"L$2 700 — it occurs twice, more than any other price."},
+    {q:"In a pie chart of a school budget, food takes L$45 000 of the L$180 000 total. Calculate the angle of the food sector.", a:"45 ÷ 180 × 360° = 90°."},
+    {q:"A class raises L$25 000 of a L$50 000 target for the quiz team. What percentage has been raised?", a:"25 ÷ 50 × 100 = 50%."},
+    {q:"A price index moves from 400 to 500. Calculate the percentage increase.", a:"(100 ÷ 400) × 100 = 25% increase."},
+    {q:"A grade has 36 boys and 24 girls, and weekly market sales range from L$800 to L$3 000. Express the class ratio in its simplest form and find the range of sales.", a:"Ratio 36 : 24 = 3 : 2; range = 3 000 − 800 = L$2 200."}
+  ],
+  challenge:[
+    {q:"Five traders earn L$200, 220, 240, 260 and 4 000 in a day, a mean of L$984. Why is the median a better summary here, and what is it?", a:"The single very large earning drags the mean far above what most traders earn — four of the five earn under L$300. Ordered 200, 220, 240, 260, 4 000, the median is L$240, which describes the typical trader."},
+    {q:"A survey reports “80% of households grow cassava”, but it only asked farmers. What is wrong, and what lesson about reading tables does it teach?", a:"The sample is biased — town households who buy food were never asked. A statistic describes only the group actually measured; generalising from a biased sample misleads, which is why the source and coverage of every table must be checked."},
+    {q:"Prices rise 10% one year and 10% the next on a L$1 000 basket. Is the total rise 20%? Show the correct figure.", a:"No. After year 1: L$1 100; after year 2: 1 100 × 1.10 = L$1 210 — a 21% rise. Percentage increases compound on the new base; they do not simply add."},
+    {q:"Rubber rises from L$400 to L$500 (up 25%) while output falls from 500 to 450 tonnes (down 10%), and a headline cries “Output collapsed”. Comment using the data.", a:"A 10% fall is modest, not a collapse, and it is half the size of the price change. Percentages keep both movements in proportion; honest reporting compares percentage changes rather than dramatic words."}
+  ],
   activities:[
     "Determine the uses and importance of the basic tools of economic analysis",
     "Conduct a class survey on a social issue and tabulate the results",
@@ -1145,6 +1242,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"Four policies change who owns and runs business. **Privatization** transfers a public enterprise to private owners, seeking efficiency. **Commercialization** makes a public enterprise operate on commercial lines, charging economic prices without a change of ownership. **Indigenization** transfers ownership to citizens of the country, building local control. **Nationalization** transfers private business to the state, usually for strategic reasons. Examine the impact of each policy on the Liberian economy — on employment, prices, investment and public revenue."},
     {k:"h3", t:"The Forms Compared Side by Side"},
     {k:"p", t:"This table is the whole of the unit and is asked in almost every paper. Learn the columns as well as the rows, because the question usually asks for two forms compared rather than one described."},
+    {k:"fig", f:"econ-business-forms", cap:"Each form trades **control** for **capital and shared risk** as it grows."},
     {k:"table", head:["Feature","Sole proprietorship","Partnership","Limited company (corporation)","Cooperative","Statutory corporation"], rows:[
      ["Number of owners","One","Two to twenty","Two to unlimited shareholders","Members who subscribe","The state"],
      ["Legal personality","None — owner and business are one","Ordinary partnership: none; limited partnership: partly","Yes — the company sues and is sued in its own name","Yes","Yes — created by Act"],
@@ -1169,6 +1267,7 @@ var EC_CURRICULUM = [
      ["Short term (under a year)","Trade credit, bank overdraft, cash credit, loans from friends and family, advances from customers","Wages, raw materials, day-to-day trading"],
      ["Medium term (one to five years)","Bank term loans, hire purchase, leasing of equipment, credit from suppliers of machinery","Vehicles, small machines, shop fittings"],
      ["Long term (over five years)","Shares, debentures, retained profit, development-bank loans, mortgages, government grants","Land, buildings, heavy plant, a concession"]]},
+    {k:"fig", f:"econ-capital-sources", cap:"Every business draws on the same half-dozen **sources of capital**; the form decides which are open to it."},
     {k:"rule"},
     {k:"h3", t:"Business Enterprise Policy Applied to Liberia"},
     {k:"p", t:"The four policies are examined for their effect on **employment, prices, investment and public revenue**, and each can be illustrated from Liberian experience. **Privatization** — selling a state enterprise to private owners — was pursued across West Africa from the 1980s under structural adjustment: the aim is efficiency, an end to the drain on the treasury and fresh private capital; the risks are job losses, higher prices where the buyer becomes a monopolist, and the loss of a service the state can no longer direct. **Commercialization** — making a state enterprise trade on commercial lines, charging prices that cover its costs, while ownership stays public — was the commoner Liberian choice for the utilities, since a service too essential to sell can at least be made to pay its way. **Indigenization** — transferring ownership to Liberian citizens — builds local control and local profit, but can frighten the foreign capital and the foreign management the economy still needs. **Nationalization** — transferring private business to the state — protects a strategic industry and can end exploitation, but brings the risk of political management, of a loss of the efficiency motive and of a burden on the budget. A full answer weighs both sides and then states which policy suits which enterprise — the market trader needs none of them; the power utility needs all four considered."},
@@ -1296,6 +1395,22 @@ var EC_CURRICULUM = [
     {q:"A public company is often criticised for separating ownership from control. Explain the problem.", a:"Shareholders own the company but managers run it, and the managers may pursue their own interests such as high salaries or growth rather than the shareholders' interest in profit."},
     {q:"Suggest why the Liberian government might operate some services as statutory corporations rather than leaving them to private firms.", a:"Services such as water, ports or electricity are essential and may be natural monopolies or unprofitable in poor areas, so state operation ensures they are provided to everyone rather than only where profit is available."}
   ],
+  word:[
+    {q:"Three partners in a Gbarnga store share profits in the ratio 3 : 2 : 1. If profit is L$240 000, how much does each receive?", a:"Total parts = 6; each part = 240 000 ÷ 6 = L$40 000 — so L$120 000, L$80 000 and L$40 000."},
+    {q:"A company issues 50 000 shares at L$20 each. Calculate the share capital raised.", a:"50 000 × 20 = L$1 000 000."},
+    {q:"A shareholder holds 2 000 shares and the dividend is L$3 per share. Calculate her dividend.", a:"2 000 × 3 = L$6 000."},
+    {q:"A business in Sinkor has revenue of L$850 000 and total costs of L$610 000. Calculate the profit.", a:"850 000 − 610 000 = L$240 000."},
+    {q:"Using the same figures, calculate the profit margin on revenue.", a:"240 000 ÷ 850 000 × 100 ≈ 28.2%."},
+    {q:"A trader borrows L$500 000 at 12% simple interest per year for 2 years. Calculate the interest owed.", a:"500 000 × 12% × 2 = L$120 000."},
+    {q:"A farmers' cooperative of 40 members shares a surplus of L$320 000 equally. How much does each member receive?", a:"320 000 ÷ 40 = L$8 000 each."},
+    {q:"A sole proprietor keeps 60% of a L$150 000 profit and reinvests the rest. How much is reinvested?", a:"40% × 150 000 = L$60 000 reinvested."}
+  ],
+  challenge:[
+    {q:"A Monrovia trader needs L$2 million to build a rice mill. Why can a private limited company raise this more easily than a sole proprietor?", a:"A company sells shares to many owners, each contributing part of the capital, and a shareholder risks only what he paid (limited liability), which attracts savers. A sole proprietor must rely on personal savings and loans in his own name, which rarely reach such a sum."},
+    {q:"Two partners lose L$300 000 when their business collapses, and one partner owns 70% of the firm. Under unlimited liability, what can creditors claim from the richer partner personally, and how would this differ in a company?", a:"In an ordinary partnership the creditor can pursue either partner for the FULL debt — even personal houses or cars — not just a 70% share. In a company, shareholders lose at most the value of their shares; personal property is protected by limited liability."},
+    {q:"A cooperative returns its L$200 000 surplus to members in proportion to the produce each delivered (patronage), not to shares held. If Varney delivered 25% of all produce, what does he receive, and why is this considered fairer for farmers?", a:"25% × 200 000 = L$50 000. The reward follows each member's contribution to the real business, so the industrious farmer gains most, whereas dividends-on-shares reward whoever already had money."},
+    {q:"A rubber-processing joint venture is owned 60% by a foreign firm and 40% by a Liberian firm. If annual profit is L$5 million, how is it shared, and what does the local partner gain beyond the money?", a:"Foreign partner: 60% × 5m = L$3 million; Liberian partner: L$2 million. Beyond the profit, the local partner gains technology, training for Liberian staff and access to export markets it could not reach alone — the main reason joint ventures are welcomed."}
+  ],
   activities:[
     "Class discussion on the various types of businesses",
     "Group presentations on the advantages and disadvantages of each type of business organisation",
@@ -1348,6 +1463,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"Demand for a good is more elastic when close **substitutes** exist, when the good takes a large share of the consumer's budget, when it is a **luxury** rather than a necessity, and when buyers have time to adjust. Supply is more elastic when producers hold spare capacity, can store the good, can switch production easily, and when time is long. Calculate the elasticity of a good from a knowledge of its determinants."},
     {k:"h3", t:"The Four Elasticities Distinguished"},
     {k:"p", t:"Every calculation question in this unit is one of four, and the first mark goes to naming the right one. **Price elasticity of demand (PED)** — how quantity demanded responds to a change in the good's **own price**. **Price elasticity of supply (PES)** — how quantity supplied responds to a change in price. **Income elasticity of demand (YED)** — how demand responds to a change in **consumer income**. **Cross elasticity of demand (XED)** — how demand for one good responds to a change in the price of **another** good. All four have the same shape: **percentage change in quantity ÷ percentage change in the variable concerned**, and all four are computed the same way."},
+    {k:"fig", f:"econ-elastic-panels", cap:"**Inelastic** demand barely moves when the price rises; **elastic** demand runs away."},
     {k:"table", head:["Elasticity","Formula","Positive value means","Negative value means"], rows:[
      ["Price elasticity of demand","% change in quantity demanded ÷ % change in own price","Rare — a Giffen or Veblen good","Normal: the usual case (the sign is ignored and the size judged)"],
      ["Price elasticity of supply","% change in quantity supplied ÷ % change in price","The normal case — supply slopes upward","Impossible for an ordinary supply curve"],
@@ -1364,6 +1480,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"The Total Revenue Test"},
     {k:"p", t:"Where the figures for a calculation are not given, the paper asks for the **total revenue test**, and it is the cleanest way to state the relation. **Total revenue (TR) = price × quantity**, and equals the buyers' total expenditure."},
+    {k:"fig", f:"econ-revenue-rectangles", cap:"If price and revenue move the **same way**, demand is **inelastic** — the rectangle test."},
     {k:"table", head:["Demand is","A price rise does to TR","A price cut does to TR","Why"], rows:[
      ["Elastic (PED > 1)","Falls","Rises","Quantity changes by a larger percentage than price"],
      ["Unitary (PED = 1)","Unchanged","Unchanged","The two percentage changes are equal"],
@@ -1507,6 +1624,22 @@ var EC_CURRICULUM = [
     {q:"Explain why demand for a good becomes more elastic over a longer period.", a:"Given time, consumers can find substitutes, change habits and adjust equipment or contracts, so their response to a price change grows larger."},
     {q:"A shop discovers that a 10 per cent price cut raised its sales by 30 per cent. Should it cut prices further? Discuss.", a:"Elasticity is 3, so demand is elastic and revenue rose. Further cuts may raise revenue again, but the shop must check that price still covers cost per unit, since revenue is not profit."}
   ],
+  word:[
+    {q:"At Red Light, a 20% rise in the price of sandals cuts quantity demanded by 40%. Calculate the price elasticity of demand and say what it means.", a:"PED = 40 ÷ 20 = 2 — demand is elastic; quantity is very sensitive to price."},
+    {q:"Price rises from L$50 to L$60 and quantity demanded falls from 200 to 180 units. Calculate total revenue before and after the rise.", a:"Before: 50 × 200 = L$10 000; after: 60 × 180 = L$10 800 — revenue rises."},
+    {q:"Income rises 10% and demand for chicken rises 25%. Calculate income elasticity of demand.", a:"YED = 25 ÷ 10 = 2.5 — a normal, luxury good."},
+    {q:"Income rises 20% and demand for dry rice falls 8%. Calculate YED and classify the good.", a:"YED = −8 ÷ 20 = −0.4 — negative, so an inferior good."},
+    {q:"The price of tea rises 15% and demand for coffee rises 6%. Calculate cross elasticity and state the relationship.", a:"XED = 6 ÷ 15 = +0.4 — positive: tea and coffee are substitutes."},
+    {q:"The price of petrol rises 10% and demand for car journeys falls 4%. Calculate cross elasticity and state the relationship.", a:"XED = −4 ÷ 10 = −0.4 — negative: they are complements."},
+    {q:"Price rises from L$80 to L$100 and quantity supplied rises from 200 to 250 bags. Calculate the price elasticity of supply.", a:"%Qs = 50 ÷ 200 = 25%; %P = 20 ÷ 80 = 25%; PES = 25 ÷ 25 = 1 — unit elastic supply."},
+    {q:"Demand for electricity falls from 500 to 460 units when price rises from L$100 to L$125. Calculate PED and the change in total revenue.", a:"%Qd = 40 ÷ 500 = 8%; %P = 25 ÷ 100 = 25%; PED = 0.32 — inelastic. TR: 100 × 500 = 50 000 → 125 × 460 = 57 500: revenue rises."}
+  ],
+  challenge:[
+    {q:"A salt seller doubles his price and loses almost no customers, but a phone seller does the same and loses most of hers. Explain the difference with elasticity.", a:"Salt is a small necessity with no close substitute — demand is inelastic, so a price rise barely reduces quantity and revenue rises. Phones are big purchases with substitutes — demand is elastic, so quantity falls by a bigger percentage than price rises, and revenue collapses. Elasticity decides whether a price rise helps or hurts."},
+    {q:"Total revenue rises from L$10 000 to L$10 800 when price rises 20%. Without computing PED exactly, what does the revenue change alone tell you about elasticity?", a:"Revenue rising when price rises means the quantity lost was percentage-wise smaller than the price gained — demand is inelastic over this range (PED below 1). Had demand been elastic, revenue would have fallen instead."},
+    {q:"Incomes in Monrovia rose after the Ebola outbreak, and demand for second-hand clothes fell even though their prices were unchanged. Use income elasticity to explain.", a:"Second-hand clothes are inferior goods with negative YED: as incomes rise, buyers switch to new clothes, so demand falls at every price — a leftward shift of the demand curve, not a movement along it."},
+    {q:"Cocoa farmers cannot respond to this season's price rise because trees take four years to mature. Describe the elasticity of supply now and later, and the price pattern you expect.", a:"Short-run supply is highly inelastic (PES near 0): the price rise coaxes out little extra quantity, so prices jump sharply. After new trees mature, supply turns more elastic and prices ease back — the boom-and-slide pattern typical of tree crops."}
+  ],
   activities:[
     "Group work identifying price elasticity of demand and supply, income elasticity and cross elasticity, and how each differs",
     "Pair learners to derive the elasticity formula and calculate each type from given data",
@@ -1574,6 +1707,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Price and Output Under Perfect Competition"},
     {k:"p", t:"Because the firm is one of very many selling an identical product, it cannot charge above the market price — buyers simply go next door — so the price is given and the firm's **demand curve is a horizontal line at that price**. Since every extra unit sells at the same price, **average revenue = marginal revenue = price**. The firm maximises profit where **marginal cost = marginal revenue**, and in the short run it may earn above-normal profit (if price exceeds average cost), normal profit (if price equals average cost) or a loss (if price is below average cost). In the **long run** the loss-makers leave and, where profit is being made, new firms enter freely; entry raises supply, drives the price down, and continues until only **normal profit** remains — price equals the lowest point of the long-run average cost curve. That is why perfect competition is called **efficient**: it produces the greatest output at the lowest possible price, with no waste of resources. Its **shortcomings** are equally part of the answer: no variety, since the product is identical; no supernormal profit to fund research; and no economies of scale, since every firm is small."},
+    {k:"fig", f:"econ-perfect-competition", cap:"The small firm is a **price taker**: it sells where **MC = MR** at the market price."},
     {k:"rule"},
     {k:"h3", t:"Monopolistic Competition and the Cost of Variety"},
     {k:"p", t:"Many sellers, free entry in the long run, but a **differentiated** product — by brand, quality, packaging, credit, location or service. Differentiation gives each firm a small monopoly over its own version, so its demand curve **slopes downward** and it can raise price a little without losing all its customers. Heavy **advertising and selling costs** are the means of the differentiation and are part of the firm's cost. In the long run, free entry again erodes profit to normal — but the firm settles at an output **below** the point of lowest average cost, leaving **excess capacity**: it could produce more, more cheaply, but does not, because doing so would require cutting the price. Judge it as the paper asks: the consumer gains **variety, choice and convenience** and pays for them in a **higher price** than perfect competition would give. That trade is the whole of the evaluation."},
@@ -1583,6 +1717,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Monopoly — Sources, Behaviour and Control"},
     {k:"p", t:"A **monopoly** is a market of **one seller** of a product with **no close substitute**, protected by barriers to entry. The **sources of monopoly**: **legal** — a patent, a copyright, a licence, or a statute creating a public utility; **natural** — where the whole market can be supplied most cheaply by one firm because average cost falls throughout, as with water, power and railways; **control of a resource** — one owner of the only supply; **scale and capital** — the market is too small to support a second plant; and **merger** — firms combining until one remains. The monopolist faces the **market demand curve**, so it must lower price to sell more, and **marginal revenue lies below average revenue**. It maximises profit where **MC = MR** and then charges the price the demand curve allows at that output — **above marginal cost**, and with a **smaller output** than a competitive industry would produce. It can also **price discriminate** — charging different prices to different buyers for the same thing — where markets can be kept separate and resale prevented: the off-peak electricity tariff, the cheaper student fare, the export price below the home price."},
+    {k:"fig", f:"econ-monopoly", cap:"The monopolist fixes output at **MC = MR**, then reads the **price off the demand curve** — less output, higher price."},
     {k:"p", t:"**Weigh it.** The case **for** monopoly: great **economies of scale**, so cost per unit may be lower than under many small firms; **supernormal profit** available for research and development; **stability** of supply and price; and the ability to serve a market too small to attract competitors. The case **against**: **higher price and smaller output** than under competition; **no competitive pressure**, so inefficiency and slack management may persist (the **X-inefficiency** of a sheltered firm); **exploitation of the consumer**, who has nowhere else to go; **income inequality**, as profit accrues to the few; and **political power** following economic power. Hence the **control of monopoly**: **price regulation** fixing a maximum price; **public ownership** of the natural monopolies; **taxation** of supernormal profit; **anti-monopoly legislation** against restrictive practices and collusion; **licensing** and quality standards; and the **opening of the market** to imports and to new entrants. In Liberia the natural monopolies — power and water — are publicly owned and regulated for exactly these reasons."},
     {k:"rule"},
     {k:"h3", t:"Common Mistakes in This Unit"},
@@ -1706,6 +1841,22 @@ var EC_CURRICULUM = [
     {q:"How does branding give a small restaurant some power over its own price?", a:"Product differentiation through name, taste, location and service makes its meals imperfect substitutes for rivals', so some customers will still come if it charges slightly more."},
     {q:"Suggest two measures a government can use to control monopoly power.", a:"Regulate the price it may charge or the profit it may earn, and enforce competition law against mergers and collusion; it may also license new entrants or operate the service publicly."}
   ],
+  word:[
+    {q:"A firm under perfect competition sells 500 baskets at L$40 each. Calculate total revenue.", a:"TR = 500 × 40 = L$20 000."},
+    {q:"The market price facing a perfectly competitive seller is L$40 a basket. What is the marginal revenue of selling one more?", a:"MR = L$40 — each extra unit sold adds the price itself."},
+    {q:"A monopolist can sell 100 phones at L$90 or 120 phones at L$80. Which choice yields more revenue, and by how much?", a:"100 × 90 = L$9 000; 120 × 80 = L$9 600 — selling 120 at L$80 yields L$600 more."},
+    {q:"Using the same figures, calculate the marginal revenue of the extra 20 phones.", a:"ΔTR = 9 600 − 9 000 = 600; MR = 600 ÷ 20 = L$30 per phone."},
+    {q:"Four cement firms hold market shares of 45%, 25%, 20% and 10%. Calculate the three-firm concentration ratio.", a:"45 + 25 + 20 = 90% — a tight oligopoly."},
+    {q:"A firm's total cost is L$18 000 and its total revenue L$20 000. Calculate the profit.", a:"20 000 − 18 000 = L$2 000."},
+    {q:"A monopolist's total cost is L$7 000 when revenue is L$9 600. Calculate his monopoly profit.", a:"9 600 − 7 000 = L$2 600."},
+    {q:"A restaurant raises its price 5% and loses 15% of its customers. What does the size of the loss say about the market it operates in?", a:"Demand is highly elastic — many close substitutes (other restaurants) exist, the mark of monopolistic competition; differentiation through quality is what cooks the elasticity down."}
+  ],
+  challenge:[
+    {q:"Why can a potato seller at Duala never charge above the going price, while the single electricity company in a region can?", a:"The potato seller is one of many selling identical produce — any price above the market loses all customers at once, so he is a price taker facing almost perfectly elastic demand. The electricity company is a monopoly with no close substitute and high entry barriers, making it a price maker, restrained mainly by demand and regulation."},
+    {q:"A monopolist finds MR = L$30 and MC = L$45 on the last unit sold. Should he have sold it, and what rule does this illustrate?", a:"No. That unit added L$45 to cost but only L$30 to revenue — it destroyed L$15 of profit. Profit is maximised where MR = MC: sell every unit whose MR exceeds its MC, and none beyond."},
+    {q:"Three water sellers at one junction hold 90% of sales. One cuts his price 10% and the others copy within a day. What feature of oligopoly does this show, and why might prices instead be “sticky”?", a:"Interdependence: every seller's move forces rivals to respond, so a price cut wins no lasting customers and only shrinks everyone's revenue. Fearing a price war, oligopolists tend to hold prices steady and compete through service or quality instead."},
+    {q:"A tailor in a busy street claims heavy advertising must raise his profit. Under monopolistic competition, when will advertising pay and when will it not?", a:"It pays when the extra revenue from the customers it wins exceeds the advertising cost — adverts that genuinely differentiate him (style, fit, reliability) make his demand less elastic. It fails when it merely cancels out rivals' adverts or costs more than the new custom brings."}
+  ],
   activities:[
     "Group research on the features of the various market structures",
     "Pair work discussing and illustrating the advantages and disadvantages of each market type",
@@ -1757,6 +1908,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"Relate the channel to practice in Liberia: poor rural roads raise the cost of moving produce from Lofa or Bong to Monrovia; storage is scarce, so perishable crops are sold cheap at harvest; market information is thin, so prices differ widely between markets; finance for traders is costly; packaging and processing are limited. Suggest how better roads, storage, cooperative marketing and market information would ease each problem."},
     {k:"h3", t:"The Stages and the Classification of Production"},
     {k:"p", t:"Production runs through **stages**, and the paper may ask for them: **primary** — extraction from nature, as farming, fishing, mining, forestry and quarrying; **secondary** — manufacturing and construction, as milling rice, weaving cloth, sawing timber, building a road; **tertiary** — services, as trade, transport, banking, insurance, teaching and medicine; and, in some syllabuses, **quaternary** — the information services of research, computing and consultancy. Note that production is **not only the making of a thing**: it includes the **creation of utility** — **form utility** (the log made into furniture), **place utility** (the rice moved from Lofa to Monrovia), **time utility** (the crop stored to the lean season) and **possession utility** (the good sold to the person who wants it). A trader who moves and stores rice is therefore a producer, which is why the wholesale and retail trades belong in the answer on production."},
+    {k:"fig", f:"econ-production-stages", cap:"Production flows **primary → secondary → tertiary**; one Liberian crop passes through all three."},
     {k:"table", head:["Class of goods","Definition","Examples"], rows:[
      ["Consumer goods","Bought by households for direct satisfaction","Rice, cloth, bread, a radio"],
      ["Producer (capital) goods","Bought by firms to produce other goods","A rice mill, a tractor, a loom, a factory building"],
@@ -1773,6 +1925,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"The Channels of Distribution"},
     {k:"p", t:"A **channel of distribution** is the route a good takes from producer to final consumer. Learn the four standard channels and be able to name the goods that travel each."},
+    {k:"fig", f:"econ-channel", cap:"Each middleman adds **cost and value**; the gap between farm price and shelf price is the **marketing margin**."},
     {k:"num", items:[
       "**Producer → Consumer** (direct): no middleman at all — the farmer selling at his gate, the baker's own shop, the hairdresser, the doctor. Used where the service is personal, the good perishable, or the market small.",
       "**Producer → Retailer → Consumer**: the manufacturer or importer sells to shops, which sell to the public — clothing, bread, furniture, hardware.",
@@ -1916,6 +2069,22 @@ var EC_CURRICULUM = [
     {q:"How would improved rural roads affect both farmers and urban consumers?", a:"Lower transport cost and less spoilage raise the farm gate price the farmer receives while lowering the price the urban consumer pays, since the margin absorbed by transport and loss shrinks."},
     {q:"Explain why a person may have high income but little wealth.", a:"Income is a flow that may be entirely spent as it is received. Wealth is the stock of assets accumulated; someone who saves nothing builds no wealth however much he earns."}
   ],
+  word:[
+    {q:"A Bong County farmer sells pepper to a wholesaler at L$250 a bag; the Monrovia consumer pays L$1 400. Calculate the marketing margin.", a:"1 400 − 250 = L$1 150."},
+    {q:"Express the farmer's share as a percentage of the final price.", a:"250 ÷ 1 400 × 100 ≈ 17.9% — the farmer keeps under one-fifth of the final price."},
+    {q:"A wholesaler buys at L$400 a bag and sells at L$800. Calculate his mark-up as a percentage of cost.", a:"(400 ÷ 400) × 100 = 100% mark-up."},
+    {q:"One bucket in every five of a market woman's tomatoes spoils on the road. What percentage of her stock is lost?", a:"1 ÷ 5 × 100 = 20% loss."},
+    {q:"A retailer buys 50 buckets at L$800 each but sells only 40 at L$1 400 because of spoilage. Calculate her profit or loss.", a:"Cost = 50 × 800 = 40 000; revenue = 40 × 1 400 = 56 000; profit = L$16 000."},
+    {q:"A firm operates 4 plants, each producing 250 units a day. What is the firm's total daily output?", a:"4 × 250 = 1 000 units a day."},
+    {q:"Transporting 60 buckets of plantain to market costs L$18 000. What is the transport cost per bucket?", a:"18 000 ÷ 60 = L$300 per bucket."},
+    {q:"A canoe lands 200 kg of fish, but 30 kg spoils before sale. At L$600 per kg, what revenue does the spoilage destroy?", a:"30 × 600 = L$18 000 of revenue lost."}
+  ],
+  challenge:[
+    {q:"“Cut out the middleman and food will be cheap.” Using the pepper chain (L$250 farm price, L$1 400 retail), give two reasons the chain may still cost nearly as much without him.", a:"The L$1 150 margin is not pure profit — it pays for transport (L$300 a bucket on one route), loading, road risk, spoilage, market fees and finance. If farmers sell direct, they must bear those costs and risks themselves, so consumer prices fall far less than the margin suggests. What matters is whether each function is done efficiently, not who does it."},
+    {q:"A rural farm can sell at the gate at L$250 a bag or truck produce 300 km to Monrovia where it fetches L$1 400. Trucking costs L$300 a bag and 10% spoils. On 100 bags, which route pays more?", a:"City: revenue = 90 bags × 1 400 = 126 000; trucking = 100 × 300 = 30 000; net = L$96 000. Gate: 100 × 250 = L$25 000. Even after spoilage and transport, the city pays nearly four times more — showing it is poor roads and trucks, not lazy traders, that hold farmers back."},
+    {q:"Explain how splitting the chain into farmer → wholesaler → retailer can LOWER the final cost instead of raising it.", a:"Specialisation brings economies of scale: a wholesaler moving 1 000 bags at once spreads truck, storage and finance costs over many units, and a retailer near buyers sells small units daily. Each doing the whole job separately, in small lots, would cost more per bag than the specialised chain does."},
+    {q:"Perishable fish spoils at 15% between Buchanan and Gbarnga in the hot months. Name two distribution improvements that cut the loss, and compute the revenue saved by halving spoilage to 5% on a 200 kg catch at L$600 per kg.", a:"Improvements: insulated (ice) boxes, plus faster trucks on better roads or cold storage at either end. Saving 10% of 200 kg = 20 kg × 600 = L$12 000 of extra revenue per trip — money that quickly repays the cold-chain investment."}
+  ],
   activities:[
     "Discuss the classification of goods and services and the concept of wealth in the Liberian setting",
     "Group work distinguishing firm, plant and industry",
@@ -1958,6 +2127,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Population Size, Growth and Distribution"},
     {k:"p", t:"Population size changes through three determinants: the **birth rate**, the **death rate** and **migration**. **Population density = total population ÷ land area**, in persons per square kilometre. Distribution is studied by **geographical region** — coast against interior, county against county; by **age** and **sex**, which the dependency ratio summarises; and by **occupation** — farming, trading, public service. Describe each distribution for Liberia and account for it."},
+    {k:"fig", f:"econ-pyramid", cap:"A **young population** gives the pyramid a broad base — the **dependency** problem in one picture."},
     {k:"rule"},
     {k:"h3", t:"The Malthusian Theory"},
     {k:"p", t:"**Malthus** argued that population, when unchecked, grows in a **geometric** progression (2, 4, 8, 16 ...) while food supply grows only in an **arithmetic** progression (2, 3, 4, 5 ...), so population must outrun food unless checked by **positive checks** — famine, disease and war — or **preventive checks** — later marriage and moral restraint. State the theory, then critique it: technology, new seed and world trade have raised food faster than he expected, and birth rates fall as incomes and education rise; yet in parts of Africa the pressure he described is real."},
@@ -1983,6 +2153,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Malthus Stated, Then Criticised"},
     {k:"p", t:"**Thomas Malthus (1798)** argued that population, when unchecked, grows in a **geometric** progression — 1, 2, 4, 8, 16 — doubling about every twenty-five years, while food supply grows only in an **arithmetic** progression — 1, 2, 3, 4, 5 — because land is fixed and subject to diminishing returns. Population must therefore outrun food, and the gap is closed by **positive checks** that raise the death rate — famine, disease, war — or by **preventive checks** that lower the birth rate — late marriage, celibacy and moral restraint. His conclusion was that any lasting rise in the wage of the poor would be spent on more children and so bring the wage back down, the **iron law of wages**."},
+    {k:"fig", f:"econ-malthus", cap:"Malthus feared **geometric** mouths chasing **arithmetic** food."},
     {k:"p", t:"**The criticism is the second half of the answer.** Malthus did not foresee **technological progress** — the new seed, the fertiliser, the tractor, irrigation — which raised food output far faster than arithmetic; he did not foresee the **demographic transition**, in which rising incomes, education (especially of women), urbanisation and family planning cause the **birth rate itself to fall**, as it has fallen across Europe, East Asia and much of Latin America; he ignored **world trade**, by which a country short of food can buy it with what it exports; and he under-estimated **human ingenuity** in raising yields from the same land. Yet the theory is not wholly dead: in parts of Africa and South Asia population still grows faster than food production, and where technology is stagnant and the birth rate high, the pressure Malthus described is real. The balanced answer states the theory, gives the four criticisms, and then says where the warning still bites — which is precisely the case for Liberia, where food production and imported rice must feed a population growing at a rapid rate."},
     {k:"rule"},
     {k:"h3", t:"Optimum, Under- and Over-Population"},
@@ -2120,6 +2291,22 @@ var EC_CURRICULUM = [
     {q:"Suggest three policies to reduce youth unemployment in Liberia.", a:"Expand technical and vocational training matched to actual employer needs; support small business through accessible credit and simpler registration; and invest in agriculture and infrastructure, which are labour intensive and largely rural."},
     {q:"Why is rural to urban migration both a symptom and a cause of economic problems?", a:"It is a symptom of the lack of rural jobs, schools and services. It is also a cause, because it drains agricultural labour while creating urban overcrowding, unemployment and pressure on city services."}
   ],
+  word:[
+    {q:"A county has 5 000 000 people on 100 000 km². Calculate the population density.", a:"5 000 000 ÷ 100 000 = 50 persons per km²."},
+    {q:"A town of 480 000 people has 216 000 under 15 and 24 000 over 64. What is the working-age population?", a:"480 000 − 216 000 − 24 000 = 240 000."},
+    {q:"Using those figures, calculate the dependency ratio.", a:"Dependants = 216 000 + 24 000 = 240 000; ratio = 240 000 : 240 000 = 1 : 1 (100%)."},
+    {q:"There are 60 000 live births in a population of 4 000 000. Calculate the birth rate.", a:"(60 000 ÷ 4 000 000) × 1 000 = 15 per thousand."},
+    {q:"Deaths are 36 000 in the same population. Calculate the death rate and the rate of natural increase.", a:"Death rate = 9 per thousand; natural increase = 15 − 9 = 6 per thousand (0.6%)."},
+    {q:"A labour force of 800 000 includes 120 000 unemployed. Calculate the unemployment rate.", a:"(120 000 ÷ 800 000) × 100 = 15%."},
+    {q:"Population grows from 4.0 to 4.2 million in one year. Calculate the population growth rate.", a:"(0.2 ÷ 4.0) × 100 = 5% per year."},
+    {q:"A district of 200 000 gains 8 000 migrants, and records 7 000 births and 3 000 deaths. What is its new population?", a:"200 000 + 8 000 + (7 000 − 3 000) = 212 000."}
+  ],
+  challenge:[
+    {q:"Malthus feared population growing geometrically (2, 4, 8, 16…) while food grows arithmetically (2, 3, 4, 5…). From 2 million people and 2 million tonnes of cassava in year 1, show the gap in year 5, and name what closes it in real life.", a:"Year 5: population = 16 million; food = 5 million tonnes — an 11-million-tonne gap. In real life the gap is closed by preventive checks (later marriage, family planning), by positive checks (disease and famine — the Malthusian misery) and, best of all, by technology making food grow faster than arithmetic: improved seed, fertiliser and better farming."},
+    {q:"Liberia's dependency ratio stands near 1 dependant per worker. Give two numbered effects this has — one on a household and one on government.", a:"Household: a worker earning L$30 000 supports about one dependant on top of himself, so saving per worker is squeezed to almost nothing. Government: for every worker paying tax there is roughly one child or elder needing schools and clinics, so public spending per worker doubles while the tax base stays narrow."},
+    {q:"Why can a falling death rate with an unchanged birth rate first WORSEN, then IMPROVE, the dependency burden?", a:"First, more children survive, swelling the 0–14 group while births stay high, so dependants per worker rise. About twenty years later — if births then fall — that large group enters working age with few children behind them, so workers per dependant rise sharply: a “demographic dividend”. Timing decides which effect dominates."},
+    {q:"About 40 000 young adults a year move from the villages to Monrovia, where urban jobs grow by only 25 000. What happens in the city and in the villages?", a:"Urban job seekers exceed new jobs by 15 000 a year, so open unemployment and informal street trading swell. The villages lose precisely the 18–35 workers that farming most needs, ageing the rural labour force and holding agriculture back — the two sides of the same migration."}
+  ],
   activities:[
     "Discuss the meaning of population and population census",
     "Group work outlining the types of population census according to their features",
@@ -2168,6 +2355,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Cost Tables, Curves and Calculations"},
     {k:"p", t:"Build a hypothetical firm's **cost table** output by output: fixed cost stays constant, variable cost climbs, total cost is their sum; divide and subtract to fill in average cost, average variable cost and marginal cost. Plotted, the curves show the familiar shapes: average fixed cost falls throughout, marginal cost cuts average cost and average variable cost at their lowest points, and the long-run average cost curve first falls with economies of scale and then rises with diseconomies. On the revenue side, **total revenue = price × quantity**, average revenue equals price, and **marginal revenue** is the addition to revenue from one more unit; profit is at its greatest where **marginal cost = marginal revenue**."},
+    {k:"fig", f:"econ-cost-curves", cap:"**MC cuts AC at its lowest point**: below it while AC falls, above it while AC rises."},
     {k:"p", t:"Apply the concepts in debate: using opportunity cost, weigh the effects of early marriage against the benefit of education for the social and economic development of the individual — for girls and for boys — and cite the regions or sections of Liberia where early marriage is still practised."},
     {k:"h3", t:"A Cost Table Worked in Full"},
     {k:"p", t:"The cost table is the single most common calculation in this unit. Fixed cost is **given and constant**; every other column is derived from it. Learn the order of working: TC = FC + VC; AFC = FC ÷ Q; AVC = VC ÷ Q; AC = TC ÷ Q (which is also AFC + AVC); MC = the change in TC."},
@@ -2183,6 +2371,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Why the Curves Take Their Shapes"},
     {k:"p", t:"**AFC** falls continuously and approaches the horizontal axis without touching it — the fixed cost never disappears, but its burden per unit becomes negligible. **AVC** is U-shaped because of the **law of diminishing returns**: at first the variable factor is too few for the fixed plant, so adding workers raises output faster than cost and AVC falls; after a point diminishing returns set in, each further worker adds less, and AVC rises. **AC** is U-shaped for the same reason, but lies **above AVC** by the amount of AFC, and the gap narrows as output grows. **MC** is U-shaped and steeper, cutting both AVC and AC at their minima. In the **long run** every input is variable, so there is no fixed cost: the **long-run average cost curve** is the envelope of all the short-run curves, falling where **economies of scale** operate, flat over a range of **constant returns to scale**, and rising where **diseconomies of scale** set in — the U-shape of the long run is caused by scale, the U-shape of the short run by diminishing returns, and the distinction is worth a mark."},
+    {k:"fig", f:"econ-total-costs", cap:"**TFC is flat**, **TVC** climbs from zero, and **TC** is the two added together."},
     {k:"rule"},
     {k:"h3", t:"The Revenue Side and Profit Maximisation"},
     {k:"p", t:"**Total revenue (TR) = price × quantity**. **Average revenue (AR) = TR ÷ Q**, which equals the **price** at every output. **Marginal revenue (MR)** is the addition to TR from selling one more unit. Under perfect competition, where the price is fixed, **MR = AR = price**. Where the firm must lower its price to sell more, **MR lies below AR**."},
@@ -2328,6 +2517,22 @@ var EC_CURRICULUM = [
     {q:"How would a rise in the price of fuel affect a transport firm's cost curves?", a:"Fuel is a variable cost, so variable, total, average and marginal cost curves all shift upward. Fixed cost is unchanged, so the break-even output rises."},
     {q:"Why must a firm know its marginal cost as well as its average cost?", a:"Average cost shows profitability overall, but marginal cost shows whether producing one more unit adds more to revenue than to cost — which is the basis for deciding output."}
   ],
+  word:[
+    {q:"A bakery's fixed cost is L$40 000 and variable cost L$60 000 for the month. Calculate total cost.", a:"TC = FC + VC = 40 000 + 60 000 = L$100 000."},
+    {q:"Total cost is L$100 000 for 500 loaves. Calculate the average cost per loaf.", a:"100 000 ÷ 500 = L$200 per loaf."},
+    {q:"Total cost rises from L$100 000 to L$104 500 when output rises from 500 to 520 loaves. Calculate the marginal cost per loaf.", a:"ΔTC = 4 500 over 20 loaves = 4 500 ÷ 20 = L$225 per loaf."},
+    {q:"The bakery sells 500 loaves at L$260 each against the L$100 000 total cost. Calculate total revenue and profit.", a:"TR = 500 × 260 = L$130 000; profit = 130 000 − 100 000 = L$30 000."},
+    {q:"With fixed cost L$40 000, price L$260 and variable cost L$120 a loaf, how many loaves must it sell to break even?", a:"Contribution = 260 − 120 = L$140 a loaf; break-even = 40 000 ÷ 140 ≈ 286 loaves."},
+    {q:"Revenue is L$3 600 000 and explicit (money) costs are L$2 760 000. Calculate the accounting profit.", a:"3 600 000 − 2 760 000 = L$840 000."},
+    {q:"The owner's labour and buildings would earn L$625 000 elsewhere. Calculate the economic profit.", a:"840 000 − 625 000 = L$215 000."},
+    {q:"Average cost is L$200 and the price is L$260. Calculate the profit per unit sold.", a:"260 − 200 = L$60 per unit."}
+  ],
+  challenge:[
+    {q:"A printer's fixed cost is L$100 000 whether he prints 1 000 or 2 000 books. Use average fixed cost to explain why average total cost falls as output rises — then why it rises again at 5 000 books.", a:"AFC = 100 000 ÷ 1 000 = L$100 at 1 000 books, but only L$50 at 2 000: spreading fixed cost pulls AC down. By 5 000 books, overtime wages and machine strain push variable cost per book up faster than AFC falls, so MC and then AC turn upward — the U-shaped cost curve."},
+    {q:"Pekin's shop earns L$30 000 a month in accounting profit, but he could earn L$35 000 managing someone's store. What do economic profit and normal profit say he should do?", a:"Economic profit = 30 000 − 35 000 = −L$5 000: after paying his own labour its market price (normal profit), the shop returns less than his best alternative. The economist's advice is to close and take the management job — resources should move to their best-paid use."},
+    {q:"At 500 loaves, marginal cost is L$225 while average cost is L$200. What will the next loaves do to AC, and what general rule links MC and AC?", a:"Adding loaves that each cost MORE than the current average pulls the average up — AC must rise. Rule: when MC < AC the average is falling; when MC > AC the average is rising; therefore MC cuts AC exactly at the minimum point of the AC curve."},
+    {q:"A taxi driver's fares cover his variable costs (L$24 000 a week for fuel and repairs) but not the L$8 000 licence fee when passengers are scarce. Should he shut down in the short run? Use fixed and variable cost logic.", a:"Not yet. The licence (fixed cost) must be paid even at zero passengers, so it is irrelevant to the short-run decision. While fares cover variable costs with something left over, running reduces the loss; he should shut down only when revenue fails to cover even the variable costs."}
+  ],
   activities:[
     "Brainstorm the definitions of cost and revenue",
     "Group work demonstrating the cost of production and revenue concepts",
@@ -2380,6 +2585,7 @@ var EC_CURRICULUM = [
      ["Livestock","Cattle, goats, sheep, pigs, poultry","Cattle chiefly in the drier north and in the savannah counties; small stock and poultry throughout","Protein, income, and a store of wealth"],
      ["Fisheries","Marine fish, river and lake fish, fish from ponds","The Atlantic coast from Robertsport to Harper; the rivers and Lake Piso; inland ponds","The cheapest animal protein for most households"]]},
     {k:"p", t:"Know the **export** and **import** lists by heart, for the question is short and the marks are fixed. Liberia's **exports**: rubber, iron ore, timber, cocoa, coffee, gold and diamonds, and palm products. Liberia's **imports**: **rice above all**, then petroleum products, machinery and transport equipment, manufactured goods, and medicines. The contrast between a country that exports agricultural raw materials and imports its staple food is the central fact of Liberian agricultural economics, and the paper returns to it in almost every session."},
+    {k:"fig", f:"econ-crops-bars", cap:"**Food crops** dominate Liberian farming; **rubber** remains the leading cash crop by value."},
     {k:"rule"},
     {k:"h3", t:"The Six Constraints — Cause, Effect and Remedy"},
     {k:"table", head:["Constraint","How it limits production","The remedy"], rows:[
@@ -2525,6 +2731,22 @@ var EC_CURRICULUM = [
     {q:"How does providing storage facilities increase a farmer's bargaining power?", a:"Without storage he must sell immediately at whatever price is offered before the crop spoils. With storage he can wait for a better price and is no longer forced to accept the buyer's first offer."},
     {q:"Why might a subsidy on fertiliser be more effective than a subsidy on the crop price?", a:"An input subsidy lowers the cost of production and directly raises yields, benefiting those who actually farm, while a price subsidy is costly to administer, can be captured by traders, and does nothing to improve productivity."}
   ],
+  word:[
+    {q:"A farmer harvests 60 bags of groundnuts but 15 spoil before sale. Calculate the percentage spoilt.", a:"15 ÷ 60 × 100 = 25%."},
+    {q:"The farm-gate price of rice rises from L$180 to L$320 a bag. Calculate the percentage increase.", a:"(140 ÷ 180) × 100 ≈ 77.8%."},
+    {q:"A farmer sells 45 bags at L$320 each. Calculate his revenue.", a:"45 × 320 = L$14 400."},
+    {q:"His production costs are L$6 000. Calculate his profit and his profit as a percentage of revenue.", a:"Profit = 14 400 − 6 000 = L$8 400; margin = 8 400 ÷ 14 400 × 100 ≈ 58.3%."},
+    {q:"A cooperative of 40 members shares a surplus of L$600 000 equally. What does each member receive?", a:"600 000 ÷ 40 = L$15 000 each."},
+    {q:"A country produces 300 000 tonnes of rice but consumes 500 000 tonnes. How much must be imported, and what percentage of consumption is home-grown?", a:"Imports = 500 000 − 300 000 = 200 000 tonnes; home share = 300 ÷ 500 × 100 = 60%."},
+    {q:"Yield rises from 1.2 to 1.8 tonnes per hectare. Calculate the percentage increase in yield.", a:"(0.6 ÷ 1.2) × 100 = 50% increase."},
+    {q:"Growing 100 hectares at the old yield gave 120 tonnes. How many hectares at the new yield would give the same 120 tonnes?", a:"120 ÷ 1.8 ≈ 66.7 hectares — one-third less land for the same rice."}
+  ],
+  challenge:[
+    {q:"Explain why raising yields (1.2 → 1.8 t/ha) usually develops farming faster than clearing new land does.", a:"Higher yield multiplies output on land already farmed, using the same labour, roads and buildings — 120 tonnes needed 100 hectares before and only about 67 after, with no extra clearing, no deforestation and lower unit cost. Expansion adds distance and expense and soon meets the land and forest limit, while better seed, fertiliser and extension advice keep paying every single year."},
+    {q:"A rubber farmer sells raw latex at L$150 a cup; dried and processed rubber from the same latex fetches the equivalent of L$450. What does this gap tell you about agricultural policy?", a:"Two-thirds of the final value is added after the farm gate — and captured by whoever does the processing, usually abroad. Processing inside Liberia would triple what the same farm output earns and create factory jobs, so policy should push local value addition: processing, storage and grading, not just more planting."},
+    {q:"Rice prices are low at harvest and high in the hungry season, and farmers sell most of the crop at harvest. What happens to farm revenue, and what policies fix it?", a:"The harvest glut pushes the price down exactly when farmers must sell — they may receive L$180 a bag against L$320 mid-year, losing L$140 on every bag sold. Fixes: village storage silos so selling can wait, harvest-time credit so farmers need not sell at once, and stabilisation boards that buy when prices slump."},
+    {q:"Yields double on 50 000 small farms whose net income averages L$10 000. Trace the effect through the rest of the economy in numbers.", a:"Extra income = 50 000 × 10 000 = L$500 million of new spending power, spent on clothes, tools, school fees and building — demand that non-farm businesses then supply (the linkage effect). Growing more rice at home also trims the 200 000-tonne import bill, saving foreign exchange for machines and medicines."}
+  ],
   activities:[
     "Brainstorm and discuss the importance of agriculture to national development",
     "Discuss the challenges faced in the agricultural sector of Liberia and recommend how they can be alleviated",
@@ -2581,6 +2803,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"The factors: natural resources and their management; capital accumulation and savings; the size and skill of the labour force; technology; infrastructure of roads, power and ports; political stability and honest administration; health and education of the people; the terms of trade; and the flow of foreign investment and aid. Pair the factors with recommendations for Liberia and its West African neighbours, and propose what policy would lift each."},
     {k:"h3", t:"Growth Against Development"},
     {k:"p", t:"The distinction is set in nearly every paper and must be stated exactly. **Economic growth** is the sustained increase in a country's **output of goods and services** over time — usually measured as the annual percentage increase in real GDP or in real GDP per head. It is a **quantitative** change and it is **necessary**. **Economic development** is the sustained improvement in the **welfare** of the people — in income, health, education, nutrition, life expectancy and the range of choices open to them — accompanied by a change in the **structure** of the economy as agriculture gives way to industry and services. It is a **qualitative** as well as a quantitative change, and it is **sufficient**. A country may therefore **grow without developing**: output may rise because a mine opens, while the earnings leave the country, the mass of the people see no change in their incomes, and literacy and life expectancy stand still. Growth is a rise in the **numbers**; development is a change in the **lives**."},
+    {k:"fig", f:"econ-growth-vs-development", cap:"**Growth** is a bigger pie; **development** is better lives — growth without development is possible."},
     {k:"table", head:["Indicator","What it measures","Why it is used"], rows:[
      ["Real GDP per head","Output per person, with prices held constant","The commonest single measure of living standards; its weakness is that it says nothing about distribution"],
      ["Rate of growth of real GDP","How fast output is rising","Shows whether the economy is expanding faster than the population"],
@@ -2609,6 +2832,7 @@ var EC_CURRICULUM = [
      ["Population","A rapidly growing population can supply labour and a market, but if it grows faster than output it lowers income per head and strains the schools and clinics"],
      ["Foreign trade and aid","Export earnings buy the capital goods development needs; aid and concessional loans fill the gap — but dependence on one or two export commodities leaves the country at the mercy of a world price"],
      ["Entrepreneurship","Without those willing to organise, risk and innovate, capital and labour are never combined; the encouragement of local enterprise is therefore a development policy in itself"]]},
+    {k:"fig", f:"econ-poverty-cycle", cap:"Each deficit feeds the next — the **vicious circle of poverty** that development policy must break."},
     {k:"rule"},
     {k:"h3", t:"Common Mistakes in This Unit"},
     {k:"bul", items:[
@@ -2731,6 +2955,22 @@ var EC_CURRICULUM = [
     {q:"A donor offers to build a hospital but not to fund its staff and drugs. Discuss the development value.", a:"The building alone adds little: without staff, medicines and maintenance it cannot deliver health care. Genuine development requires recurrent funding and trained personnel, not only capital projects."},
     {q:"Why might a development plan fail even when well written?", a:"Because implementation depends on reliable data, trained administrators, secure finance and political continuity. Weakness in any of these — or corruption and changes of government — can leave the plan unexecuted."}
   ],
+  word:[
+    {q:"National income is L$180 billion for 4.5 million people. Calculate income per head.", a:"180 000 000 000 ÷ 4 500 000 = L$40 000 per head."},
+    {q:"Real GDP rises from L$180 billion to L$190.8 billion in a year. Calculate the growth rate.", a:"(10.8 ÷ 180) × 100 = 6%."},
+    {q:"GDP grows 6% while population grows 3%. Estimate the growth of income per head.", a:"6% − 3% = about 3% a year."},
+    {q:"GDP grows 2% but population grows 3%. What happens to income per head?", a:"It falls by about 1% a year — the people get poorer on average even though total output grows."},
+    {q:"An economy saves 8% of an income of L$180 billion. Calculate total savings.", a:"0.08 × 180 = L$14.4 billion."},
+    {q:"At a steady growth rate of 6% a year, roughly how long will income take to double? (Use the rule of 70.)", a:"70 ÷ 6 ≈ 11.7 — about 12 years."},
+    {q:"The literacy rate rises from 48% to 60%. Calculate the increase in percentage points.", a:"60 − 48 = 12 percentage points."},
+    {q:"A developing country has GDP per head of L$40 000; a developed one has L$400 000. Express the gap as a ratio.", a:"400 000 ÷ 40 000 = 10 : 1 — the average person there produces and earns ten times as much."}
+  ],
+  challenge:[
+    {q:"Country X's GDP grows 7% a year, but life expectancy and literacy are flat and most growth comes from one foreign-owned mine. Has the country developed? Distinguish growth from development using these facts.", a:"That is growth without development: output is 7% bigger each year, but the average citizen's health, schooling and income are unchanged, and the mine's profits may leave the country. Development means living standards rising broadly — literacy, health, jobs and infrastructure — not merely a larger GDP figure."},
+    {q:"Savings rise from 6% to 12% of national income. Why do planners cheer, and why does the Liberian traditional economy make such saving hard?", a:"More saving frees resources from consumption into investment — roads, mills, schools — which raises future growth; the saving-investment link is at the heart of planning. In the subsistence economy, output is barely above family needs and much of it never touches cash, so there is little surplus to save and few banks to gather it."},
+    {q:"Income per head is L$40 000 in town and L$15 000 in the village. Give the ratio, and explain how a dual economy like this lets national averages hide reality.", a:"Ratio = 40 000 : 15 000 ≈ 2.7 : 1. The national average blends the modern and traditional sectors, so average income can rise on city and mine growth alone while village life stagnates — the “average” in the statistics then describes almost nobody. Planning must reach the lagging sector directly."},
+    {q:"A plan targets 6% growth for 12 years, and (1.06)¹² ≈ 2.0. Explain the planner's dilemma between consumption now and plenty later.", a:"The target would double income in 12 years, but growth needs investment, investment needs saving, and saving means consuming less than income today. Poor households can spare little, so the plan trades present hardship for future plenty — the central political difficulty of development economics."}
+  ],
   activities:[
     "Discuss economic development and planning, and economic growth and economic development",
     "Research and chart the features of underdeveloped, developing and developed economies",
@@ -2801,9 +3041,11 @@ var EC_CURRICULUM = [
       "**The income method** adds the incomes earned in production: **wages and salaries** (the reward of labour), **rent** (of land), **interest** (of capital) and **profit** (of the entrepreneur), together with the income of the self-employed. It measures national income **at factor cost**, since these are what the factors were paid.",
       "**The expenditure method** adds what is spent on the final output: **C + I + G + (X − M)** — personal **consumption**, private **investment**, **government** spending on goods and services, and **net exports** (exports minus imports). Imports are subtracted because they were consumed at home but produced abroad.",
       "**The three must agree**, because what is produced is paid for as income and is bought as expenditure. In practice they differ, through errors and omissions and through the part of the economy no statistic reaches, and a **discrepancy** figure is inserted to balance them."]},
+    {k:"fig", f:"econ-value-added-chain", cap:"Add only each stage's **added value** — the sum equals the **final value**, counted once."},
     {k:"rule"},
     {k:"h3", t:"The Circular Flow of Income"},
     {k:"p", t:"In the simplest economy there are two sectors. **Households** supply the factors of production — labour, land, capital and enterprise — to **firms**, and receive in return wages, rent, interest and profit; firms produce goods and services, which households buy with that income. The flow is therefore circular: factors flow one way, goods the other, and money runs round both. **Leakages (withdrawals)** are income not spent on the home output — **saving**, **taxation** and **spending on imports**; **injections** are spending on the home output not coming from households' current income — **investment**, **government expenditure** and **exports**. **Equilibrium** is reached where **leakages equal injections (S + T + M = I + G + X)**; if injections exceed leakages, income and output rise, and if leakages exceed injections they fall. Use the model to explain the **multiplier**: an injection of L$1 million into a construction project becomes the income of the workers and suppliers, who spend most of it, and their spending becomes someone else's income, so total income rises by several times the original injection — the more so the **less** that leaks away into saving, tax and imports. This is why a small, open, import-hungry economy such as Liberia's has a **small multiplier**: much of any new spending immediately buys imported rice, fuel and manufactures and so leaks abroad."},
+    {k:"fig", f:"econ-circular-flow", cap:"Households supply **factors** and receive **income**; firms supply **goods** and receive **spending** — the flow never stops."},
     {k:"rule"},
     {k:"h3", t:"Advantages and Limitations of National Income Statistics"},
     {k:"p", t:"**Uses:** they measure the size and the growth of the economy; they show the **standard of living** through per capita income; they reveal the **structure** of the economy by sector, so a government can see how far it still depends on agriculture; they guide **planning and budgeting**, and the setting of targets; they permit **comparison** between countries and between years; they show the **distribution** of income between wages, rent, interest and profit; and they inform **fiscal and monetary policy**. **Limitations:** the **subsistence** output of the family farm and the unpaid work of the household are largely unrecorded, which understates a rural economy such as Liberia's; **double counting** threatens wherever value added is not correctly measured; **non-marketed services** — the mother's care, the neighbour's help — have no price and so no place; the **informal sector** of petty trade, which employs most people in a West African town, is estimated at best; **quality changes and new products** make comparison across years imperfect; **externalities** — the pollution and the deforestation a factory brings — are counted as gains and not as losses; the **distribution** of income is invisible in the average, which may rise while most people grow poorer; **leisure** and the length of the working day are ignored; and **prices** must be held constant, or a rise in the price level is mistaken for growth."},
@@ -2933,6 +3175,22 @@ var EC_CURRICULUM = [
     {q:"A minister proposes measuring success by GDP alone. Give two reasons to object.", a:"GDP ignores how income is distributed, so growth may benefit only a few; and it takes no account of pollution, resource depletion, health or education, which determine actual welfare."},
     {q:"Why might import substitution in rice be attractive but difficult for Liberia?", a:"Attractive because it would save foreign exchange, create rural jobs and improve food security. Difficult because it requires irrigation, improved seed, credit, storage and roads, all of which need heavy investment before output can compete on price."}
   ],
+  word:[
+    {q:"GDP is L$180 billion and net income from abroad is +L$6 billion. Calculate GNP.", a:"GNP = GDP + net income from abroad = 180 + 6 = L$186 billion."},
+    {q:"GNP is L$186 billion and depreciation is L$14 billion. Calculate NNP.", a:"NNP = 186 − 14 = L$172 billion."},
+    {q:"NNP is L$172 billion for 4.3 million people. Calculate income per head.", a:"172 000 000 000 ÷ 4 300 000 = L$40 000 per head."},
+    {q:"A mill in Careysburg buys cassava worth L$200 000 and sells gari worth L$340 000. Calculate the value added by the mill.", a:"340 000 − 200 000 = L$140 000."},
+    {q:"C = L$120bn, I = L$30bn, G = L$25bn, X = L$18bn, M = L$22bn. Calculate GDP by the expenditure approach.", a:"GDP = C + I + G + (X − M) = 120 + 30 + 25 + (−4) = L$171 billion."},
+    {q:"Wages are L$90bn, rent L$15bn, interest L$20bn and profit L$46bn. Calculate national income by the income approach.", a:"90 + 15 + 20 + 46 = L$171 billion."},
+    {q:"Nominal income rises 12% while prices rise 8%. Estimate the growth of real income.", a:"12% − 8% = about 4% real growth."},
+    {q:"GDP rises from L$150 billion to L$171 billion. Calculate the percentage growth.", a:"(21 ÷ 150) × 100 = 14%."}
+  ],
+  challenge:[
+    {q:"A farmer sells wheat for L$50 to a miller, the miller sells flour at L$120, and the baker sells bread at L$300. A learner sums all three and calls output L$470. Correct the figure and explain the double counting.", a:"Summing 50 + 120 + 300 counts the wheat and flour repeatedly. True output counts only value added at each stage: 50 + (120 − 50) + (300 − 120) = L$300 — which equals the value of the final good, the bread, alone."},
+    {q:"A village grows cassava it eats without selling, and that output never enters GDP. How does this distort Liberia's GDP relative to a fully monetised economy, and what correction helps?", a:"GDP understates real Liberian production, because a large subsistence sector produces food that never passes a market and has no recorded price; comparisons with monetised economies then exaggerate Liberia's poverty. Statisticians estimate an imputed value for subsistence output — pricing it at nearby market prices — to correct the bias."},
+    {q:"Government pays L$2 billion in pensions and L$3 billion building a road. Only one enters GDP. Which, and why?", a:"Only the L$3 billion on the road — it buys newly produced goods and services (asphalt, engineers). Pensions are transfer payments: income moved from taxpayers to pensioners with no new output in return, and counting them would double-count the money when pensioners spend it."},
+    {q:"Nominal GDP doubles over 20 years while the price index triples. In what sense is the country richer or poorer, and why does this matter when comparing 2005 with 2025?", a:"Real income = nominal ÷ prices = 2 ÷ 3 ≈ 0.67 — real output has actually FALLEN by one-third; each dollar buys barely a third of what it did. Nominal comparisons across years are meaningless: figures must be deflated by a price index into constant-price (real) terms before any growth is claimed."}
+  ],
   activities:[
     "Group research and debate on industrialisation in the context of Liberia and West Africa",
     "Organise a field trip to an industrial site to observe production and distribution, and report findings",
@@ -3003,9 +3261,11 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"How Banks Create Credit — Worked"},
     {k:"p", t:"A bank keeps a fraction of its deposits as **cash reserves** and lends the rest. Take a required reserve ratio of **20 %** and an initial deposit of **L$100 000**. The bank keeps L$20 000 and lends L$80 000; the borrower spends it and it is redeposited in the system; of that L$80 000 the bank keeps L$16 000 and lends L$64 000; and so the process runs. Total deposits created = initial deposit ÷ reserve ratio = 100 000 ÷ 0.20 = **L$500 000**, of which **L$400 000 is newly created credit**. The **credit multiplier is 1 ÷ reserve ratio = 5**. The higher the ratio, the smaller the multiplier: at 25 % the multiplier is 4 and the same deposit creates only L$400 000. This is the mechanism by which the central bank controls the money supply — by **raising the reserve requirement** it shrinks the multiplier and restricts credit; by **lowering it** it expands credit. The process assumes the public redeposits what it receives and the banks lend the whole of the excess, both of which are only approximately true."},
+    {k:"fig", f:"econ-credit-multiplier", cap:"Each bank keeps its **reserve** and lends the rest; the lending rounds multiply the first deposit by **1 ÷ the reserve ratio**."},
     {k:"rule"},
     {k:"h3", t:"Inflation — Types, Measurement, Effects and Control"},
     {k:"p", t:"**Inflation** is a persistent and general rise in the price level, not a rise in the price of one good. Its **types** by cause: **demand-pull**, where total demand outruns what the economy can supply at full employment, so too much money chases too few goods; **cost-push**, where wages, imported inputs or taxes push costs up and producers pass them on, so prices rise even though demand has not; **imported**, where the price of what the country buys abroad rises, or the exchange rate falls; and **hyperinflation**, where prices rise so fast that money ceases to function. By speed: **creeping** (a few per cent a year), **galloping** (double or triple figures) and **hyper** (prices doubling in weeks). It is measured by a **consumer price index**, which tracks the cost of a fixed basket of goods and services: if the basket cost L$1 000 in the base year and L$1 150 now, the index is 115 and **inflation is 15 %**."},
+    {k:"fig", f:"econ-inflation-line", cap:"The **price index** tracks the cost of the same basket year by year; its percentage rise is the inflation rate."},
     {k:"p", t:"**The effects** are the marks. **Debtors gain and creditors lose**, because the debt is repaid in money worth less than the money borrowed. **Savers lose**, since the real value of what they saved falls; **spenders gain**. **Those on fixed incomes** — pensioners, salaried workers whose pay is adjusted yearly at best — lose, while **traders holding stocks** of goods gain as the stocks rise in value. **Income is redistributed** away from the poor, who hold no assets, toward those who do. **Planning becomes impossible**, since no one can cost a project a year ahead; **saving falls** and **speculation** in land, gold and foreign currency rises; **exports suffer**, since home goods grow dearer abroad, while **imports** look cheap and the balance of payments worsens; and where prices rise faster than wages, **industrial unrest** follows. **Control:** **monetary policy** — raising interest rates and the reserve requirement, selling government securities, and restricting credit; **fiscal policy** — cutting government spending and raising taxes to reduce demand; **supply measures** — raising output, importing what is scarce, and holding down the cost of key inputs; **incomes policy** — restraint on wages and prices by agreement or by law; and, at the root, **producing more**, since inflation is finally a shortage of goods against money."},
     {k:"rule"},
     {k:"h3", t:"Unemployment — Types and the Link with Inflation"},
@@ -3139,6 +3399,22 @@ var EC_CURRICULUM = [
     {q:"How does inflation discourage long-term investment?", a:"It makes future costs and revenues unpredictable, so firms cannot calculate whether a project will be profitable. Lenders also demand higher interest to protect themselves, raising the cost of capital."},
     {q:"A government prints money to pay salaries. Explain the likely economic consequence.", a:"The money supply grows without any corresponding rise in output, so more money chases the same goods. Demand-pull inflation follows, prices rise and the real value of the salaries paid is eroded."}
   ],
+  word:[
+    {q:"A market basket cost L$4 000 last year and L$5 200 this year. Calculate the inflation rate.", a:"(1 200 ÷ 4 000) × 100 = 30%."},
+    {q:"A pension of L$12 000 a year is unchanged while prices rise 30%. What is it worth in last year's prices?", a:"12 000 ÷ 1.30 ≈ L$9 231 — a real loss of about L$2 769."},
+    {q:"A worker's wage rises from L$20 000 to L$23 000 while prices rise 15%. What happens to her real wage?", a:"Money wage +15%; real wage = 1.15 ÷ 1.15 = unchanged — the whole rise is eaten by prices."},
+    {q:"A bank holds deposits of L$50 million and the reserve requirement is 20%. What must it keep in reserve, and how much can it lend?", a:"Reserve = 20% × 50m = L$10 million; it can lend up to L$40 million."},
+    {q:"With a 20% reserve requirement, calculate the credit (deposit) multiplier.", a:"Multiplier = 1 ÷ 0.20 = 5."},
+    {q:"An initial deposit of L$10 million enters a banking system with a 20% reserve ratio. What total deposits can the system create?", a:"10m × 5 = L$50 million of total deposits."},
+    {q:"The price index rises from 100 to 145 over three years. Calculate the total rise in the price level.", a:"145 − 100 = 45 points — a 45% rise over the three years."},
+    {q:"The money supply grows 25% while real output grows 5%. Estimate the inflation rate.", a:"Roughly 25% − 5% = 20% inflation (the quantity-theory approximation)."}
+  ],
+  challenge:[
+    {q:"Tomta borrowed L$100 000 last year to build a shop and repays exactly L$100 000 this year, with inflation at 30%. Who gains, and what does this say about inflation and lending?", a:"Tomta gains: the repaid L$100 000 buys 30% less than the sum he borrowed — the lender's real recovery is only about L$76 923 of last year's value, an invisible transfer from lender to borrower. Lenders therefore add interest premia or index loans when they expect inflation."},
+    {q:"In a barter village, a fisherman who wants cassava must find a cassava farmer who wants fish. State the problem, and show how money solves more than one function at once.", a:"Barter requires a double coincidence of wants — each trader must want exactly what the other offers, in matching amounts — which wastes time and strangles trade. Money works as a medium of exchange (accepted by everyone), a store of value (the catch's worth can be saved) and a unit of account (all prices quoted in one unit), so nobody needs the double coincidence."},
+    {q:"A bank's nominal loan rate is 15% and inflation is 12%. Compute the real rate, and explain why depositors still complain.", a:"Real rate ≈ 15 − 12 = 3%. But savings accounts pay far less than the loan rate — say 4% — so deposits earn a NEGATIVE real return (4 − 12 = −8%): their buying power shrinks every year. That is why high inflation punishes savers and pushes people into goods, land and dollars."},
+    {q:"The central bank cuts the reserve requirement from 20% to 10% to fight a recession. Trace the effect through the credit multiplier and name one risk.", a:"The multiplier rises from 5 to 10, so the same initial L$10m can support L$100m of deposits instead of L$50m — more loans to traders and farmers, cheaper credit, more spending and output. The risk: money growing faster than real goods turns stimulus into inflation (the quantity theory), and thinner reserves leave banks fragile if many depositors withdraw at once."}
+  ],
   activities:[
     "Brainstorm and discuss the definition, origin, characteristics and functions of money",
     "Group research on the central bank, commercial banks, merchant banks, development banks and savings banks",
@@ -3199,12 +3475,14 @@ var EC_CURRICULUM = [
      ["Exchange rate","The price of one currency in terms of another","How many Liberian dollars one United States dollar buys"],
      ["Protection","Deliberate restriction of imports to shelter home industry","Tariffs, quotas, embargoes, exchange control"]]},
     {k:"p", t:"**Worked terms of trade.** In the base year Liberia's export price index is 100 and its import price index is 100, so the terms of trade are (100 ÷ 100) × 100 = **100**. In a later year the export price index falls to 90 while the import price index rises to 120, so the terms of trade are (90 ÷ 120) × 100 = **75** — **unfavourable**, because Liberia must now export more rubber to buy the same machinery. This is the classic complaint of the primary producer: the prices of what it sells rise slowly or fall, while the prices of the manufactures it buys rise steadily, so the **terms of trade move against the developing country** and more export effort buys less."},
+    {k:"fig", f:"econ-tot-line", cap:"The **terms of trade** = export index ÷ import index × 100; a falling index means ever dearer imports."},
     {k:"rule"},
     {k:"h3", t:"Why Nations Trade — and How International Trade Differs"},
     {k:"p", t:"**The reasons:** differences in **climate and natural resources**, so Liberia grows rubber and Nigeria pumps oil; differences in **technology and skill**, so one country makes machines and another grows cocoa; differences in **cost of production**, which make specialisation profitable; differences in **taste**, which create a demand for what another country alone produces; the **size of the market**, since some industries need a market larger than any one country offers; and **uneven distribution of resources**, which no country can alter. **The differences from domestic trade:** different **currencies**, so payment must be converted and the exchange rate matters; **tariffs, quotas and other barriers** at the border; **different laws and standards** governing contract, quality and safety; **greater distance and transport cost**; **less mobility of labour and capital**, since workers do not move easily between countries and languages; **immobility of some goods**, and the **risk** of war, of exchange-rate movement and of a buyer abroad who cannot be pursued through the courts."},
     {k:"rule"},
     {k:"h3", t:"Absolute and Comparative Advantage Worked"},
     {k:"p", t:"**Absolute advantage** exists where a country produces a good with fewer resources than another. **Comparative advantage**, the **law of comparative cost** of David Ricardo, holds that even a country with no absolute advantage gains by specialising in the good where its disadvantage is **least** — where its **relative** cost is lowest — and trading for the rest. Work it on two countries and two goods, with output per worker per day:"},
+    {k:"fig", f:"econ-comparative", cap:"Different slopes mean different **opportunity costs** — the whole basis of **comparative advantage**."},
     {k:"table", head:["Country","Bags of rice per worker","Tonnes of rubber per worker"], rows:[
      ["Liberia","6","3"],
      ["Neighbourland","10","4"]]},
@@ -3347,6 +3625,22 @@ var EC_CURRICULUM = [
     {q:"Why does a country with only two or three export commodities face particular risk?", a:"Its entire foreign exchange earnings depend on the world prices of a few goods. A price collapse or crop failure causes an immediate balance of payments crisis with nothing to offset it."},
     {q:"How could ECOWAS membership benefit Liberian producers?", a:"It gives access to a far larger regional market without tariffs, allowing production on a larger and cheaper scale, and it improves bargaining power and encourages regional infrastructure and investment."}
   ],
+  word:[
+    {q:"Liberia exports L$620 million and imports L$980 million. Calculate the balance of trade.", a:"620 − 980 = −L$360 million — a trade deficit."},
+    {q:"The export price index is 120 and the import price index 150. Calculate the terms of trade.", a:"(120 ÷ 150) × 100 = 80."},
+    {q:"Liberia can produce 20 tonnes of rubber or 10 tonnes of rice with the same resources. Find the opportunity cost of one tonne of rubber.", a:"10 ÷ 20 = 0.5 tonnes of rice."},
+    {q:"Using the same figures, find the opportunity cost of one tonne of rice.", a:"20 ÷ 10 = 2 tonnes of rubber."},
+    {q:"At US$1 = L$190, what is the Liberian-dollar cost of a vehicle priced at US$4 500?", a:"4 500 × 190 = L$855 000."},
+    {q:"The exchange rate moves from L$190 to L$210 per US dollar. Calculate the depreciation of the Liberian dollar.", a:"(20 ÷ 190) × 100 ≈ 10.5% depreciation."},
+    {q:"After that change, recalculate the cost of the same US$4 500 vehicle.", a:"4 500 × 210 = L$945 000 — L$90 000 dearer in local currency."},
+    {q:"The current account deficit is L$360 million and net capital inflow is L$300 million. How much must come out of reserves?", a:"360 − 300 = L$60 million drawn down from foreign reserves."}
+  ],
+  challenge:[
+    {q:"Liberia produces 20 rubber or 10 rice with the same resources; a neighbouring country produces 12 rubber or 8 rice. Work out both opportunity costs, state who should specialise in what, and why both gain.", a:"Liberia: 1 rubber costs 0.5 rice, 1 rice costs 2 rubber. Neighbour: 1 rubber costs ⅔ rice, 1 rice costs 1.5 rubber. Liberia sacrifices less rice per tonne of rubber (0.5 < 0.67) — comparative advantage in rubber; the neighbour sacrifices less rubber per tonne of rice (1.5 < 2) — advantage in rice. Each specialises and trades, and total world output of both crops exceeds self-sufficiency — the gain from trade."},
+    {q:"After the L$ slides from 190 to 210 per US$, a US$4 bag of imported rice rises from L$760 to L$840. Trace how depreciation feeds inflation in an import-dependent economy.", a:"Imports are priced in dollars, so the depreciation adds L$80 (10.5%) to every bag before any world-price change. Imported rice, fuel and spare parts sit inside household budgets and transport costs, so the price level rises right across the economy — “imported inflation”. A sliding L$ reaches the shopper at Red Light even though she never buys dollars."},
+    {q:"The terms of trade fall from 100 to 80. With rubber at US$600 a tonne and a milling machine at US$60 000, show what happens to Liberia's buying power.", a:"At ToT 100, a machine costs 100 tonnes of rubber (60 000 ÷ 600). At ToT 80, export prices are one-fifth weaker relative to import prices — say rubber falls to US$480 — and the same machine now costs 125 tonnes. The country must dig a quarter more rubber just to stand still: deteriorating terms of trade silently tax every exporter."},
+    {q:"To protect a new Liberian shoe factory, a 25% tariff lifts imported shoes from L$800 to L$1 000 a pair. Weigh the gain against the cost, in numbers.", a:"Gain: the infant factory, selling at L$950, can now survive, build skills and grow until it competes. Cost: buyers pay L$150–200 more per pair — up to L$20 million a year across 100 000 pairs, transferred from consumers to the factory and the treasury. Protection makes sense only as a temporary nursery; permanent tariffs tax the poor to shelter the unfit."}
+  ],
   activities:[
     "Group discussion of international trade, domestic trade, regional trade, terms of trade and balance of trade",
     "Pair research on the importance of international trade and the differences from domestic trade",
@@ -3403,6 +3697,7 @@ var EC_CURRICULUM = [
     {k:"p", t:"Prepare a research paper on these organisations and indicate how Liberia has benefited from each — in loans, debt relief, technical advice, training and market access."},
     {k:"h3", t:"The Sources of Government Revenue and the Budget"},
     {k:"p", t:"**Public finance** is the study of how government raises and spends money. Its **sources of revenue**: **taxation**, by far the largest — direct taxes on income and profit, indirect taxes on goods and services, and above all the **customs duties** on imports, which in a small open economy such as Liberia's supply a very large share of the total because they are collected at a few ports and are hard to evade; **fees and licences** — for a passport, a driving licence, a business permit, a market stall; **fines and forfeitures**; the **profits of public enterprises** and the **rent and royalty** from concessions on land, minerals and forest; **borrowing**, at home through treasury bills and development bonds and abroad from governments and institutions; **grants and aid** from foreign governments and organisations; and the **sale of public assets**, including the proceeds of privatization. Note the distinction between **recurring revenue**, which comes in year after year and can fund salaries, and **capital or windfall revenue**, such as a loan or the sale of an asset, which should fund a project and not the payroll."},
+    {k:"fig", f:"econ-budget-bars", cap:"When **expenditure outruns revenue** the gap is a **deficit**, bridged by borrowing."},
     {k:"p", t:"The **national budget** is the government's statement of expected revenue and intended expenditure for the coming year. It is **balanced** when the two are equal; in **surplus** when revenue exceeds expenditure, which withdraws purchasing power and so restrains inflation; and in **deficit** when expenditure exceeds revenue, which the government must finance by borrowing or by drawing on reserves, and which adds to demand and so may cause inflation. **Fiscal policy** is the deliberate use of the budget to steer the economy: against **inflation**, a surplus budget — spending less and taxing more; against **unemployment and depression**, a deficit budget — spending more and taxing less, so that demand and output rise; and for **growth**, spending directed to the infrastructure, education and health that raise the economy's capacity. The **national debt** is the accumulated total of past borrowing; it is **internal** when owed at home and **external** when owed abroad. Servicing the external debt costs foreign exchange, which is why a heavy debt burden can absorb a large part of what a developing country earns from its exports."},
     {k:"rule"},
     {k:"h3", t:"Direct and Indirect Taxation Compared"},
@@ -3420,6 +3715,7 @@ var EC_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Tax Incidence and the Three Systems of Taxation"},
     {k:"p", t:"**Tax incidence** is where the burden of a tax **finally rests**, as distinct from where it is levied — the **impact** is on the seller who pays it over, but the **incidence** may fall on the buyer. The rule is set by **elasticity**: the side of the market that is **less elastic** bears the greater share, because it has the less escape. Where **demand is inelastic** and supply elastic — salt, fuel, tobacco — the **consumer** bears most of the tax, since he goes on buying whatever the price. Where **demand is elastic** and supply inelastic — a perishable crop that must be sold — the **producer** bears most of it, since the buyer simply switches to something else. On a diagram the tax drives a wedge between the price the buyer pays and the price the seller receives, and the split of that wedge is the incidence."},
+    {k:"fig", f:"econ-tax-rates", cap:"**Progressive** taxes take a rising share, **proportional** a constant share, **regressive** a falling share as income rises."},
     {k:"table", head:["System","What it does","Worked example on incomes of L$2 000 and L$20 000"], rows:[
      ["Progressive","The rate rises as income rises, so the rich pay a larger share","10 % on the first income and 30 % on the second: L$200 against L$6 000 — 10 % and 30 % of income"],
      ["Proportional","The same rate on all incomes","15 % on both: L$300 and L$3 000 — 15 % of each"],
@@ -3571,6 +3867,22 @@ var EC_CURRICULUM = [
     {q:"A government borrows heavily from abroad to build roads. Discuss one benefit and one risk.", a:"Benefit: roads raise productivity and growth for decades, and the loan spreads the cost over the years that enjoy them. Risk: repayment requires foreign exchange, so if export earnings fall the debt service can crowd out spending on health and education."},
     {q:"Why might a government subsidise fertiliser rather than simply cutting taxes on farmers?", a:"Most small farmers pay little tax anyway, so a tax cut would not reach them. A fertiliser subsidy lowers their actual cost, raises yields directly, and targets those who genuinely farm."}
   ],
+  word:[
+    {q:"A clerk earns L$600 000 a year and pays income tax at 15%. Calculate the tax.", a:"600 000 × 0.15 = L$90 000."},
+    {q:"A progressive system charges 0% on the first L$200 000 and 20% on income above that. Find the tax on L$600 000.", a:"Taxable layer = 400 000 × 0.20 = L$80 000."},
+    {q:"Using the same figures, calculate the average rate of tax on the full L$600 000.", a:"80 000 ÷ 600 000 × 100 ≈ 13.3%."},
+    {q:"A tax of L$20 per unit raises the market price from L$100 to L$119. State the incidence: how much the buyer bears and how much the seller bears.", a:"Buyer bears 119 − 100 = L$19; the seller bears the remaining L$1."},
+    {q:"After that tax, sales are 9 700 units. Calculate the government's tax revenue.", a:"9 700 × 20 = L$194 000."},
+    {q:"Government revenue is L$85 billion and expenditure L$102 billion. Calculate the budget balance.", a:"85 − 102 = −L$17 billion — a budget deficit."},
+    {q:"Express that deficit as a percentage of expenditure.", a:"17 ÷ 102 × 100 ≈ 16.7% of expenditure."},
+    {q:"A 10% sales tax is added to a restaurant bill of L$4 500. Calculate the tax and the total bill.", a:"Tax = 4 500 × 0.10 = L$450; total = L$4 950."}
+  ],
+  challenge:[
+    {q:"Two workers earn L$300 000 and L$3 000 000 under the progressive two-band system (0% up to L$200 000, 20% above). Compute each average tax rate and say how the tax reduces inequality.", a:"Worker 1: 100 000 × 20% = L$20 000 → 6.7% of income. Worker 2: 2 800 000 × 20% = L$560 000 → 18.7% of income. The better-paid worker surrenders a larger share of income, so post-tax incomes stand closer together than pre-tax incomes — vertical equity."},
+    {q:"A L$20 tax moves the price of rice from L$100 to L$119, but a L$20 tax on imported sweets moves its price from L$100 only to L$108. Explain why the incidence differs.", a:"Demand for rice is inelastic — buyers cannot easily switch — so sellers pass on nearly the whole tax (buyers bear L$19 of L$20). Sweets have elastic demand with many substitutes, so sellers who raise price lose too many customers and must absorb more themselves (buyers bear L$8, sellers L$12). Incidence follows elasticity: the side least able to escape pays most."},
+    {q:"Government borrows L$17 billion at home to cover its deficit, and loan interest rates rise from 10% to 14%. What happens to private investment, and what is this effect called?", a:"Projects that paid at 10% — a L$1m mill returning L$120 000 a year — no longer clear their cost at 14%, so firms postpone or cancel them. Government borrowing that soaks up private savings and pushes up rates is “crowding out”: the deficit is financed at private growth's expense."},
+    {q:"Name the institution best placed for each task, with one reason: (i) emergency help when Liberia cannot pay its import bill; (ii) a 30-year loan for a rural road; (iii) tariff-free trade with Sierra Leone and Côte d'Ivoire.", a:"(i) The IMF — balance-of-payments support and stabilisation programmes. (ii) The World Bank (or African Development Bank) — long-term development loans and grants for infrastructure. (iii) ECOWAS — the regional community whose protocols remove trade barriers among West African members."}
+  ],
   activities:[
     "Group discussion on the meaning of public finance and its objectives",
     "Assign small groups to visit business institutions that pay taxes, examine the types and amounts paid, and report to the class",
@@ -3634,6 +3946,7 @@ var EC_CURRICULUM = [
       "**Economic and monetary union** — one economic policy, coordinated fiscal and monetary policy, and **one currency** under one central bank.",
       "**Complete economic integration (fiscal harmonization)** — members align taxation, public spending and economic policy under a common authority; the last stage, and the one few groupings reach."]},
     {k:"p", t:"The order must be recited correctly — a candidate who places the common market before the customs union loses the mark. **ECOWAS** was established by the **Treaty of Lagos in 1975** with the aim of a common market, and has moved through a free trade area toward a customs union with a **common external tariff**, while its protocol on the **free movement of persons, residence and establishment** allows a citizen of a member state to enter and work without a visa. The **Mano River Union**, founded in **1973** by Liberia and Sierra Leone and later joined by Guinea and Côte d'Ivoire, is a narrower grouping named for the river that rises in the highlands shared by its members, and works mainly on border cooperation, joint infrastructure and the movement of people."},
+    {k:"fig", f:"econ-stages", cap:"**Free trade area → customs union → common market → economic union**: each stage shares one more decision."},
     {k:"rule"},
     {k:"h3", t:"Advantages and Disadvantages, Weighed"},
     {k:"p", t:"**Advantages:** a **wider market**, so industries can reach the scale at which cost per unit falls; **economies of scale** and **specialisation** according to comparative advantage, so total output rises; **more competition**, which drives out the inefficient firm and lowers the price to the consumer; **freer movement** of labour to where work is, and of capital to where the return is; **shared infrastructure** — a road, a bridge, a power line, a river scheme — that no single member could fund; **stronger bargaining** with the outside world and with the multinational company; **the transfer of technology and skill**; and **political stability**, since members have an interest in one another's peace. **Disadvantages:** **loss of national sovereignty**, as tariff, monetary and trade policy pass to the bloc; **loss of tariff revenue**, which for a small state relying on customs duties is a serious loss that must be replaced; **uneven gains**, since industry tends to concentrate where the infrastructure and the skilled labour already are, so the strongest member gains most and the weaker becomes a market for its goods; **the cost of adjustment**, as firms that cannot compete close and their workers lose their jobs; **trade diversion**, where cheap imports from an efficient outsider are replaced by dearer goods from a member merely because the tariff favours it, which makes the consumer worse off; **the difficulty of one rule** for economies at very different stages of development; and **the risk** that political conflict between members stops the whole arrangement — which is what the Liberian civil war did to the Mano River Union for a decade."},
@@ -3648,6 +3961,7 @@ var EC_CURRICULUM = [
      ["Ghana","Gold, cocoa, timber, petroleum and natural gas, bauxite and manganese"],
      ["Nigeria","Petroleum and natural gas above all, with tin, columbite, coal, cocoa, groundnuts and palm produce"]]},
     {k:"p", t:"Compare them as the question asks and then **draw the conclusion**. All are rich in resources; none is rich in the **processing** of them. Each exports the raw material and imports the manufactured article — Liberia exports rubber and imports tyres, exports timber and imports furniture, exports iron ore and imports steel. The result is the **terms of trade** problem of Unit 16, the **low value added** retained at home, and the **vulnerability** of an economy whose earnings rise and fall with a world price it cannot control. The **remedy** is the one the paper is leading to: process the resource at home, so the value added stays; diversify, so no single price decides the national income; and use the earnings on the education, health and infrastructure that make further development possible rather than on consumption that ends when the price falls. Add the warning of the **resource curse** — that countries rich in a single exportable resource often grow more slowly and govern worse than poorer neighbours, because the revenue comes without taxation and so without accountability, and because the easy money crowds out every other industry."},
+    {k:"fig", f:"econ-value-added-bars", cap:"The same tonne is worth far **more processed** than raw — value addition is the margin Liberia gives away."},
     {k:"rule"},
     {k:"h3", t:"Common Mistakes in This Unit"},
     {k:"bul", items:[
@@ -3776,6 +4090,22 @@ var EC_CURRICULUM = [
     {q:"How would free movement of persons under ECOWAS benefit a Liberian graduate?", a:"He could seek work anywhere in the sub-region without immigration barriers, gaining experience and higher earnings, and could later return with skills and capital."},
     {q:"Explain the resource curse and how Liberia might avoid it.", a:"Resource wealth can invite corruption, raise the exchange rate so other exports become uncompetitive, and let government neglect taxation and accountability. It is avoided by transparent revenue management, saving part of the income for the future, and deliberate investment in education and other sectors."},
     {q:"A logging company clears 1 800 hectares a year without replanting. Discuss two consequences.", a:"The forest is exhausted within about three decades, destroying the industry itself and the livelihoods depending on it; and clearance causes soil erosion, loss of biodiversity and disruption of rainfall and rivers."}
+  ],
+  word:[
+    {q:"Raw iron ore sells at US$60 a tonne while processed steel from the same ore sells at US$420. How much more is earned from each tonne processed?", a:"420 − 60 = US$360 more per tonne."},
+    {q:"Express the processed price as a multiple of the raw price.", a:"420 ÷ 60 = 7 times."},
+    {q:"Calculate the export earnings from 1 000 000 tonnes shipped raw, and the potential earnings if it were all processed.", a:"Raw: 1 000 000 × 60 = US$60 million; processed: 1 000 000 × 420 = US$420 million."},
+    {q:"A 15% tariff is removed on US$40 million of imports from a partner country within the community. How much duty is saved each year?", a:"0.15 × 40m = US$6 million saved."},
+    {q:"Intra-regional trade rises from US$120 million to US$186 million. Calculate the percentage growth.", a:"(66 ÷ 120) × 100 = 55%."},
+    {q:"A mining concession pays a 4.5% royalty on exports of US$60 million. Calculate the royalty due to the government.", a:"0.045 × 60m = US$2.7 million."},
+    {q:"Employment at a new processing plant rises from 900 to 5 200 workers. Calculate the percentage increase in jobs.", a:"(4 300 ÷ 900) × 100 ≈ 477.8% — the workforce is nearly six times larger."},
+    {q:"A forest of 60 000 hectares is being logged at 1 800 hectares a year. At that rate, how long will it last?", a:"60 000 ÷ 1 800 ≈ 33.3 years — barely one generation."}
+  ],
+  challenge:[
+    {q:"ECOWAS members keep their own external tariff while trading freely among themselves. Which integration stage is this, and why is a common market harder to sustain? Use the duty figures in your answer.", a:"It is a customs union (free internal trade plus a common external tariff) — internally, the US$6m of duty on US$40m of partner trade disappears. A common market goes further, adding free movement of labour and capital, which demands shared rules on work permits, business law and economic policy; states must surrender more sovereignty, and uneven gains — one country's factories drawing the labour — breed disputes."},
+    {q:"Liberia exports raw ore at US$60 a tonne while processors abroad add US$360 a tonne. Explain in numbers why “we lose by exporting raw”, and name two obstacles to processing at home.", a:"Per tonne, Liberia captures only 1/7 of the final value (60 of 420); US$60m of raw exports could in principle be US$420m. Obstacles: the huge capital a mill costs, unreliable and expensive electricity, limited engineering skills, and freight terms that make shipping bulk ore cheap for buyers. Value addition needs power, skills and finance before it pays."},
+    {q:"A country discovers oil, its currency rises 20%, and its rice farmers — who compete with imports — start losing their market. Trace the problem and give its name.", a:"Oil exports pull in dollars and lift the currency, so imported rice becomes about 20% cheaper in local money while farm prices stay put — farmers are undercut through no fault of their own. One booming resource sector weakening the rest of the tradable economy is the “Dutch disease”."},
+    {q:"Mount Nimba ore is finite. Frame the choice as an economist: export raw at US$60 million a year for 30 years, or invest US$300 million in a mill that then pays US$40 million a year for 40 years?", a:"Raw: 30 × 60 = US$1.8bn with no investment. Mill: 40 × 40 = US$1.6bn minus the US$300m cost = US$1.3bn, PLUS employment rising from 900 to 5 200 jobs, new skills, and an industry that outlives the mine. The economist compares the whole stream of benefits and costs over time — capacity built, jobs and later income — not just this year's price, so the mill wins on broader grounds even though its cash total is smaller."}
   ],
   activities:[
     "Group research and discussion of economic integration concepts: trade benefits, employment, political cooperation, market expansion, technology sharing and investment flows",

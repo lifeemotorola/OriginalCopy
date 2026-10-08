@@ -101,7 +101,7 @@
   /* a question for the assignment that the plan has not already used */
   function homeQuestion(t, used) {
     var cands = [];
-    ["apply", "short", "worked", "mcq", "facts", "grammar"].forEach(function (k) {
+    ["apply", "short", "worked", "word", "challenge", "mcq", "facts", "grammar"].forEach(function (k) {
       (t[k] || []).forEach(function (v) { if (v.q) cands.push(plain(v.q)); });
     });
     for (var i = 0; i < cands.length; i++) {
@@ -195,6 +195,8 @@
     if (t.tf && t.tf.length) e.push("the true and false statements");
     if (t.worked && t.worked.length) e.push("the worked examples");
     if (t.drills || t.drills2) e.push("the practice questions");
+    if (t.word && t.word.length) e.push("the word problems");
+    if (t.challenge && t.challenge.length) e.push("the challenge questions");
     if (t.short || t.apply) e.push("short-answer questions");
     if (t.sort && t.sort.length) e.push("sorting the examples into groups");
     if (t.casestudy && t.casestudy.length) e.push("the case study");

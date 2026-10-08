@@ -217,6 +217,37 @@
     return { blocks: blocks, key: key };
   }
 
+  /* O · Word problems — situations from daily economic life. Only rendered
+     for units that supply t.word ({q, a}); answer lines mirror GEN_MA's word
+     sheet so Economics feels the same as Mathematics. */
+  function wsWord(t, n, r) {
+    var sel = pick(t.word, Math.max(4, Math.min(n, (t.word || []).length)), r);
+    if (!sel.length) return null;
+    return {
+      blocks: [
+        { k: "h3", t: "O · Word Problems — Economics in Daily Life" },
+        { k: "instr", t: "Read each problem twice. Show your working, then write the answer with its unit or in a complete sentence." },
+        { k: "num", items: sel.map(function (v) { return v.q + "\n     Working:\n" + dots(52) + "\n     Answer: " + dots(20); }) }
+      ],
+      key: sel.map(function (v, i) { return (i + 1) + ". " + v.a; })
+    };
+  }
+
+  /* P · Challenge — think it through. Only rendered for units that supply
+     t.challenge ({q, a}); mirrors GEN_MA's challenge sheet. */
+  function wsChallenge(t, n, r) {
+    var sel = pick(t.challenge, Math.min(4, (t.challenge || []).length), r);
+    if (!sel.length) return null;
+    return {
+      blocks: [
+        { k: "h3", t: "P · Challenge — Think It Through" },
+        { k: "instr", t: "These questions need reasoning as well as calculation. Explain your answer in words." },
+        { k: "num", items: sel.map(function (v) { return v.q + "\n" + dots(52) + "\n" + dots(52); }) }
+      ],
+      key: sel.map(function (v, i) { return (i + 1) + ". " + v.a; })
+    };
+  }
+
   /* J · Apply it — civic reasoning */
   function wsApply(t, n, r) {
     var sel = pick(t.apply, n, r);
@@ -322,7 +353,11 @@
     debate:   { label: "Class debate",                fn: wsDebate },
     journal:  { label: "Subject journal",             fn: function (t) { return wsJournal(t); } },
     spelling: { label: "Vocabulary & spelling test",  fn: wsSpelling },
-    worked:   { label: "Calculations & data",         fn: function (t, n, r) { return wsWorked(t, n, r); } }
+    worked:   { label: "Calculations & data",         fn: function (t, n, r) { return wsWorked(t, n, r); } },
+    /* word problems and challenge questions (Maths-style practice); render
+       only for units that carry the banks — Economics 10-12 does. */
+    word:     { label: "Word problems",               fn: wsWord },
+    challenge:{ label: "Challenge questions",         fn: wsChallenge }
   };
 
   /* ---------------- period test ---------------- */

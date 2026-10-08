@@ -143,6 +143,7 @@ node tests/voice.js             # speech reader chunking and recovery
 node tests/ai.js                # tutor failure handling
 node tests/header-footer.js     # sheet + platform header/footer
 node tests/history.js           # Senior High History
+node tests/economics.js         # Senior High Economics: word problems + challenges + project, drawn figures, seed & keys
 node tests/kg-lesson.js         # Kindergarten ECD lesson plans
 node tests/health-lesson.js     # Elementary health units and plans
 node tests/cs-lesson.js         # Computer Science units, Grades 1-12, and computing plans

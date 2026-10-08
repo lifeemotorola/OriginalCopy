@@ -1,1 +1,944 @@
-# OriginalCopy
+# Easy School Liberia 
+
+An **offline, single-file web app** that generates printable course packs for the
+Liberian National Curriculum: pupil workbooks, period tests, semester
+examinations and teacher's answer keys — in **English, Phonics, French, General
+Science, **Health Science**, **Computer Science**, Mathematics, Social Studies, Religious & Moral
+Education, Physical Education, Biology, Chemistry, Physics, Economics, English
+Grammar, Geography, History, Civics, Literature and Kindergarten**, Grades 1–12,
+all A4-exact on screen, in print and in Word.
+It also plans **KG-I and KG-II teacher's lesson plans** from the national ECD
+theme planners, and designs **KG-I and KG-II cover pages** for work the school
+prepares itself.
+
+Everything runs from one HTML file with **no server and no internet**
+(`index.html`, about 11 MB). It has no dependencies at runtime — the
+`.docx` exporter is built by hand and images are resized in a canvas
+so the whole thing stays self-contained.
+
+## Features
+
+- **19 National Curriculum subjects** (the 16 graded subjects plus **Health Science**, which carries the Elementary health strand for Grades 1–6, **Computer Science**, original unplugged-first and paper-first units for Grades 1–12, and **Kindergarten**, which plans ECD lessons on KG-I and KG-II), plus **Civics supplementary teaching resources for Grades 7–12** (six Civics units per grade)
+- **Teacher-first platform** — the session opens in **Teacher** mode (the
+  platform is built for teachers; the teacher copy adds full answer keys with
+  reasons and methods). A **Student** session remains for clean pupil packs;
+  keys never leak into a student pack
+- **10+ exercise types per subject** (vocabulary, matching, cloze, true/false,
+  short answer, MCQ, diagrams, experiments, word problems, challenges, ...),
+  each backed by a deterministic generator with a **variant seed** — Test A /
+  Test B share the same questions, just shuffled
+- **Teacher's Lesson & Weekly Unit Plans** — a Document switch (Course pack /
+  Lesson plan) supports both **Daily Lesson Plans** and **Weekly Unit Plans**
+  calibrated to the regular Liberian school sector where each unit runs for **3 or 4 weeks**
+  until completion. Includes **Weekly Plan Adjustments** tailored to teacher planning:
+  - **Planning format**: choose between a **Daily Plan** (timed day-by-day lesson
+    plans with weekly adjustment milestones and 4 timed stages summing to the exact duration)
+    or a **Weekly Plan** (week-by-week unit scheme covering Week 1, Week 2, Week 3, Week 4
+    with weekly objectives, procedures, aids, methods, formative evaluations, assignments,
+    and period culmination).
+  - **Unit duration**: quick presets for **3 weeks** or **4 weeks** (the Liberian standard)
+    or custom week counts.
+  - **Weekly plan adjustments**: customizable adjustment strategies (**Standard progression**,
+    **Remedial & reinforcement** with diagnostic scaffolding, and **Accelerated / Exam prep**),
+    plus custom teacher adjustment notes embedded directly on every weekly and daily plan.
+- **Study notes** for every unit: key ideas, worked examples and common
+  mistakes — and for Social Studies, General Science, English, Mathematics,
+  French and Physical Education Grades 1–9 (Mathematics, French and Phonics
+  also Grades 10–12) and Biology, Chemistry, Physics, Economics,
+  English Grammar and Geography Grades 10–12, the full **course text**,
+  transcribed from the official curriculum guides. **Religious & Moral Education**
+  spans Grades 1–12: guide-aligned topics in Grades 1–9, original Senior High
+  resources in Grades 10–12, and full-detail original teaching supplements for
+  every period in Grades 6–12. **Senior High
+  History (Grades 10–12)** includes explanatory study notes and exercises
+  aligned to the uploaded History guide, with source pages recorded per unit
+- **Voice reader (offline)** — a floating "voice reader" that pronounces the
+  difficult words of the current subject or reads any sentence aloud, using the
+  browser's built-in speech engine (no internet, no key, works from a USB
+  stick). It is customisable: choose a **Man**, **Woman** or **Auto** voice and
+  an **accent** — including African English (Nigeria, Ghana, Kenya, South
+  Africa, Liberia, Tanzania), US, UK and Australian English, and French for the
+  French subject — plus reading **speed** and **pitch**. It lives entirely
+  outside the printable session: the button and panel are hidden in print and
+  never appear on a generated sheet
+- **Back to top** — a course pack runs to dozens of A4 sheets, so a floating
+  button appears once the reader is half a sheet down and returns the platform
+  to the subject, grade and period controls in one press. It scrolls smoothly
+  (instantly where the device asks for reduced motion, or on a browser too old
+  for smooth scrolling), it steps aside for the AI tutor's button and stands
+  down while that tutor's panel is open so the two never sit on top of each
+  other, and it is hidden in print — it is never injected into a generated
+  sheet, so it cannot reach a pupil's workbook or the Word export
+- **Customizable cover**: template choice, 19 built-in subject-matched PNG
+  backgrounds (equations for Mathematics, laboratory imagery for Science,
+  books for Literature, and so on), school name (persisted), uploaded logo or
+  replacement background, pupil/teacher/term/year fields, and emoji crest — plus
+  a full **cover designer**: five colour pickers (border band, title ink,
+  accent, paper, warm bar) each with an *Auto* button that hands the colour back
+  to the chosen template, a choice of **eight drawn emblems**, a **title size**
+  slider (60–150%), a retypable **level line**, and **eleven show/hide switches**
+  for every element of the sheet (school name, motto, emblem, rule, level line,
+  details panel, colour strip, corner leaves, corner dots, footer note,
+  organization line). The designer is saved on the device, travels with any
+  document saved in the teaching library, and is applied on screen, in print and
+  in the `.docx` export as far as Word allows
+- **Health Science — Elementary Grades 1–6**: the health strand of the national
+  Elementary General Science guide, planned as a subject of its own (`data-hs.js`):
+  **six 4-week units per grade — Periods I to VI** (three in Semester One, three
+  in Semester Two), so the health content the guide gives each grade is taught
+  across the year: body parts, handwashing and body safety (G1), my body, my
+  safety and safe medicine (G2), food, cleanliness and saying no (G3), puberty,
+  hygiene and protecting myself (G4), nutrition, germs and the health services
+  near us (G5), body systems, disease and healthy living (G6). The period the
+  guide itself places the health content in keeps the guide's own outcomes
+  (G1 VI, G2 III & VI, G3 II & IV, G4 V & VI, G5 III & IV, G6 II & IV); the
+  other periods spiral the same grade's own outcomes, objectives, contents and
+  activities. It generates **lesson plans** (daily
+  and weekly, 40-minute four-stage periods, with a safeguarding note printed on
+  every plan) **and course packs** (workbook, period test, semester exam and
+  teacher's key) on the General Science engine
+- **Computer Science — Grades 1–12**: original unplugged-first
+  computing units for Grades 1–6 (`data-cs.js`), junior high ICT and
+  computational-thinking units for Grades 7–9 (`data-cs79.js`) and senior high
+  computer-science units for Grades 10–12 (`data-cs1012.js`) — **six 4-week
+  units per grade, Periods I to
+  VI**. No official Computer Science syllabus was supplied, so these are
+  teaching resources, not a transcription. Lesson plans open in the computing
+  circle (*we try, we debug, we do not laugh at a mistake*); packs reuse the
+  General Science engine with Computing Classroom Rules
+- **Kindergarten — KG-I and KG-II lesson plans and cover pages**: a Kindergarten
+  level band lists both kindergarten levels for every national-curriculum
+  subject, with its own generated `kg.png` artwork and a bright Kindergarten
+  cover template. On the **Kindergarten** subject a lesson plan is built from
+  the transcribed national ECD theme units (`data-kg.js`); everywhere else the
+  two levels stay **cover-page levels**, so choosing one produces the
+  customizable cover sheet alone — never invented worksheets
+- **Pagination engineered for A4** (794 × 1123 px sheets, fixed geometry),
+  with a responsive preview that scales the sheet instead of resizing it
+- **A Contents page that names the page**: every pack lists its periods, its
+  period tests, its examination papers and its answer keys with the number of
+  the page each of them begins on — entry on the left, dotted leaders across,
+  the number in the right margin — in the preview, on paper and in the `.docx`.
+  The numbers are read off the finished layout, so they stay true when
+  something re-flowes the pack: another font size, study notes switched off, a
+  worksheet edited in the teaching workspace
+- **Export**: `.docx` (student or teacher copy) and **Print / PDF** with
+  print-specific CSS
+- **Duplex print helper** — odd/even page sequences so an A4 workbook can be
+  printed double-sided on a printer that only prints one side at a time
+- **Fold book** — page order for a folded, stapled booklet (two pages per
+  sheet side), on **A4**, **A3** or **Legal** paper
+- Settings persist in `localStorage` (subject, grade, cover details, images)
+- **Installable on Android and PC** as a Progressive Web App, with the Liberia
+  flag-map favicon and offline app icon
+
+## Teaching workspace: library, editing and assessment
+
+Use the **Your teaching workspace** toolbar above the document preview. All
+three tools work offline, including from the single-file USB copy. Switch to
+**Teacher** session to manage teaching documents or edit answers.
+
+### Saved teaching library
+
+- Save a named copy of the current course pack, assessment or daily/weekly
+  lesson plan, including settings, question edits, answer keys, cover text and
+  uploaded artwork. Saving creates a new copy; it does not overwrite earlier work.
+- Search by name, subject, grade, class or term; open, duplicate, rename or delete
+  saved copies. Documents are kept locally in **IndexedDB**, not on a server.
+- **Export library backup** produces a JSON file for another device or USB.
+  **Export current document backup** also works when device storage is unavailable.
+  Import accepts versioned `.json` backups up to **25 MB / 100 documents**, validates
+  every record before writing, and adds new copies without replacing existing work.
+- **Backups may contain teacher answer keys and personal cover details. Do not
+  distribute them to pupils.** Student Word/print exports omit the answer-key
+  section; the Teacher/Student switch is a document-format choice, not authentication.
+- Clearing browser/site data deletes the library. A `file://` copy and a hosted
+  copy may have separate browser storage, so use backups to move between them.
+
+### Worksheet question editor
+
+Choose **Edit questions**, then a worksheet. For numbered worksheets with a
+one-to-one answer key, change questions, answers and optional marks; reorder or
+remove paired questions; replace a question with an unused generated alternative;
+or add teacher-written questions. Shared headings, instructions and passages
+are editable too. Replacements do not change the rest of the pack or its seed.
+
+Word banks, matching tables and other complex worksheets use a whole-worksheet
+editor with a companion key. Automatic question movement/replacement is disabled
+when correspondence cannot be established safely. Teachers must review both the
+question content and key after changing shared material. Existing fixed-format
+period/semester tests are unchanged; use **Assessment builder** for an editable
+marked test. Lesson-plan prose can still be edited after Word export.
+
+Click **Apply** to put form edits into the preview. Applied changes survive cover,
+font-size and Teacher/Student changes and feed both Word and Print/PDF. Edited
+selections are retained as drafts during the current session, but **save to the
+library or export a backup before closing/reloading** to retain them permanently.
+
+### Assessment builder
+
+Choose topics, a title, duration, target total and a blueprint of multiple-choice,
+true/false, short-answer and essay questions. Each type has a question count,
+marks per question and optional suggested thinking level (Recall, Understanding,
+Application). The builder checks totals and available unique questions; it never
+silently duplicates questions to fill a shortage. Availability varies by subject
+and topic; select more topics, lower counts, or start a blank assessment when needed.
+
+Edit each question, expected answer, marks and partial-credit/essay rubric;
+add, remove or reorder questions. Printed scores and totals follow the actual
+questions. Teacher exports include the marking scheme; student exports do not.
+Save an assessment before **Return to course pack** if you want to keep it.
+All papers are **original practice assessments**, not official WAEC past papers.
+Thinking levels and marking suggestions require teacher review.
+
+### Customizable auto-filled covers
+
+Open **Customization → Customize all cover titles & labels**. Main title,
+subtitle, curriculum/level line, subject value, detail labels, default message,
+and organization footer can all be overridden. Fields initially show the
+subject/session defaults. Once edited, an override remains fixed; **Auto** resets
+one field, and **Reset all cover text to automatic** resets all title/label overrides.
+A custom blank suppresses that text. School, class, pupil, teacher, term, year,
+motto and note remain editable in the existing cover fields above.
+
+Overrides are remembered locally and included in saved documents and Word/print
+exports. Designed covers combine term/year on one row; the Simple List template
+uses separately customizable Term and Year labels. Long cover text wraps and the
+on-screen/printed cover content scales down to remain within its A4 sheet.
+
+### The cover designer
+
+Open **Customization**. Under the template picker the **Cover designer** tunes the
+chosen template without changing the A4 geometry:
+
+| Control | What it does |
+|---|---|
+| **Cover colours** | Five pickers — border band, title ink, accent, paper and warm bar. **Auto** returns one colour to the template; *Use the template's colours* returns all five. |
+| **Emblem** | Any of eight drawn emblems (apple, building blocks, pencil, star, sun, plant, book, Liberian flag) instead of the template's own. An uploaded logo still wins, then a typed crest. |
+| **Title size** | 60–150% of the template's title, scaled on screen, in print and in Word. |
+| **Level line** | The italic line under the title. Blank prints the automatic curriculum and level line. |
+| **Show on the cover** | Eleven switches: school name, motto, emblem/logo, rule & book icon, level line, details panel, colour strip, corner leaves, corner dots, footer note, organization line. |
+
+Every setting is validated on load — a bad colour, an unknown emblem or an
+out-of-range scale falls back to the template — is stored on the device with the
+school's details, and is carried inside any document saved in the teaching
+library. The colours, emblem, title size and switches apply to the five designed
+templates; the Simple List template is plain text.
+
+### The back of the book — the author page
+
+A **Fold book** booklet has a back cover, and that sheet is about the author. It
+is edited in **Customization → Back of the book — the author**, below the cover
+controls and independent of them: the cover page can be switched off and the
+author page still prints, and vice versa.
+
+| Control | What it does |
+|---|---|
+| **Print an author page on the back of the book** | The whole sheet, on or off. Off removes the page *and* its page break, so the booklet simply ends on the last content page and the booklet preview stops labelling the last page. |
+| **Upload a photo / Remove** | Your own portrait, kept as a PNG so a cut-out keeps its transparency. With no upload the photo bundled with the page is used, and with neither the template's drawn emblem takes its place. |
+| **Photo size** | 16–70 mm, applied on screen, in print and in Word. |
+| **Title, subtitle, product line** | *About the Author*, the line under it, and the small italic line beneath the rule. |
+| **Biography, mission line, footer line** | The three paragraphs of the page. `**bold**` prints bold. |
+| **Details rows** | Four rows — author/teacher, school, subject, class — each with its own editable label beside its own editable value. |
+| **Show on the author page** | Fourteen switches: photo, title, subtitle line, product line, rule & book icon, biography, mission line, details rows, footer line, cover background photo, box around the text, corner leaves, corner dots, border around the photo. |
+
+The portrait stands alone on the sheet: no ring, no circle and no box are drawn
+around it and nothing is painted behind it, so the paper shows through a
+transparent image. **Border around the photo** puts the ring back for anyone who
+wants it. Every field prints the automatic wording for the pack in front of you
+while it stays blank — the placeholders show exactly what that wording is — so
+the panel can be ignored and the page still looks designed. The words are stored
+with the school's details, the portrait under its own storage key so a large
+photo cannot crowd them out, and both travel inside any document saved in the
+teaching library. The Word export reads the same settings, so a switched-off
+part is absent there too.
+
+### Kindergarten — KG-I and KG-II lesson plans and cover pages
+
+**Kindergarten** appears as a level band alongside Elementary, Junior High and
+Senior High, and lists **KG-I** and **KG-II**. Its band tab reads **KG** so the
+level row stays narrow on a handset. It is also a subject of its own: pick
+**National Curriculum → Kindergarten**, pick the level, tick the theme units
+and generate a **Lesson plan** — daily or weekly, 2 weeks per unit — built from
+the transcribed ECD planners, with songs, learning centers, small groups and
+observation checkpoints instead of exercise books. The plan file is named after
+the level, for example `Kindergarten_KG-I_Lesson_Plan_Teacher_Copy.docx`.
+
+Outside those lesson plans the two levels are deliberately **cover-page
+levels**. No other kindergarten material is transcribed on this platform, so the
+platform will not invent worksheets for them: pick any other subject, pick the
+level, design the cover, then **Print / PDF** or **Word (.docx)** — the file is
+named after the subject and level, for example
+`English_KG-II_Cover_Student.docx`. The unit list is empty with a note saying
+so, the cover's Class row reads `KG-I` or `KG-II`, its subtitle reads
+*Kindergarten I Cover Page*, and its footer reads *Kindergarten · Liberian
+National Curriculum* rather than claiming curriculum content.
+
+The Kindergarten band is offered only where it produces something:
+
+- in the **National Curriculum** track — never in the WASSCE track, which is a
+  Grade 12 examination;
+- for a **Course pack** on any subject — and for a **Lesson plan** only on the
+  **Kindergarten** subject, whose ECD units fill the plan; on every other
+  subject the band and its two levels disappear from the level picker the
+  moment the document switch moves to Lesson plan and return when it moves
+  back;
+- and never by default, so every subject still opens on its own lowest grade.
+
+The printed companion lessons live in `kg-lessons/`: a complete 4-week
+`KG-1-Staying-Healthy-and-Safe-Lessons.md` and
+`KG-2-Staying-Healthy-and-Safe-Lessons.md` for the model theme, written from
+the same planners.
+
+### Health Science — Elementary Grades 1–6
+
+**Health Science** is the health strand of the national Elementary **General
+Science** guide (grades 1–6), transcribed as a subject of its own in
+`data-hs.js`. Pick **National Curriculum → Health Science → Grade 1 … Grade 6**:
+each grade carries **six 4-week health units, Period I to Period VI** (Periods
+I–III in Semester One, IV–VI in Semester Two), and the same tab icon and
+`hs.png` cover artwork mark it everywhere else in the app. The periods that hold
+the guide's own health content — G1 VI, G2 III and VI, G3 II and IV, G4 V and
+VI, G5 III and IV, G6 II and IV — keep it at that period number; the rest teach
+the same grade's outcomes, objectives, contents and activities again, one unit
+at a time, in the order a child meets them. Every unit is a full unit of its
+own: outcomes, objectives, contents, activities, aids, key terms, oral
+questions, true/false, sorting, diagram, investigation, apply-it, home practice
+and assessment.
+
+- **Lesson plan** (daily or weekly, 40-minute periods, the sector's four stages):
+  the lesson opens in the **health circle** with the two rules (*everything is
+  answered honestly, no pupil is laughed at or named*), the habit is
+  **demonstrated and then practised by every pupil**, the summary says the class
+  health rule or slogan, the evaluation is oral plus the practice chart, and the
+  assignment ends with **home practice**. Weekly plans give each week its own study
+  focus from the unit's study notes, the class health chart, the remedial
+  pacing that never blames a pupil's home or body, and an **end-of-unit health
+  fair**. A **Safeguarding & Sensitive-Content Note** is printed on every health
+  plan: charts and correct names only, same-sex small groups for the body-change
+  talks, parent notice beforehand, invented characters for case studies, no
+  shaming, and the referral route for a disclosure (head teacher and carer the
+  same day; in Liberia the police Women and Children Protection Unit and the
+  Ministry of Gender, Children and Social Protection; a recent assault to a health
+  facility at once).
+- **Course pack**: the unit's key terms, matching, cloze, true/false, short
+  answer, MCQ, sorting, label-the-diagram, the investigation write-up and the
+  apply-it questions, plus the period test and the teacher's key — generated by
+  `GEN_SC`, the General Science engine, since the health content belongs to that
+  subject's guide.
+
+The printed companion lessons live in `elementary-lessons/`: one file per grade,
+each opening with **the six periods of that grade at a glance** (period, semester,
+unit title and the guide page it comes from) and then working up one period in
+full — the guide's own outcomes/objectives/contents/activities/materials/
+assessment block, the four-week scheme, the master materials list, the assessment
+plan, the appendices and a fully worked 40-minute **model lesson** with board
+plan, expected answers, common mistakes, differentiation and home practice —
+`Grade-1-Care-of-the-Body.md` … `Grade-6-Body-Systems-Disease-and-Healthy-Living.md`.
+
+### Computer Science — Grades 1–12
+
+**Computer Science** is an original computing course: elementary units in
+`data-cs.js` (Grades 1–6), junior high units in `data-cs79.js` (Grades 7–9) and
+senior high units in `data-cs1012.js` (Grades 10–12); the two upper files merge
+into the same `CS_CURRICULUM` list at load. No official Liberian Computer
+Science syllabus was supplied, so these units are **teaching resources, not an
+official transcription**. Teachers should compare them with the school's
+approved scheme of work before use.
+
+Pick **National Curriculum → Computer Science → Elementary / Junior High /
+Senior High → Grade 1 … Grade 12**: each grade carries **six 4-week units,
+Period I to Period VI** (Periods I–III in Semester One, IV–VI in Semester Two).
+The spiral is unplugged-first in the elementary grades and paper-first above
+them (every unit is teachable on paper and a chalkboard, with practice on a
+shared machine where the school has one), so a class with no computer can
+still compute:
+
+| Grade | Focus |
+|---|---|
+| 1 | Computers around us, following instructions, patterns, parts, machine safety, taking turns |
+| 2 | Input and output, sequences, information versus things, keyboard and mouse, digital manners, saving work |
+| 3 | Loops, debugging, files and folders, the internet as a library, unplugged coding, responsible phones |
+| 4 | Decomposition, if–then choices, networks, searching, digital footprint, instructions a computer can follow |
+| 5 | Hardware and software, variables, data, passwords and safety, collaboration, writing instructions |
+| 6 | Abstraction, binary, computing in Liberia and Africa, cybersecurity, a computational-thinking project, making a program |
+| 7 | The computer system (hardware, software, users), generations and types of computers, keyboard skills and word processing, the operating system and files, health and safety with ICT tools, algorithms, flowcharts and trace tables |
+| 8 | Inside the computer (CPU, memory, storage), spreadsheets, computer networks, the internet, the web and email, information security and digital citizenship, first programs (variables, input, output) |
+| 9 | Presentation software, programming with selection and repetition, data representation (text, images, sound), databases (tables, records, fields), web pages in HTML, emerging technology, careers and a computing project |
+| 10 | History and evolution of computing, number systems (binary, octal, hexadecimal), binary arithmetic and storage units, logic gates and Boolean algebra, computer architecture (inside the CPU), system software and operating systems |
+| 11 | Python data types, operators and expressions, Python control structures and functions, lists, strings and simple algorithms, relational databases and SQL, spreadsheets for analysis, networks and data communication |
+| 12 | Web technologies, client–server and cloud services, computer security, ethics and law, systems analysis and the SDLC, algorithm efficiency (searching, sorting, Big-O), AI, data science and emerging technologies, the computing project and examination preparation |
+
+Each unit carries **Physics-like course text** (`study[]` with many headings,
+tables and worked prose) and a **`worked[]` bank** of traced algorithms, counts
+and binary reasoning in the elementary grades, and of traces, conversions,
+binary sums, truth tables, Python expressions, SQL queries, spreadsheet
+formulas and step counts in the upper grades — 'calculations' proper to
+computing, not Physics sums.
+
+- **Lesson plan** (daily or weekly, 40-minute periods): the lesson opens in the
+  **computing circle** with the two rules (*we try, we debug, we do not laugh at
+  a mistake*), an **unplugged demonstration** is acted and then written, pupils
+  **pair-program** (driver and navigator), and the assignment ends with **home
+  practice** that needs no device. Weekly plans close with a **computing fair
+  and debug check**. A **Device & Online-Safety Note** is printed on every plan.
+- **Course pack**: key terms, matching, cloze, true/false, short answer, MCQ,
+  sorting, label-the-diagram, worked traces, the unplugged investigation
+  write-up and apply-it questions, plus the period test and the teacher's
+  key — generated by `GEN_SC`, including the shared **Calculations & problem
+  solving** sheet (traced algorithms, not Physics sums).
+
+**Source status:** original teaching resource; teacher review required. Not an
+official curriculum transcription. Scenarios are fictional.
+
+## Quick start
+
+1. **Open `index.html`** in any modern browser (Chrome/Edge/Firefox). That's it —
+   it works offline from a USB stick, a school computer with no internet, or
+   `file://`.
+2. Pick **Session → Subject → Level → Grade**, choose the units and exercise
+   types you want, then **⚙ Generate course pack**.
+3. **⬇ Word (.docx)** to edit in Word, or **🖨 Print / PDF** for paper.
+
+Rebuilding `index.html` from the source parts (e.g. after editing content):
+
+```bash
+bash build.sh
+```
+
+### Install on Android or PC
+
+The original `index.html` can still be opened directly and used offline. To
+install the platform like an app, serve the repository over HTTPS (or
+`localhost` during development), open `index.html` in Chrome or Edge, and use
+the **Install app** button when it appears.
+
+```bash
+python3 -m http.server 8000
+# then open http://localhost:8000
+```
+
+- **Android:** open the site in Chrome, tap **Install app** (or browser menu →
+  **Add to Home screen**), then confirm.
+- **Windows/macOS/Linux:** open the site in Chrome or Edge, click **Install
+  app**, then confirm. It opens in its own window and remains available offline.
+
+A service worker stores the offline shell (the single-file app, the
+duplex-print tool and its icons) **on each device** after the first successful
+visit — so every device must be opened once while online. The status line next
+to the **Install app** button says so: it shows **“Saved on this device —
+works without internet.”** once that device's offline copy is complete. Each
+shell file is cached independently, so a single failed download (a weak
+connection, a full cache) can no longer leave a device with no offline copy
+at all, and every page is cached under its own URL so the app and the
+duplex-print tool each come back correctly offline. Browsers only allow
+service workers over HTTP/HTTPS — not from a `file://` URL — so a USB copy
+opens directly in the browser instead of installing.
+
+## Using the generator
+
+| Control | What it does |
+|---|---|
+| **Session** | `Student` or `Teacher`. Teacher adds the answer-key pack contents. |
+| **Subject** | One of the 16 National Curriculum subjects; Biology/Chemistry/Physics reuse the Science engine, and Economics/Geography/History reuse the Social Studies engine, and Literature and Phonics have their own engines. |
+| **Level / Grade** | Education band (Elementary, Junior High, Senior High) and grade; a subject only shows the bands it covers. |
+| **Units to include** | Select the curriculum periods per grade. |
+| **Exercise types** | Which worksheets each unit gets. |
+| **Pack contents** | Study notes, period tests, semester exams, answer keys (teacher only). |
+| **Customization** | Cover template, school name, logo/background uploads, pupil/teacher/term/year, emoji crest. |
+| **Voice reader** | The floating 🔊 button (bottom-left) pronounces the current pack's difficult words or any sentence you type — pick a **Man/Woman** voice and an **accent** (African/US/UK/Australian/French), then **Speed** & **Pitch**. It uses the device's own speech engine, so it works offline. Long readings are spoken a sentence or two at a time and watched while they play, so a browser that stops talking cannot leave the reader stuck — and the panel says so if nothing comes out at all. It never appears on printed sheets. |
+| **Format & text size** | Body size (8–20 pt), questions per exercise, and the **variant seed**. |
+
+The **seed** makes packs reproducible: the same seed always produces exactly
+the same questions, so a student copy and its teacher copy match question for
+question. *New random variant* just picks a new seed.
+
+### Duplex printing a workbook
+
+If your printer prints one side at a time, click **📖 Duplex print** in the
+action bar (it pre-fills the current pack's page count):
+
+1. **Pass 1** — copy the **odd pages** sequence into the printer's page range and print.
+2. Flip the printed pages and reinsert them into the tray.
+3. **Pass 2** — copy the **even pages** sequence and print.
+
+The helper also shows how many sheets you'll need and remembers books you've
+named (saved in `localStorage` as `printBooks`). A standalone version of the
+same tool lives in `book.html`.
+
+### Fold book (stapled booklet)
+
+Click **Fold book** in the action bar to open the same helper in its second
+print session. Pick a paper size — **A4** (folds to A5), **A3** (folds to A4)
+or **Legal** (folds to 7 × 8½ in), in that order — and the tool lays the pages
+out as a saddle-stitched booklet: two pages side by side on each face of the
+sheet, outermost pages first (`N, 1, N-2, 3 …` on the front, `2, N-1, 4, N-3 …`
+on the back).
+
+1. In the print dialog choose the paper, **landscape**, and **2 pages per sheet**.
+2. **Pass 1** — copy the **front** sequence into the page range and print.
+3. Flip the sheets, reinsert them with the same edge leading.
+4. **Pass 2** — copy the **back** sequence and print.
+5. Fold the stack once down the middle and staple on the fold.
+
+A booklet needs a multiple of 4 pages; the summary says how many blank pages
+to add at the end when the pack falls short. Saved books remember which
+session and paper they were made with.
+
+## Subjects and coverage
+
+| Subject | Grades | Units per grade | Total units |
+|---|---|---|---|
+| English (`en`) | 1–9 | 6 | 54 |
+| Phonics (`pho`) | 1–12 | 6 | 72 |
+| French (`fr`) | 1–12 | 6 | 72 |
+| General Science (`sc`) | 1–9 | 6 | 54 |
+| Health Science (`hs`) | 1–6 | 6 (Periods I–VI) | 36 |
+| Computer Science (`cs`, original) | 1–12 | 6 (Periods I–VI) | 72 |
+| Mathematics (`ma`) | 1–12 | 6 for 1–9; 11 / 8 / 23 for 10 / 11 / 12 | 96 |
+| Social Studies (`ss`) | 1–9 | 6 | 54 |
+| Religious & Moral Education (`rm`) | 1–12 | 6 (Periods I–VI) | 72 |
+| Physical Education (`pe`) | 1–9 | 6 | 54 |
+| Biology (`bi`) | 10–12 | 6 | 18 |
+| Chemistry (`ch`) | 10–12 | 6 | 18 |
+| Physics (`ph`) | 10–12 | 6 | 18 |
+| Economics (`ec`) | 10–12 | 6 | 18 |
+| English Grammar (`eg`) | 10–12 | 6 | 18 |
+| Geography (`gg`) | 10–12 | 6 | 18 |
+| History (`hi`) | 10–12 | 6 | 18 |
+| Civics (`ci`, supplementary) | 7–12 | 6 | 36 |
+| Literature (`li`) | 10–12 | 6 | 18 |
+| Kindergarten (`kg`, lesson plans) | KG-I–KG-II | 2 theme units | 4 |
+
+> **Coverage:** Mathematics, French, **Phonics**, **Computer Science** and
+> **Religious & Moral Education** span Grades 1–12, and
+> Biology, Chemistry, Physics, Economics, English Grammar, Geography, History and
+> Literature cover Grades 10–12; the other elementary and junior-high
+> subjects stop at Grade 9. **Health Science** covers Grades 1–6 with **six 4-week
+> health units per grade — Periods I to VI**; the periods the guide gives health
+> content to keep it at the guide's own period number, and the rest spiral that
+> grade's own outcomes, objectives, contents and activities.
+> **Computer Science** covers Grades 1–12 with **six 4-week original units per
+> grade — Periods I to VI**, unplugged-first in Grades 1–6 and paper-first in
+> Grades 7–12; it is not an official syllabus transcription.
+> **Kindergarten** spans KG-I–KG-II with 2 ECD theme
+> units per level (lesson plans only; packs stay cover-only).
+
+### Religious & Moral Education — expanded Grades 6–12
+
+Choose **National Curriculum → Religious & Moral**, select Elementary (Grade 6),
+Junior High (Grades 7–9) or Senior High (Grades 10–12), then the periods to include.
+Keep **Study notes** enabled to include the full lessons. The subject has six
+periods in every grade, with 72 units across Grades 1–12; all **42 units in
+Grades 6–12** now include the full-detail supplement in `data-rm612-full.js`.
+
+| Grade | Period I | Period II | Period III | Period IV | Period V | Period VI |
+|---|---|---|---|---|---|---|
+| 6 | Creation | Commitment | Conflict resolution | Worship and offering | Religious personalities | Death and hereafter |
+| 7 | Reconciliation | Religion and substance abuse | Individual and society | Worship and offering | STIs | Peace |
+| 8 | Substance abuse | Conflict resolution | Moral teaching on sexual conduct | Reconciliation | Stewardship | Religious practices and moral implications |
+| 9 | Religious personalities and moral teachings | Commitment to God | Festivals and values | Religion and health | Religious leaders' ministries | Chastity and immorality |
+| 10 | Nature of God | Sources of religious authority | Worship and devotion | Marriage and family | Wealth, poverty and honest gain | Work and vocation |
+| 11 | Conscience and moral decisions | Justice, dignity and religious freedom | Leadership and governance | Sickness, suffering and care | Death and life after death | Science, technology and faith |
+| 12 | Comparative religion and dialogue | Peacebuilding | Environment | Discernment | Youth and nation-building | Meaning of life and commitment |
+
+Each expanded unit adds:
+
+- Two further learning goals, detailed explanations, a comparison table,
+  a step-by-step practical process and a contextual example.
+- Three defined vocabulary terms with example sentences, four recall questions
+  with answers, and two true/false checks with explanations.
+- Two application questions and two worked moral-reasoning cases with steps
+  and suggested conclusions, plus two guided classroom enquiry activities.
+- A six-question extended review in the study notes, before the original
+  assignment. The added vocabulary and questions also enter the existing
+  worksheets, period tests, semester exams and teacher-key pools.
+
+The expansion adds **126 glossary entries, 168 recall questions, 84 true/false
+checks, 84 application questions, 84 worked cases and 84 enquiry activities**.
+It uses the shared renderer and Word exporter, so screen, print and `.docx`
+workbooks receive the same material and remain fully offline. Lesson-plan
+builders can use the extended objectives, study headings and question pools.
+Grades 1–5 and the number and order of periods are unchanged.
+
+**Source status:** Grades 6–9 retain the uploaded Liberian guides' topic
+sequence; the expanded prose, cases and activities are original teaching
+supplements. Grades 10–12 are original multi-religious resources, **not an
+official Senior High RME syllabus or a WASSCE paper**. Christian, Islamic and
+African Traditional perspectives are attributed and compared, with internal
+variation acknowledged. The advanced comparative unit also introduces other
+traditions and non-religious perspectives without ranking people's worth.
+
+**Sensitive topics:** use fictional cases and voluntary, non-devotional
+participation. Do not require pupils to reveal personal beliefs, health,
+relationships, grief or family history. Health explanations distinguish
+infection from moral judgement, and qualified care from spiritual support.
+Safety and accountability are not cancelled by forgiveness or religious
+authority. Mark accurate knowledge and reasoned decisions, not devotion.
+
+Checks: `node tests/rme-curriculum.js`, `node tests/notes-verbatim.js`,
+`node tests/docx-inline.js` and `python3 tests/rme.py` (Playwright/Chromium).
+Rebuild the distributable after editing any data file: `bash build.sh`.
+
+### Civics — Grades 7–12
+
+Choose **National Curriculum → Civics**, then Junior High or Senior High.
+There are six original supplementary units per grade:
+
+| Grade | Focus |
+|---|---|
+| 7 | Belonging, fair rules, diversity, national symbols, peaceful conflict resolution, service |
+| 8 | Government, three branches, local administration, elections, rights, public budgets |
+| 9 | Media literacy, safe schools, disability inclusion, integrity, environment, advocacy |
+| 10 | Liberia's constitutional framework, rule of law, rights, oversight, constitutional change, reconciliation |
+| 11 | Public service, procurement, accounts, policy evaluation, development, disaster readiness |
+| 12 | International cooperation, regional peace, migration, trade, digital citizenship, civic inquiry |
+
+`data-ci.js` supplies study notes, glossary terms, worked scenario reasoning,
+worksheets, tests, teacher keys, projects and daily/weekly lesson-plan inputs.
+It reuses the Social Studies exercise engine and bundled artwork. No new network
+service or download is needed.
+
+**Source status:** no dedicated Civics syllabus was supplied in this repository.
+These units are original teaching resources, **not an official Liberian Civics
+syllabus transcription or WASSCE examination material**. Compare them with the
+school's approved scheme of work before classroom use. Scenarios are fictional;
+activities do not require learners to disclose political affiliations, private
+information or traumatic experiences.
+
+### Senior High History
+
+Choose **National Curriculum → History → Grade 10, 11 or 12**. History is
+separate from **WASSCE → WASSCE History**, which remains the Grade 12 exam track.
+All six periods per grade support student and teacher course packs, study
+notes, worksheets, period tests, semester exams, daily/weekly lesson plans,
+Word export and Print/PDF, including offline use.
+
+- **Grade 10:** African historical evidence; Ethiopia and Swahili civilization;
+  Liberian state and society; Ghana, Mali and Songhai; other African states;
+  the slave trade, exploration and colonization.
+- **Grade 11:** early foundations of European history; Greece, Macedonia and
+  Rome; Christianity and the Reformations; medieval society; industrialization
+  and the Enlightenment; imperialism, revolutions and the world wars.
+- **Grade 12:** Liberia's civil war and peace process; foreign policy; seven
+  selected presidents; economic history; Africa and the UN; eastern African
+  independence struggles.
+
+`data-hi.js` follows `uploads/History 10-12.pdf`, pp. 2–34. Ghana, Mali and
+Songhai are combined in Grade 10 Period IV, as in the guide. The study notes
+and practice questions are **original explanatory material aligned to the
+guide**, not a verbatim transcription or official examination questions.
+The guide's election-list typo is clarified as 2005 rather than 2000, and
+later medieval universities are distinguished from its 500–1000 heading.
+History reuses the existing world-history classroom cover image, so no
+additional download or runtime service is needed.
+
+## Emmanuel, the AI tutor — a key that never touches the browser
+
+The tutor is powered by Groq, but the Groq API key is **never** shipped in the
+page, in `ai.js`, or in any secret that reaches the browser. A tiny
+server-side proxy holds the key; the browser calls the proxy. This matters: a
+key baked into a static page or a public repo is scraped and revoked
+automatically by Groq within hours, and can be abused for your quota.
+
+### Recommended: host the site on Cloudflare Pages (easiest)
+
+Cloudflare Pages runs a serverless proxy *inside* the same site — no separate
+Worker to deploy and no URL to configure. The proxy ships in this repo at
+`functions/api/chat.js`; the app calls `/api/chat` on its own domain
+automatically.
+
+1. Create a fresh key at [console.groq.com/keys](https://console.groq.com/keys)
+   (and delete/revoke any old key — a key that ever appeared in a public page
+   is burned).
+2. Publish this repo to **Cloudflare Pages** (Workers & Pages → Create →
+   connect the GitHub repo). Build command can be empty; output directory the
+   repo root (or whatever serves `index.html`).
+3. In the Pages project: **Settings → Variables and Secrets → Add variable**:
+   - Name: `GROQ_API_KEY`
+   - Value: the `gsk_...` key
+   - Type: **Secret** (encrypted)
+4. **Deployments → Redeploy** (or push to GitHub). Done — the tutor works.
+
+### Alternative: GitHub Pages (or any static host)
+
+Static hosts can't run the proxy themselves, so deploy it as a standalone
+free Cloudflare Worker instead — full steps in [`worker/README.md`](worker/README.md).
+Short version:
+
+```bash
+cd worker && npx wrangler deploy && npx wrangler secret put GROQ_API_KEY
+```
+
+Then set the GitHub repository **variable** (Settings → Secrets and variables
+→ Actions → **Variables**) `AI_PROXY_URL` to the printed Worker URL
+(`https://liberia-packs-ai.<you>.workers.dev/`), and install the deploy
+workflow once:
+
+```bash
+mkdir -p .github/workflows && cp github/pages-deploy.workflow.yml .github/workflows/deploy.yml
+```
+
+`ai.js` finds the proxy in this order: `window.AI_PROXY_URL` (injected by
+`build.sh` from the `AI_PROXY_URL` variable) → `<meta name="ai-proxy-url">` →
+same-origin `/api/chat` (the Pages Function above) → the `PROXY_URL` constant
+in `ai.js`. If none is reachable the tutor shows a friendly "not connected"
+message and the rest of the app works normally.
+
+Both proxies only accept chat-completion requests for the tutor's model, only
+from your site's origin, and rate-limit visitors.
+
+### "Are you human?" — Cloudflare Turnstile
+
+The platform opens behind a Cloudflare Turnstile card, so automated software
+does not quietly spend the AI quota. It is one small widget, free, and it
+costs a real visitor at most a single click.
+
+1. In the Cloudflare dashboard: **Turnstile → Add site**. Add your site's
+   hostname, choose the managed (non-interactive) mode, and create it.
+2. Put the **site key** into the build — it is public by design, it only
+   identifies the widget. The built `index.html` is committed with it, so a
+   Cloudflare Pages deployment that serves the repo root gets the live card
+   immediately; to change the key, run `TURNSTILE_SITE_KEY=0x… bash build.sh`
+   and commit `index.html` again. If you rebuild via GitHub Actions instead,
+   leave it as an Actions **variable** (`TURNSTILE_SITE_KEY`) and the workflow
+   bakes it in.
+3. Add the **secret key** on the server that verifies tokens:
+   - **Cloudflare Pages:** Settings → Variables and Secrets →
+     `TURNSTILE_SECRET_KEY` (type *Secret*), then redeploy.
+   - **Standalone Worker:** `npx wrangler secret put TURNSTILE_SECRET_KEY`.
+
+The page asks the widget for a token and sends it with every tutor request;
+the proxy checks it against the secret before it calls Groq. When the token
+has expired the tutor quietly asks the visitor to confirm themselves again
+and re-sends the question on its own.
+
+Nothing is enforced until step 3 — leave the secret unset and both proxies
+behave exactly as they did before. The card is switched off just as
+thoroughly when there is no site key, and on `file://` copies and offline
+visits, because the check cannot run there and a USB copy of the course
+packs must never be locked out by it.
+
+> **The tutor says nothing when a request fails** — no error text, no status
+> codes, no key or hosting details. An unanswered question is simply taken
+> back. The reason is logged as a short code in the browser console for the
+> site owner, and never shown to a pupil.
+
+> **Rotate any Groq key that was ever committed or built into an `index.html`**
+> — revoke it at [console.groq.com](https://console.groq.com) and give the new
+> key to the proxy only (Pages secret or `wrangler secret`).
+
+> **Offline note:** the curriculum content, books and printing work fully
+> offline; the AI tutor needs an internet connection (it calls an online
+> model), as it always did — only the key handling changed. When the device
+> is offline the tutor hides itself — the floating button disappears, the
+> panel closes and a reply still in flight is ended gracefully — and the
+> button returns the moment the connection does. Everything else on the
+> platform is unaffected.
+
+## Project layout
+
+| File | Purpose |
+|---|---|
+| `index.html` | **The deliverable** — the built single-file app (generated by `build.sh`; commit it when sources change). |
+| `body.html` | Page markup (header, settings panel, action bar, duplex-print / fold-book dialog). |
+| `styles.css` | All styling, including A4 sheet geometry and `@media print` rules. |
+| `app.js` | The platform: subject registry, settings UI, block renderer, A4 pagination, `.docx` packager, cover builder, persistence. |
+| `data-*.js` | Curriculum content per subject (`data-en.js`, `data-pho.js` = Phonics Grades 1–12, `data-ma79.js` = Junior High part, `data-bi.js`, `data-kg.js` = Kindergarten ECD units, `data-hs.js` = Elementary health units for Grades 1–6, ...). |
+| `gen-*.js` | Exercise-generation engines per subject (some share an engine, e.g. `bi`/`ch`/`ph` use `gen-sc.js`, and `ec`/`gg`/`hi` use `gen-ss.js`; Literature has its own, `gen-li.js`, and Phonics its own, `gen-pho.js`). |
+| `book.js` | Duplex print sequence + fold-book (booklet imposition, A4/A3/Legal) helper — shared by the built-in dialog **and** `book.html`. |
+| `book.html` | Standalone version of the duplex print helper (dark theme), loads `book.js`. |
+| `ai.js` | The Emmanuel AI tutor: chat panel, streaming answers, and the quiet failure handling described below. |
+| `usage.js` | Optional **on-device usage counters** (Settings → *Usage & privacy*). Off by default, stored in `localStorage`, and **no network call of any kind** — `tests/usage.js` fails the build if one is ever added. Exports a `.json` report a school can hand to a principal, sponsor or ministry. |
+| `brand.js` | White-label configuration. One object (`window.APP_BRAND`) sets the product name, short name, the AI tutor's name, the support address and the footer text, so a licensee can rebrand without touching the code. |
+| `voice.js` | The offline voice reader: a floating button + panel (built with the browser's `speechSynthesis`) that pronounces the pack's difficult words or any typed sentence, with person (Man/Woman/Auto), African/other accents, speed and pitch controls. `app.js` feeds it the generated pack via `window.VOICE_READER.loadFromPack(pack, subjectId, label, grade)`. Hidden in print. |
+| `humancheck.js` | "Are you human?" — the Cloudflare Turnstile card that covers the platform until the visitor passes it. Switched off unless a `TURNSTILE_SITE_KEY` is baked in by `build.sh`. |
+| `manifest.webmanifest` / `sw.js` | Android/desktop installation metadata and offline app shell. |
+| `assets/icons/` | Liberia flag-map favicon, touch icon and installable-app icons. |
+| `functions/api/chat.js` | Cloudflare **Pages Function**: same-origin AI proxy at `/api/chat` used automatically when the site is hosted on Cloudflare Pages (set the `GROQ_API_KEY` Pages secret, and `TURNSTILE_SECRET_KEY` to enforce the human check). |
+| `worker/` | Standalone Cloudflare **Worker** proxy for static hosts that can't run server code (GitHub Pages etc.): holds the Groq key, enforces the Origin allowlist, model allow-list and rate limiting. Deploy instructions in `worker/README.md`. |
+| `github/pages-deploy.workflow.yml` | Ready-made GitHub Actions workflow: builds `index.html` with the `AI_PROXY_URL` variable and deploys to Pages. Copy it to `.github/workflows/deploy.yml` once. |
+| `github/deploy-worker.workflow.yml` | Optional ready-made workflow: deploys the Worker automatically when `worker/` changes. Copy it to `.github/workflows/deploy-worker.yml` and add `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` repository secrets to enable it. |
+| `build.sh` | Concatenates styles + markup + scripts into `index.html` and inlines the favicon and cover art; also bakes in `AI_PROXY_URL` and `TURNSTILE_SITE_KEY` when those variables are set. |
+| `tests/` | Playwright UI regressions (`ui.py`), all-subject regression (`regress.py`), the human-check and quiet-failure guard (`humancheck.py`), pure sequence unit test (`book.js`), `notes-verbatim.js` (dependency-free Node check that every `study[]` block list renders as-is, per subject — Social Studies, General Science, English, Phonics, Mathematics, French, Computer Science and Religious & Moral Education (Grades 1–12), Physical Education Grades 1–9, and Biology, Chemistry, Physics, Economics, English Grammar, Geography, History and Literature Grades 10–12 today; add a subject to its `SUBJECTS` list when its units gain `study` blocks, and `grades: N` (or `grades: {from: a, to: b}` for a band) once every unit in that range carries its own list). Three dependency-free Node checks sit alongside them: `tests/cover-kg.js` (the KG-I / KG-II cover-page levels, the cover-designer state normalizer, `designVars()`, `coverArtHtml()` show/hide and colour output, the kindergarten cover wording in `cover-text.js`, and that `kg.png` and the designer markup survive the build), `tests/kg-lesson.js` (the Kindergarten ECD units through the real plan builders: ECD daily/weekly wording, no exercise books or chalkboards, other subjects untouched, `data-kg.js` and the KG tab icon survive the build), `tests/health-lesson.js` (the Elementary health units through the real plan builders: health-circle wording, the safeguarding note on every plan, the guide's own content per grade, no ECD or generic-plan leakage either way, and `data-hs.js`, the `hs` tab icon, `hs.png` and the `elementary-lessons/` files surviving the build), `tests/cs-lesson.js` (the original Computer Science units for Grades 1–12 through the real plan builders: computing-circle wording, unplugged pair-debug, device-safety note, no health/ECD leakage, the upper-grade units' own subject matter, and `data-cs.js`, `data-cs79.js`, `data-cs1012.js`, the `cs` tab icon and `cs.png` surviving the build), `tests/voice.js` (the voice reader: chunking, one utterance at a time, no `pause()`, cancelled utterances ignored, silent-browser recovery), `tests/ai.js` (Emmanuel: failures reported, hangs given up on, Stop always frees the composer, answers streamed and remembered) and `tests/docx-inline.js` (the inline markup of the curriculum prose: `**bold**` and `*italic*` become `<b>`/`<i>` on the sheet and real runs in the `.docx`, entities become characters, an asterisk that is not markup keeps its place, and every subject's transcribed course text is swept for a marker that survives). |
+| `requirements.txt` | Python test dependencies. |
+
+### How the content is organized
+
+- Each `data-*.js` file declares one curriculum array; Junior High content
+  comes from a `*79.js` file that is merged in (`FR_CURRICULUM.push(...)`),
+  Senior High French from `data-fr1012.js`
+  (`FR_CURRICULUM.push.apply(FR_CURRICULUM, FR_CURRICULUM_1012)`),
+  and Senior High Mathematics from `data-ma-sh.js`
+  (`MA_CURRICULUM.push.apply(MA_CURRICULUM, MA_CURRICULUM_SH)`). The Senior
+  High generators live in `gen-ma-sh.js`, which adds its `_sh` drills and
+  methods to the shared `GEN_MA` object.
+- Every unit looks roughly like
+  `{grade, period, sem, icon, title, subtitle, outcomes, objectives, note,
+  focus, terms[], worked[], drills[], word[], challenge[], activities[]}`
+  (French uses `fr`/`en`/`vocab[]`; each subject carries the fields its
+  engine needs). The note field may contain simple `<b>/<i>` markup.
+- A unit may also carry `study[]` — a block list (`h3`/`p`/`bul`/`num`/`rule`,
+  plus `table`/`cols`) transcribed **as-is from the official course text**.
+  When present, the Study Notes page renders it verbatim instead of the
+  auto-assembled page. Block text carries a light inline markup —
+  `**bold**` for the key terms throughout the course text, `*italic*` for a
+  title, a foreign word or a word read aloud — and one parser (`inlineSegs()`
+  in `app.js`) reads it for every output: the sheet renders `<b>`/`<i>`, and
+  the Word export emits a real bold/italic run, so no marker the writer meant
+  as emphasis is ever printed as text. Spans nest as the course text writes
+  them (`*un carré **rouge***`) and an italic span may run to a whole worked
+  example. The parser reads markup only: a multiplication (`0*4 + 1*2`),
+  a spaced operator (`2 + 3 * 4`), an unpaired `**`, the `*` a WASSCE syllabus
+  puts in front of a topic reserved for some countries, an inequality
+  (`x < 10`) and the HTML a computing lesson teaches
+  (`<p>Hello <b>world</b></p>`) all
+  print exactly as written. Entities a field still carries (`&gt;`, `&nbsp;`,
+  `&deg;`) become the characters they name instead of printing as text.
+  `tests/docx-inline.js` guards all of it. The original 15 subjects carry
+  notes derived from their curriculum guides — Social Studies,
+  General Science, English, Mathematics, French, Religious & Moral Education
+  and Physical Education, Grades 1–9 (54 units each, plus the 42 Senior High
+  Mathematics units, the 18 Senior High French units and the 72 Phonics units
+  covering Grades 1–12), and Biology,
+  Chemistry, Physics, Economics, English
+  Grammar, Geography and Literature, Grades 10–12 (18 units each) — with the
+  guide page range of each unit recorded in a comment above its list. History
+  adds 18 units of original explanatory notes aligned to the uploaded guide,
+  with machine-readable `source.file` and `source.pages` fields. The renderer
+  preserves these authored blocks as-is too; the rendering test does not claim
+  that authored explanations are verbatim text from the PDF.
+- Generators emit a **uniform block model**
+  (`{k:"h3"|"p"|"table"|"num"|"bul"|"mcq"|..., t/head/rows/...}`), so one
+  renderer handles pagination and one exporter builds Word for every subject.
+
+### Adding content or a subject
+
+1. Add units to (or create) a `data-*.js` file following the existing shape.
+2. Register the subject in `SUBJECTS` in `app.js` (label, flag, accent,
+   curriculum, engine, defaults, title/filename) — or reuse another subject's
+   engine like Biology does.
+3. `bash build.sh` and open `index.html` locally to check it.
+4. Run the tests below.
+
+## Building and testing
+
+```bash
+# rebuild the single-file app
+bash build.sh
+
+# unit test for the duplex-print helper (no dependencies)
+node tests/book.js
+
+# verbatim study-notes check (no dependencies): executes the real
+# UNIT_NOTES/blockHtml/rich sources against the data files
+node tests/notes-verbatim.js
+
+# Senior High History coverage, worksheets, keys and lesson plans (no dependencies)
+node tests/history.js
+
+# KG-I / KG-II cover-page levels and the cover designer (no dependencies)
+node tests/cover-kg.js
+
+# back-of-the-book author page: the switch, the unbordered portrait and every
+# editable line, run against the real app.js sources (no dependencies)
+node tests/author-cover.js
+
+# Kindergarten ECD units and lesson-plan wording (no dependencies)
+node tests/kg-lesson.js
+
+# Elementary health units and health lesson-plan wording (no dependencies)
+node tests/health-lesson.js
+
+# Computer Science units (Grades 1-12) and unplugged lesson-plan wording (no dependencies)
+node tests/cs-lesson.js
+
+# contents page numbers: the matcher that tells each Contents line which page
+# its part begins on (no dependencies)
+node tests/toc.js
+
+# inline markup in the exports: **bold** and *italic* become real Word runs,
+# entities become characters, and nothing else is touched (no dependencies)
+node tests/docx-inline.js
+
+# voice reader and AI tutor (no dependencies)
+node tests/voice.js
+node tests/ai.js
+
+# UI regressions (needs Playwright + Chromium)
+python3 -m pip install -r requirements.txt
+python3 -m playwright install chromium
+python3 tests/ui.py          # panel, covers, uploads, duplex helper, responsive
+python3 tests/regress.py     # every subject/grade/session, font sizes, devices
+python3 tests/history.py     # History track/grade controls, packs, plans, exports
+```
+
+`tests/ui.py` guards the settings panel, cover templates, image uploads,
+A4 sheet geometry, the duplex dialog, and the kindergarten cover-page levels with
+the cover designer driving the sheet live. `tests/regress.py` walks every
+subject × grade × session at several font sizes and viewports and asserts the
+A4 sheet never changes size, pages never leak answer keys in student mode, and
+no horizontal scrollbar appears.
+
+### Teaching-workspace regression checks
+
+```bash
+node tests/civics-teaching.js
+python3 tests/teaching.py
+```
+
+The dependency-free Node test covers all 36 Civics units, default worksheets,
+period/semester tests, daily/weekly plans, deterministic generation, linked keys,
+student filtering and assessment pools. The Playwright test covers offline
+IndexedDB save/reopen, duplicate/delete/import/export, malformed-backup rejection,
+question/key pairing and replacement, assessment edits/totals, teacher/student
+Word exports, saved lesson plans, automatic/custom cover text, print visibility
+and mobile layout. Set `PW_CHROMIUM` to use a non-default Chromium executable.
+
+## Commercial, legal and handover documents
+
+For anyone evaluating, buying, licensing or inheriting the platform:
+
+| File | What it is |
+|---|---|
+| [`SALE-READINESS.md`](SALE-READINESS.md) | The checklist for getting the platform ready to sell, in priority order. |
+| [`PRICING.md`](PRICING.md) | Licence tiers, the print-and-deliver model, and what the IP is worth today vs. with traction. |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | How the platform is built, how to run it, and how to add a subject — the handover document. |
+| [`PRIVACY.md`](PRIVACY.md) | Plain-language privacy statement for schools, parents and ministries. |
+| [`SECURITY.md`](SECURITY.md) | Security posture and vulnerability disclosure. |
+| [`NOTICE.md`](NOTICE.md) | What is original, what is transcribed Ministry of Education material, and third-party marks. |
+| [`LICENSE`](LICENSE) | MIT for the **code only**; see `NOTICE.md` for content and third-party material. |
+
+Two short notes that recur in all of them:
+
+- **Nothing is uploaded.** The platform has no analytics. Counting, when
+  switched on, stays in the browser; the AI tutor is the only feature that
+  sends anything (the question text, to your own proxy).
+- **The curriculum is the Ministry's.** Fifteen subjects' notes are
+  transcribed from official Liberian guides. The transcription and the platform
+  are yours; the underlying curriculum is not, and no sale can make it
+  exclusive.
+
+## License
+
+No license file is included yet. Ask the repository owner before
+redistributing the curriculum content or the generated packs.
+s uploaded.** The platform has no analytics. Counting, when
+  switched on, stays in the browser; the AI tutor is the only feature that
+  sends anything (the question text, to your own proxy).
+- **The curriculum is the Ministry's.** Fifteen subjects' notes are
+  transcribed from official Liberian guides. The transcription and the platform
+  are yours; the underlying curriculum is not, and no sale can make it
+  exclusive.
+
+## License
+
+No license file is included yet. Ask the repository owner before
+redistributing the curriculum content or the generated packs.
+curriculum is not, and no sale can make it
+  exclusive.
+
+## License
+
+No license file is included yet. Ask the repository owner before
+redistributing the curriculum content or the generated packs.

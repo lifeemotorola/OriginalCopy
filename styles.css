@@ -1,0 +1,1712 @@
+:root{ --fs:12pt;
+  --bleu:#0b3b8c; --bleu-l:#1e5fd0; --rouge:#d3242e; --ink:#12203a; --muted:#5d6b85;
+  --line:#dde5f2; --bg:#e9eef7; --gold:#e0a318; --shadow:0 6px 22px rgba(11,59,140,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+button,select,input{font-family:inherit}
+
+.top{background:linear-gradient(135deg,#0b3b8c,#1e5fd0);color:#fff;padding:18px 20px;position:relative}
+.top::after{content:"";position:absolute;inset:auto 0 0 0;height:5px;
+  background:linear-gradient(90deg,var(--bleu) 33%,#fff 33% 66%,var(--rouge) 66%)}
+.top-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font-size:1.35rem;line-height:1.25}
+.top p{margin:3px 0 0;font-size:.83rem;opacity:.9}
+.top-txt{min-width:0;flex:1}
+.top-sub{display:inline-block;margin-top:2px;font-size:.78rem;opacity:.8}
+.crest{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.16);
+  display:grid;place-items:center;font-size:24px;border:1px solid rgba(255,255,255,.28)}
+/* hamburger: arranges the whole layout — collapses the settings sidebar on
+   desktop so the pack uses the full width, and opens the drawer on touch */
+.menu-btn{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.14);color:#fff;
+  cursor:pointer;transition:background .15s,border-color .15s}
+.menu-btn:hover{background:rgba(255,255,255,.3)}
+.menu-btn .ic{width:1.45rem;height:1.45rem}
+.install-app{flex:none;border:1px solid rgba(255,255,255,.55);border-radius:10px;
+  padding:9px 13px;background:#fff;color:#0b3b8c;font-weight:800;cursor:pointer;
+  box-shadow:0 3px 12px rgba(0,0,0,.14)}
+.install-app:hover{background:#f2f6ff}.install-app[hidden]{display:none}
+.install-status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:640px){.install-app{margin-left:60px}.top-in{align-items:flex-start}}
+@media(display-mode:standalone){.install-app{display:none!important}}
+
+.wrap{max-width:1400px;margin:0 auto;padding:18px 20px 60px;display:grid;grid-template-columns:310px 1fr;gap:20px;align-items:start}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}}
+
+/* ---- control panel ---- */
+.panel{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);
+  padding:0;position:sticky;top:14px;max-height:calc(100vh - 30px);
+  display:flex;flex-direction:column;overflow:hidden}
+.panel-scroll{overflow:auto;padding:14px 14px 4px;flex:1;min-height:0}
+@media(max-width:980px){
+  .panel{position:static;max-height:none;overflow:visible;display:block}
+  .panel-scroll{overflow:visible;max-height:none;padding:14px 14px 0}
+}
+.panel h2{font-size:.7rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);
+  margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.panel h2:first-child{margin-top:0}
+
+/* ---- the three always-visible choices ---- */
+.grp{margin-bottom:12px}
+.grp-lab{font-size:.68rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);
+  font-weight:700;margin-bottom:6px}
+.grp-key+.grp-key{margin-top:12px}
+.row-sel{margin-bottom:0}
+
+/* ---- collapsible dropdown sections ---- */
+.dd{border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:#fcfdff;overflow:hidden}
+.dd[open]{background:#fff;border-color:#c9dbf6;box-shadow:0 2px 10px rgba(11,59,140,.06)}
+.dd>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;
+  padding:10px 11px;font-size:.86rem;font-weight:600;color:var(--ink);user-select:none}
+.dd>summary::-webkit-details-marker{display:none}
+.dd>summary:hover{background:#f3f7ff}
+.dd[open]>summary{border-bottom:1px solid var(--line)}
+.dd-ic{font-size:1rem;flex:none;line-height:1}
+.dd-t{flex:1;min-width:0}
+.dd-n{font-size:.7rem;font-weight:700;color:var(--bleu);background:#e8f0ff;
+  border-radius:20px;padding:2px 8px;flex:none;white-space:nowrap;
+  max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.dd-c{flex:none;color:var(--muted);font-size:.8rem;transition:transform .18s}
+.dd[open]>summary .dd-c{transform:rotate(180deg)}
+.dd-b{padding:10px 11px 12px}
+.dd-b .hint:first-child{margin-top:0}
+
+/* ---- sticky action bar inside the panel ---- */
+.panel-act{flex:none;padding:11px 14px 13px;border-top:1px solid var(--line);
+  background:linear-gradient(#fff,#f7faff)}
+.panel-act .btn:first-child{margin-top:0}
+@media(max-width:980px){.panel-act{position:static}}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:9px}
+.row label{font-size:.86rem;flex:1}
+select,input[type=number]{padding:7px 9px;border:1px solid var(--line);border-radius:9px;
+  background:#f8fbff;color:var(--ink);font-size:.9rem;width:100%}
+select:focus,input:focus{outline:2px solid #bcd3fb;outline-offset:0}
+.chk{display:flex;gap:8px;align-items:flex-start;padding:5px 6px;border-radius:8px;font-size:.85rem;cursor:pointer}
+.chk:hover{background:#f3f7ff}
+.chk input{margin-top:3px;flex:none;accent-color:var(--bleu)}
+.chk b{color:var(--bleu)}
+.mini{display:flex;gap:6px;margin:6px 0 2px}
+.mini button{flex:1;font-size:.74rem;padding:5px;border:1px solid var(--line);background:#f5f9ff;
+  color:var(--bleu);border-radius:7px;cursor:pointer}
+.mini button:hover{background:#e8f0ff}
+.mini button.lp-p.on,
+.mini button.lp-w.on{background:var(--bleu);border-color:var(--bleu);color:#fff}
+.btn{width:100%;padding:11px;border:none;border-radius:11px;font-weight:700;font-size:.94rem;cursor:pointer;margin-top:12px}
+.btn-p{background:var(--bleu);color:#fff}
+.btn-p:hover{background:var(--bleu-l)}
+.btn-s{background:var(--gold);color:#3b2c00}
+.btn-s:hover{filter:brightness(1.07)}
+.hint{font-size:.75rem;color:var(--muted);margin:6px 0 0}
+.kg-lesson-link{margin-top:8px;padding:6px 10px;border:1px solid #b3541e;border-radius:6px;background:#fff8ef;color:#8a3f16;font:inherit;font-weight:700;cursor:pointer}
+.kg-lesson-link:hover,.kg-lesson-link:focus-visible{background:#b3541e;color:#fff}
+
+/* ---- export bar ---- */
+.bar{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);
+  padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar .meta{font-size:.83rem;color:var(--muted);flex:1}
+.bar .pill{flex:none;font-size:.78rem;color:var(--bleu);background:#eaf1ff;
+  border:1px solid #d3e2fb;border-radius:20px;padding:4px 11px;font-weight:600}
+.bar .pill b{font-weight:800}
+.bar button{padding:9px 16px;border:none;border-radius:9px;font-weight:700;font-size:.86rem;cursor:pointer}
+.b1{background:var(--bleu);color:#fff}
+.b2{background:var(--gold);color:#3b2c00}
+.b1:hover{background:var(--bleu-l)}.b2:hover{filter:brightness(1.07)}
+
+/* ---- paper preview ---- */
+/* exact A4 sheet: 210mm x 297mm, 14pt body text */
+.page{background:#fff;border:1px solid var(--line);border-radius:0;box-shadow:var(--shadow);
+  width:210mm;min-height:297mm;height:297mm;padding:14mm 15mm 12mm;margin:0 auto 22px;
+  font-size:var(--fs);line-height:1.42;color:#111;display:flex;flex-direction:column;overflow:hidden}
+.page.flow{height:auto;min-height:297mm;overflow:visible}
+.page.measure{position:absolute;left:-99999px;top:0;visibility:hidden;box-shadow:none;margin:0;
+  height:297mm;display:flex;flex-direction:column}
+.page.measure .pbody{flex:0 0 auto;height:auto}
+.pbody{flex:1 0 auto}
+/* ---- running header & footer on every sheet ----
+   Font size, colour and bold come from --sh-hf-* variables written by
+   applyHF(); the per-element show/hide is driven by data attributes on
+   <body>. A section left at its defaults reproduces the original look
+   exactly: 9pt, #666666, left header bold, full visibility. */
+.phead,.pfoot{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  font-size:var(--sh-hf-hdr-fs, 9pt);color:var(--sh-hf-hdr-col, #666666);
+  letter-spacing:.02em;flex:0 0 auto}
+.phead{border-bottom:1px solid var(--bleu-l);padding-bottom:5px;margin-bottom:14px;
+  font-size:var(--sh-hf-hdr-fs, 9pt);color:var(--sh-hf-hdr-col, #666666)}
+.phead .phdr-l{font-weight:var(--sh-hf-hdr-bold, 700);color:var(--bleu);text-transform:uppercase;letter-spacing:.05em}
+.phead .phdr-r{white-space:nowrap;overflow:hidden;text-overflow:clip}
+/* Repositioned sheet footer: centred and lifted clear of the sheet's bottom
+   edge. The page number lives in the right-hand .pftr-pg span (the footer's
+   last child, see tests/regress.py), so it stays put when the footer moves. */
+.pfoot{border-top:1px solid var(--bleu-l);padding-top:5px;margin-top:12px;margin-bottom:8mm;
+  justify-content:center;gap:10px;
+  font-size:var(--sh-hf-ftr-fs, 9pt);color:var(--sh-hf-ftr-col, #666666)}
+.pfoot .pftr-l{white-space:nowrap;overflow:hidden;text-overflow:clip}
+.pfoot .pftr-r{white-space:nowrap;font-weight:700;color:var(--bleu)}
+.pfoot .pftr-pg{white-space:nowrap;font-weight:700;color:var(--bleu)}
+.page h1{font-size:1.43em;color:var(--bleu);border-bottom:2px solid var(--bleu);padding-bottom:6px;margin:18px 0 10px}
+.page h2{font-size:1.21em;color:var(--bleu-l);margin:16px 0 8px}
+.page h3{font-size:1.07em;margin:15px 0 7px;color:#12203a}
+.page p{margin:6px 0}
+.page p.it{font-style:italic;color:#555}
+.page .instr{background:#f2f6fc;border-left:3px solid var(--bleu-l);padding:7px 11px;
+  font-style:italic;color:#3d4a63;font-size:.93em;border-radius:0 6px 6px 0}
+.page ol,.page ul{margin:7px 0 7px 22px;padding:0}
+.page li{margin:5px 0}
+/* ---- contents with page numbers ----
+   A Contents list that the layout pass stamped with page numbers (see toc.js)
+   reads like a printed table of contents: no bullets, the entry on the left,
+   dotted leaders running across to the number of the page it begins on. */
+.page ul.toc{list-style:none;margin:9px 0;padding:0}
+.page ul.toc li{display:flex;align-items:baseline;gap:.45em;margin:4px 0}
+.page ul.toc li .toc-l{flex:0 1 auto;min-width:0}
+.page ul.toc li .toc-d{flex:1 0 1.2em;min-width:1.2em;border-bottom:1px dotted #8fa0ba;transform:translateY(-.26em)}
+.page ul.toc li .toc-p{flex:0 0 auto;font-weight:700;color:var(--bleu);font-variant-numeric:tabular-nums}
+.page table{width:100%;border-collapse:collapse;margin:9px 0;font-size:.93em}
+.page th,.page td{border:1px solid #9ab3d9;padding:5px 8px;text-align:left;vertical-align:top}
+.page th{background:#dce6f5;font-weight:700}
+.page td:first-child{font-weight:600}
+/* form-style table (teacher's lesson plan): no header row, no default bold */
+.ftable td:first-child{font-weight:400}
+.ftable td.b{font-weight:700}
+.ftable td.ctr{text-align:center}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.cols ol,.cols ul{list-style:none;margin:6px 0;padding:0}
+.cols li{margin:7px 0}
+.wl{border-bottom:1px solid #bbb;height:9mm;margin:2mm 0}
+.sp{height:10px}
+.page hr{border:none;border-top:1px solid var(--line);margin:12px 0}
+
+@media print{
+  .top,.panel,.bar,.fold-print-note{display:none!important}
+  /* padding must win over the max-width:1280px media rule, which also
+     matches the printed page width (~1123px on A4 landscape) and would
+     leave a 50px strip that pushes a blank page onto the end of the PDF */
+  .wrap{display:block;padding:0!important;max-width:none}
+  body{background:#fff}
+  .page{box-shadow:none;border:none;border-radius:0;margin:0;padding:14mm 15mm 12mm;
+    width:210mm;height:297mm;min-height:297mm;font-size:var(--fs);
+    page-break-after:always;display:flex;flex-direction:column;overflow:hidden}
+  .page:last-child{page-break-after:auto}
+  .phead,.pfoot{display:flex!important;font-size:9pt}
+  .pbody{flex:1 0 auto}
+  .page:last-child{page-break-after:auto}
+  @page{size:210mm 297mm;margin:0}
+  .fold-sheet-banner{display:none!important}
+  .fold-crease::before,.fold-crease::after{display:none!important}
+  .fold-crease{border-left:1px dotted #ccc!important}
+  .fold-blank-inner{display:none!important}
+  .fold-subpage.fold-blank{background:#fff!important}
+  .page.fold-sheet{box-shadow:none!important;border:none!important;margin:0!important;padding:0!important;max-height:none!important}
+}
+
+/* ============ PLATFORM: subject theming ============ */
+body[data-subject="en"]{--bleu:#0b6b3a;--bleu-l:#12864b;--rouge:#c8102e}
+body[data-subject="en"] .top{background:linear-gradient(135deg,#0b6b3a,#12864b)}
+body[data-subject="en"] .top::after{
+  background:linear-gradient(90deg,#c8102e 33%,#fff 33% 66%,#0b6b3a 66%)}
+body[data-subject="en"] .page th{background:#dcf0e4}
+body[data-subject="en"] .page th,body[data-subject="en"] .page td{border-color:#9ad0b0}
+
+.subtabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:2px}
+.subtab{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 7px;
+  border:1px solid var(--line);background:#f7faff;color:var(--muted);font-weight:700;
+  font-size:.84rem;line-height:1.2;border-radius:10px;cursor:pointer;transition:.15s;min-height:44px}
+.subtab:hover{background:#eef4ff;color:var(--ink)}
+.subtab.on{background:var(--bleu);color:#fff;border-color:var(--bleu);box-shadow:0 3px 10px rgba(0,0,0,.13)}
+.subtab .fl{font-size:1.15rem}
+
+/* --- Phonics subject theme --- */
+body[data-subject="pho"]{--bleu:#c05a1e;--bleu-l:#e07a2e;--rouge:#0b3b8c}
+body[data-subject="pho"] .top{background:linear-gradient(135deg,#c05a1e,#e07a2e)}
+body[data-subject="pho"] .page th{background:#fcead9}
+body[data-subject="pho"] .page th,body[data-subject="pho"] .page td{border-color:#e3ab7e}
+
+/* --- General Science subject theme --- */
+body[data-subject="sc"]{--bleu:#7a2e12;--bleu-l:#b4541f;--rouge:#0b6b3a}
+body[data-subject="sc"] .top{background:linear-gradient(135deg,#7a2e12,#b4541f)}
+body[data-subject="sc"] .page th{background:#fbe6d5}
+body[data-subject="sc"] .page th,body[data-subject="sc"] .page td{border-color:#e0ab84}
+
+/* --- Mathematics subject theme --- */
+body[data-subject="ma"]{--bleu:#5b2a86;--bleu-l:#8247b5;--rouge:#c8102e}
+body[data-subject="ma"] .top{background:linear-gradient(135deg,#5b2a86,#8247b5)}
+body[data-subject="ma"] .page th{background:#ebdff7}
+body[data-subject="ma"] .page th,body[data-subject="ma"] .page td{border-color:#c0a3dd}
+
+body[data-subject="ss"]{--bleu:#0d6a6a;--bleu-l:#128f8f;--rouge:#c8102e}
+body[data-subject="ss"] .top{background:linear-gradient(135deg,#0d6a6a,#128f8f)}
+body[data-subject="ss"] .page th{background:#d8f0ee}
+body[data-subject="ss"] .page th,body[data-subject="ss"] .page td{border-color:#84c7c2}
+
+body[data-subject="rm"]{--bleu:#8a5a00;--bleu-l:#b8860b;--rouge:#0b6b3a}
+body[data-subject="rm"] .top{background:linear-gradient(135deg,#8a5a00,#b8860b)}
+body[data-subject="rm"] .page th{background:#f7ebd0}
+body[data-subject="rm"] .page th,body[data-subject="rm"] .page td{border-color:#d8bb77}
+
+/* Physical Education theme */
+body[data-subject="pe"]{--bleu:#1f7a3d;--bleu-l:#2e9e55;--rouge:#8a5a00}
+body[data-subject="pe"] .top{background:linear-gradient(135deg,#1f7a3d,#2e9e55)}
+body[data-subject="pe"] .page th{background:#def2e4}
+body[data-subject="pe"] .page th,body[data-subject="pe"] .page td{border-color:#8ccaa2}
+
+/* Senior High History shares the warm archive palette, not the WASSCE track. */
+body[data-subject="hi"]{--bleu:#8a5a00;--bleu-l:#b8860b;--rouge:#0b3b8c}
+body[data-subject="hi"] .top{background:linear-gradient(135deg,#8a5a00,#b8860b)}
+body[data-subject="hi"] .page th{background:#f7ebd0}
+body[data-subject="hi"] .page th,body[data-subject="hi"] .page td{border-color:#d8bb77}
+
+body[data-subject="gg"]{--bleu:#1f6b4f;--bleu-l:#2e8b6a;--rouge:#8a5a00}
+body[data-subject="gg"] .top{background:linear-gradient(135deg,#1f6b4f,#2e8b6a)}
+body[data-subject="gg"] .page th{background:#dcf0e7}
+body[data-subject="gg"] .page th,body[data-subject="gg"] .page td{border-color:#8fc7ab}
+
+/* --- Kindergarten subject theme --- */
+body[data-subject="kg"]{--bleu:#b3541e;--bleu-l:#d3762a;--rouge:#0b6b3a}
+body[data-subject="kg"] .top{background:linear-gradient(135deg,#b3541e,#d3762a)}
+body[data-subject="kg"] .page th{background:#f7e8d2}
+body[data-subject="kg"] .page th,body[data-subject="kg"] .page td{border-color:#dfb380}
+
+/* Computer Science — computer blue, distinct from Social Studies teal and Health green */
+body[data-subject="cs"]{--bleu:#154e8a;--bleu-l:#2a7bc4;--rouge:#c8102e}
+body[data-subject="cs"] .top{background:linear-gradient(135deg,#154e8a,#2a7bc4)}
+body[data-subject="cs"] .page th{background:#dceaf7}
+body[data-subject="cs"] .page th,body[data-subject="cs"] .page td{border-color:#8fb4d8}
+
+/* cover page controls */
+#cvBox input[type=text]{width:100%;box-sizing:border-box;margin:0 0 6px;padding:6px 8px;
+  border:1px solid #c9d3e2;border-radius:6px;font:inherit;font-size:.85rem}
+#cvBox .row2{display:flex;gap:6px}
+#cvBox .row2 input{width:50%}
+#cvBox .row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+#cvBox .row input[type=text]{margin:0}
+/* the author back-cover panel is its own box, so it carries the same field
+   styling as the cover panel above it */
+#auBox input[type=text],#auBox textarea{width:100%;box-sizing:border-box;margin:0 0 6px;
+  padding:6px 8px;border:1px solid #c9d3e2;border-radius:6px;font:inherit;font-size:.85rem}
+#auBox textarea{resize:vertical;line-height:1.5}
+#auBox .row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+#auBox .row input[type=text]{margin:0}
+#auBox .row label{flex:none;white-space:nowrap;font-size:.8rem}
+#auPhotoSize{flex:1;min-width:0;accent-color:var(--bleu)}
+/* one details row: its label beside the value it prints */
+.aufact{display:flex;gap:6px;margin-bottom:6px}
+.aufact input{flex:1;min-width:0}
+.aufact .au-lab{flex:0 0 42%}
+.auprev{height:74px}
+.auprev small{position:absolute;right:3px;bottom:3px;padding:1px 4px;border-radius:4px;
+  background:rgba(10,25,55,.76);color:#fff;font-size:.55rem;font-weight:700}
+.crest-in{width:58px!important;text-align:center;flex:none}
+/* number inputs in the panel sit right-aligned at a readable width */
+.dd-b .row input[type=number]{width:82px;flex:none}
+#periods .chk,#ddParts .chk{align-items:flex-start;margin-bottom:2px}
+
+/* centred cover text on the printed sheet */
+.page .ctr{text-align:center}
+.page h1.ctr{border-bottom:0}
+.page p.cbig{text-align:center;font-weight:700;font-size:1.35em;margin:.2em 0}
+
+/* session switch (student / teacher) */
+/* level (band) selector */
+.bandtabs{display:flex;gap:6px}
+/* flex:1 1 0 with min-width:0 lets every tab shrink below its content, so a
+   long band name can never push the row wider than the panel on a handset. */
+.bandtabs .bandtab{flex:1 1 0;min-width:0;overflow-wrap:anywhere;padding:8px 6px;
+  border:1px solid var(--line);background:#f7faff;
+  color:var(--muted);font-weight:700;font-size:.8rem;border-radius:9px;cursor:pointer;
+  transition:.15s;min-height:40px}
+.bandtabs .bandtab:hover{background:#eef4ff;color:var(--ink)}
+.bandtabs .bandtab.on{background:var(--bleu);color:#fff;border-color:var(--bleu)}
+
+.sesstabs{display:flex;gap:6px;margin-bottom:6px}
+.sesstabs .sess{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 6px;border:1px solid #c9d3e2;background:#fff;border-radius:8px;
+  font:inherit;font-size:.85rem;font-weight:600;color:#44546a;cursor:pointer}
+.sesstabs .sess .fl{font-size:1.05rem}
+.sesstabs .sess.on{background:var(--bleu);border-color:var(--bleu);color:#fff}
+
+/* session track: National Curriculum | WASSCE */
+.tracks{display:flex;gap:6px;margin-bottom:6px}
+.tracks .track{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 6px;border:1px solid #c9d3e2;background:#fff;border-radius:8px;
+  font:inherit;font-size:.83rem;font-weight:700;color:#44546a;cursor:pointer;transition:.15s}
+.tracks .track .fl{font-size:1.05rem}
+.tracks .track:hover{background:#eef4ff;color:var(--ink)}
+.tracks .track.on{background:var(--ink);border-color:var(--ink);color:#fff}
+body[data-mode="teacher"] .top{filter:saturate(1.15)}
+body[data-mode="teacher"] .page .phead{font-weight:700}
+
+/* on-screen help under each exercise type */
+.shhelp{display:block;font-style:normal;font-size:.72rem;line-height:1.35;
+  color:var(--muted);margin-top:2px}
+#sheets .chk{align-items:flex-start;margin-bottom:7px}
+
+/* study-notes pages inside the sheet */
+.page .instr{border-left:3px solid var(--bleu-l);padding-left:8px}
+
+/* ============================================================
+   RESPONSIVE LAYER
+   The A4 sheet must stay exactly 210x297mm for print and Word.
+   So on narrow screens the preview is SCALED (transform), never
+   resized: the paper geometry is untouched, only its display.
+   ============================================================ */
+
+:root{ --ps:1; }                     /* preview scale, set by app.js */
+
+/* The sheet is scaled from its top-LEFT corner, not its centre.
+   The layout box stays a fixed 794px wide and can be wider than the preview
+   column. With a `top center` origin the box's centre already sits right of
+   the column's centre, so the shrunken sheet inherited that offset and hung
+   past the right edge -- the preview looked half hidden. Scaling from the left
+   keeps the painted sheet inside the column at every width. */
+#doc .page{
+  transform:scale(var(--ps));
+  transform-origin:top left;
+  margin-bottom:calc(22px - var(--sheet-h, 297mm) * (1 - var(--ps)));
+}
+/* Centring the painted sheet.
+   `margin:0 auto` on .page centres its 794px LAYOUT box. That is correct
+   whenever the column is wide enough to hold a full-size sheet, and in that
+   case --ps is 1 so the painted result matches the box exactly.
+   When the column is narrower the auto margins collapse, the box overflows to
+   the right, and scaling from the top-left leaves the painted sheet flush with
+   the column's left edge -- which is where we want it. No extra offset is
+   needed in either case; the earlier `top center` origin was the whole bug. */
+/* A transform only scales the painted result: each .page keeps a 794px layout
+   box, which would push the page wider than a phone viewport. Grid/flex items
+   default to min-width:auto and refuse to shrink below that content, so the
+   preview column is explicitly allowed to shrink and clip the overhang.
+   overflow-x:clip (not hidden) leaves the vertical axis visible, so the sheets
+   still scroll normally and no scroll container is introduced. */
+main{ min-width:0; }
+#doc{ min-width:0; overflow-x:clip; overflow-y:visible; }
+
+/* ---- side-by-side fold booklet sheet ---- */
+:root {
+  --fold-w: 297mm;
+  --fold-h: 210mm;
+  --fold-scale: 0.707106;
+}
+
+.page.fold-sheet {
+  width: var(--fold-w, 297mm) !important;
+  height: var(--fold-h, 210mm) !important;
+  min-height: var(--fold-h, 210mm) !important;
+  max-height: var(--fold-h, 210mm) !important;
+  padding: 0 !important;
+  margin: 0 auto 26px !important;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08), var(--shadow);
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  page-break-after: always;
+  break-after: page;
+}
+
+/* Informational banner along top of preview sheet (hidden in print) */
+.fold-sheet-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  padding: 0 12px;
+  background: rgba(11, 59, 140, 0.08);
+  border-bottom: 1px solid rgba(11, 59, 140, 0.18);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1e3a6c;
+  z-index: 15;
+  pointer-events: none;
+  user-select: none;
+}
+.fold-sheet-badge {
+  background: #0b3b8c;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.fold-sheet-order {
+  font-family: monospace;
+  font-weight: 800;
+  color: #0b3b8c;
+  font-size: 11px;
+}
+.fold-sheet-paper {
+  color: #4b5563;
+  font-size: 10px;
+}
+
+/* The side-by-side spread filling the sheet */
+.fold-spread {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Left and right halves of the sheet */
+.fold-half {
+  flex: 0 0 50%;
+  width: 50%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+/* Center fold line / crease / staple mark */
+.fold-crease {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dashed #b8c6dc;
+  z-index: 12;
+  pointer-events: none;
+}
+.fold-crease::before,
+.fold-crease::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  width: 4px;
+  height: 16mm;
+  background: #7d90b2;
+  border-radius: 2px;
+  box-shadow: 0 0 2px rgba(0,0,0,0.25);
+}
+.fold-crease::before { top: 20%; }
+.fold-crease::after { bottom: 20%; }
+
+/* The container holding the scaled 210mm x 297mm page */
+.fold-page-viewport {
+  width: 210mm;
+  height: 297mm;
+  flex: 0 0 210mm;
+  transform: scale(var(--fold-scale, 0.707106));
+  transform-origin: center center;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+/* The actual page content inside viewport */
+.fold-subpage {
+  width: 210mm;
+  height: 297mm;
+  min-height: 297mm;
+  max-height: 297mm;
+  padding: 14mm 15mm 12mm;
+  font-size: var(--fs);
+  line-height: 1.42;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #fff;
+  position: relative;
+}
+.fold-subpage.coverpage {
+  padding: 0 !important;
+}
+.fold-subpage.coverpage .phead,
+.fold-subpage.coverpage .pfoot {
+  display: none !important;
+}
+.fold-subpage.coverpage .pbody {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.fold-subpage.backcover {
+  padding: 0 !important;
+}
+.fold-subpage.backcover .phead,
+.fold-subpage.backcover .pfoot {
+  display: none !important;
+}
+.fold-subpage.backcover .pbody {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.fold-subpage.authorpage {
+  padding: 0 !important;
+}
+.fold-subpage.authorpage .phead,
+.fold-subpage.authorpage .pfoot {
+  display: none !important;
+}
+.fold-subpage.authorpage .pbody {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Typography and elements inside fold-subpage matching .page */
+.fold-subpage h1 { font-size:1.43em; color:var(--bleu); border-bottom:2px solid var(--bleu); padding-bottom:6px; margin:18px 0 10px; }
+.fold-subpage h2 { font-size:1.21em; color:var(--bleu-l); margin:16px 0 8px; }
+.fold-subpage h3 { font-size:1.07em; margin:15px 0 7px; color:#12203a; }
+.fold-subpage p { margin:6px 0; }
+.fold-subpage p.it { font-style:italic; color:#555; }
+.fold-subpage .instr { background:#f2f6fc; border-left:3px solid var(--bleu-l); padding:7px 11px; font-style:italic; color:#3d4a63; font-size:.93em; border-radius:0 6px 6px 0; }
+.fold-subpage ol, .fold-subpage ul { margin:7px 0 7px 22px; padding:0; }
+.fold-subpage li { margin:5px 0; }
+.fold-subpage ul.toc { list-style:none; margin:9px 0; padding:0; }
+.fold-subpage ul.toc li { display:flex; align-items:baseline; gap:.45em; margin:4px 0; }
+.fold-subpage ul.toc li .toc-l { flex:0 1 auto; min-width:0; }
+.fold-subpage ul.toc li .toc-d { flex:1 0 1.2em; min-width:1.2em; border-bottom:1px dotted #8fa0ba; transform:translateY(-.26em); }
+.fold-subpage ul.toc li .toc-p { flex:0 0 auto; font-weight:700; color:var(--bleu); font-variant-numeric:tabular-nums; }
+.fold-subpage table { width:100%; border-collapse:collapse; margin:9px 0; font-size:.93em; }
+.fold-subpage th, .fold-subpage td { border:1px solid #9ab3d9; padding:5px 8px; text-align:left; vertical-align:top; }
+.fold-subpage th { background:#dce6f5; font-weight:700; }
+.fold-subpage td:first-child { font-weight:600; }
+.fold-subpage hr { border:none; border-top:1px solid var(--line); margin:12px 0; }
+.fold-subpage .ctr { text-align:center; }
+.fold-subpage h1.ctr { border-bottom:0; }
+.fold-subpage p.cbig { text-align:center; font-weight:700; font-size:1.35em; margin:.2em 0; }
+.fold-subpage .cv-t1 { font-size:21mm; line-height:1.08; border:0; padding:0; margin:0; color:var(--cv-ink); }
+.fold-subpage .cv-t1.long { font-size:14mm; }
+.fold-subpage .cv-t1.xlong { font-size:10.5mm; }
+body[data-mode="teacher"] .fold-subpage .phead { font-weight:700; }
+
+/* Blank page representation */
+.fold-subpage.fold-blank {
+  align-items: center;
+  justify-content: center;
+  background: #fbfcfe;
+}
+.fold-blank-inner {
+  text-align: center;
+  border: 2px dashed #d0dbe8;
+  border-radius: 12px;
+  padding: 30px 20px;
+  width: 75%;
+  background: #ffffff;
+}
+.fold-blank-badge {
+  font-size: 13pt;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #627b9f;
+  margin-bottom: 6px;
+}
+.fold-blank-title {
+  font-size: 18pt;
+  font-weight: 800;
+  color: #0b3b8c;
+  margin-bottom: 20px;
+}
+.fold-blank-lines {
+  margin: 20px auto;
+  width: 80%;
+}
+.fold-blank-line {
+  border-bottom: 1px solid #e1e8f0;
+  height: 12mm;
+}
+.fold-blank-hint {
+  font-size: 10.5pt;
+  color: #8395a7;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* Export bar controls for Fold book */
+.fold-bar-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--bleu);
+  background: #eaf1ff;
+  border: 1px solid #d3e2fb;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+.fold-bar-pill[hidden] {
+  display: none !important;
+}
+.fold-bar-pill select {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--bleu);
+  background: #fff;
+  border: 1px solid #c0d3f6;
+  border-radius: 6px;
+  padding: 2px 6px;
+  outline: none;
+  cursor: pointer;
+}
+#foldExitBtn[hidden] {
+  display: none !important;
+}
+/* Print-setup warning shown while the fold booklet mode is active: it states
+   the exact paper / orientation / scale the print dialog must use, because
+   the exported sheets are one fixed paper size per PDF page and any other
+   dialog paper silently scale-fits them (squashing the whole booklet). */
+.fold-print-note {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin: 10px 0 0;
+  padding: 10px 13px;
+  border: 1px solid #e7c78d;
+  border-left: 4px solid var(--gold);
+  border-radius: 10px;
+  background: #fdf7ea;
+  color: #6d5316;
+  font-size: .84rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+}
+.fold-print-note .ic {
+  flex: none;
+  margin-top: 2px;
+  color: #b98a1d;
+}
+.fold-print-note b {
+  color: #5a440f;
+}
+.fold-print-note[hidden] {
+  display: none !important;
+}
+#foldbk.active {
+  background: #0b3b8c;
+  color: #fff;
+  box-shadow: 0 0 0 2px #d3e2fb;
+}
+.fold-pill-text {
+  font-weight: 600;
+}
+
+/* Booklet preview grid in dialogs */
+.booklet-preview-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+.mini-sheet-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .mini-sheet-pair { grid-template-columns: 1fr; }
+}
+.mini-sheet {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fcfdff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.mini-sheet-head {
+  background: #eef3fc;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--bleu);
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.mini-sheet-body {
+  display: flex;
+  height: 90px;
+  position: relative;
+  background: #fff;
+}
+.mini-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  text-align: center;
+}
+.mini-page.mini-blank {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+.mini-pg-num {
+  font-size: .88rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.mini-blank .mini-pg-num {
+  color: #94a3b8;
+  font-size: .78rem;
+}
+.mini-pg-sub {
+  font-size: .65rem;
+  font-weight: 600;
+  color: var(--bleu);
+  margin-top: 2px;
+}
+.mini-crease {
+  width: 0;
+  border-left: 1px dashed #c0d0e6;
+  position: relative;
+}
+.mini-crease::before,
+.mini-crease::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  width: 3px;
+  height: 12px;
+  background: var(--bleu);
+  border-radius: 1px;
+}
+.mini-crease::before { top: 20%; }
+.mini-crease::after { bottom: 20%; }
+
+/* ---------- large desktop / smart TV ---------- */
+@media (min-width:1700px){
+  .wrap,.top-in{max-width:1640px}
+  .wrap{grid-template-columns:360px 1fr;gap:26px}
+  .panel-scroll{padding:18px 18px 4px}
+  .panel-act{padding:13px 18px 15px}
+  .panel h2,.grp-lab{font-size:.78rem}
+  .dd>summary{font-size:.95rem;padding:12px 13px}
+  .chk,.row label{font-size:.95rem}
+  .shhelp{font-size:.8rem}
+  .top h1{font-size:1.6rem}
+  .top p{font-size:.95rem}
+}
+
+/* 10-foot UI: TVs and very large panels. Bigger type, bolder focus. */
+@media (min-width:2200px){
+  html{font-size:20px}
+  .wrap,.top-in{max-width:2000px}
+  .wrap{grid-template-columns:420px 1fr}
+  .crest{width:60px;height:60px;font-size:32px}
+  .btn{padding:15px;font-size:1.05rem}
+  .bar button{padding:13px 22px;font-size:1rem}
+  .dd>summary{padding:15px 16px;font-size:1.05rem}
+  .dd-n{font-size:.82rem}
+}
+
+/* keyboard / TV-remote navigation must always show where focus is */
+a:focus-visible,button:focus-visible,select:focus-visible,
+input:focus-visible,label:focus-visible{
+  outline:3px solid var(--gold);
+  outline-offset:2px;
+  border-radius:8px;
+}
+
+/* ---------- laptop ---------- */
+@media (max-width:1280px){
+  .wrap{grid-template-columns:290px 1fr;gap:16px;padding:14px 14px 50px}
+}
+
+/* ---------- tablet: panel stops being a sidebar ---------- */
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr;padding:12px 12px 44px;gap:14px}
+  .top{padding:14px 14px}
+  .top h1{font-size:1.15rem}
+  .top p{font-size:.78rem}
+  .panel{max-height:none}
+  /* the export bar follows the reader down the page */
+  .bar{position:sticky;top:0;z-index:30}
+}
+
+/* ---------- collapsible panel (tablet + phone) ---------- */
+.panel-toggle{display:none}
+@media (max-width:980px){
+  .panel-toggle{
+    grid-column:1/-1;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    width:100%;padding:13px 15px;margin-bottom:10px;
+    border:1px solid var(--line);border-radius:12px;background:#fff;
+    box-shadow:var(--shadow);font-weight:700;font-size:.95rem;
+    color:var(--bleu);cursor:pointer;
+  }
+  .panel-toggle .caret{transition:transform .18s}
+  body.panel-open .panel-toggle .caret{transform:rotate(180deg)}
+  .panel{display:none}
+  body.panel-open .panel{display:block;grid-column:1/-1}
+}
+
+/* ---------- smartphone ---------- */
+@media (max-width:640px){
+  .wrap{padding:10px 8px 40px}
+  .top{padding:12px 12px}
+  .top-in{gap:10px}
+  .top h1{font-size:1rem;line-height:1.25}
+  .top p{font-size:.72rem}
+  .crest{width:38px;height:38px;font-size:20px}
+  .panel{border-radius:13px}
+  .panel-scroll{padding:12px 12px 0}
+  .panel-act{padding:10px 12px 12px}
+  .dd>summary{padding:12px 11px}
+  .subtabs{grid-template-columns:1fr 1fr;gap:6px}
+  .subtab{padding:12px 6px;font-size:.82rem}
+  .bar{padding:9px 10px;gap:8px;border-radius:11px}
+  .bar .meta{flex:1 1 100%;order:3;font-size:.76rem}
+  .bar button{flex:1;padding:12px 10px;font-size:.84rem}
+  #doc{margin:0 -8px}          /* let the scaled sheet use the full width */
+}
+
+/* very small handsets */
+@media (max-width:340px){
+  .subtabs{grid-template-columns:1fr}
+  .sesstabs{flex-direction:column}
+  .top-sub{display:none}
+  .dd-n{display:none}
+}
+
+/* ---------- touch devices: finger-sized targets ---------- */
+@media (hover:none) and (pointer:coarse){
+  .chk{padding:9px 6px;font-size:.9rem}
+  .chk input{width:20px;height:20px;margin-top:1px}
+  .mini button{padding:10px 6px;font-size:.8rem}
+  select,input[type=number],#cvBox input[type=text],
+  #auBox input[type=text],#auBox textarea{padding:11px 10px;font-size:16px}
+  .subtab,.sesstabs .sess,.bandtabs .bandtab{min-height:48px}
+  .dd>summary{min-height:48px}
+  .btn{padding:14px}
+}
+
+/* ---------- landscape phone: reclaim vertical space ---------- */
+@media (max-height:520px) and (orientation:landscape){
+  .top{padding:8px 12px}
+  .top h1{font-size:.95rem}
+  .top p{display:none}
+  .wrap{padding-top:8px}
+}
+
+/* ---------- print: undo every screen-only transform ---------- */
+@media print{
+  :root{ --ps:1 !important; }
+  #doc{overflow:visible;margin:0}
+  #doc .page{transform:none !important;margin:0 auto !important}
+  #doc .page.fold-sheet{transform:none !important;margin:0 !important}
+  .panel-toggle{display:none !important}
+  .panel{display:none !important}
+}
+
+/* users who prefer less motion */
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+/* ============================================================
+   DESIGNED COVER PAGES
+   A `covart` block fills a whole A4 sheet. Five templates share
+   one structure and differ only by CSS custom properties, so the
+   layout is proven once. All artwork is inline CSS/SVG so the
+   pack stays fully offline.
+   ============================================================ */
+.cvart{
+  --cv-ink:#1b2a52; --cv-accent:#5a9367; --cv-bg:#fdf6e9;
+  --cv-band:#1b2a52; --cv-warm:#e8a33d; --cv-soft:#eaf1f8;
+  position:relative; width:100%; height:100%;
+  background:var(--cv-bg); color:var(--cv-ink);
+  display:flex; flex-direction:column; align-items:center;
+  padding:12mm 11mm; box-sizing:border-box; overflow:hidden;
+  font-family:"Segoe UI",system-ui,Arial,sans-serif;
+}
+/* outer colour band + inner hairline, as in the reference */
+.cvart::before{content:"";position:absolute;inset:0;border:7mm solid var(--cv-band);pointer-events:none}
+.cvart::after{content:"";position:absolute;inset:9mm;border:1.1px solid var(--cv-band);
+  border-radius:2px;pointer-events:none;opacity:.75}
+.cvart>*{position:relative;z-index:2}
+
+/* decorative corner leaves / dots, drawn with CSS only */
+.cv-leaf{position:absolute;z-index:1;opacity:.85}
+.cv-leaf svg{display:block}
+.cv-lt{top:11mm;left:11mm}
+.cv-rb{bottom:11mm;right:10mm;transform:rotate(180deg);opacity:.45}
+.cv-dots{position:absolute;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:3.5mm}
+.cv-dots i{width:2mm;height:2mm;border-radius:50%;background:var(--cv-accent);opacity:.5;display:block}
+.cv-dtr{top:26mm;right:16mm}
+
+/* title block */
+.cv-school{font-size:5.6mm;font-weight:800;letter-spacing:.4mm;text-align:center;
+  text-transform:uppercase;margin:0 0 1mm;color:var(--cv-ink);opacity:.9;line-height:1.2}
+.cv-motto{font-size:3.7mm;font-style:italic;text-align:center;margin:0;opacity:.72}
+.cv-emblem{font-size:17mm;line-height:1;margin:3mm 0 2mm;filter:saturate(1.05)}
+.cv-em-svg{width:15mm;height:15mm;stroke-width:1.25}
+.cv-t1{font-size:21mm;line-height:.92;font-weight:900;letter-spacing:.4mm;
+  text-transform:uppercase;text-align:center;margin:0;color:var(--cv-ink);
+  max-width:100%;overflow-wrap:break-word}
+.cv-t1.long{font-size:14mm}
+.cv-t1.xlong{font-size:10.5mm}
+.cv-t2{font-size:11mm;line-height:1.02;font-weight:800;letter-spacing:.3mm;
+  text-transform:uppercase;text-align:center;margin:3mm 0 0;color:var(--cv-accent)}
+.cv-head{width:100%;display:flex;flex-direction:column;align-items:center;margin-top:1mm}
+.cv-rule{display:flex;align-items:center;gap:3mm;margin:6mm 0 1mm;width:74%}
+.cv-rule span{flex:1;height:1.4px;background:var(--cv-ink);opacity:.8}
+.cv-rule b{font-size:7mm;line-height:1}
+.cv-sub{font-size:4.1mm;text-align:center;margin:1mm 0 0;opacity:.78;font-style:italic}
+
+/* the fill-in panel */
+.cv-panel{width:90%;margin:auto 0 0;border:1.4px solid var(--cv-accent);border-radius:5mm;
+  padding:8mm 8mm;background:rgba(255,255,255,.55)}
+.cv-panel.dash{border-style:dashed}
+/* pencil strip anchoring the lower area, echoing the desk in the reference */
+.cv-strip{width:90%;margin:7mm 0 0;display:flex;gap:2.5mm;align-items:flex-end;justify-content:center;opacity:.9}
+.cv-strip i{display:block;width:5mm;border-radius:1mm 1mm 0 0}
+.cv-row{display:flex;align-items:flex-end;gap:4mm;margin:0 0 8.5mm}
+.cv-row:last-child{margin-bottom:0}
+.cv-lab{font-size:4.6mm;font-weight:800;letter-spacing:.35mm;text-transform:uppercase;
+  white-space:nowrap;padding-bottom:.6mm}
+.cv-val{flex:1;min-width:0;border-bottom:1.3px solid var(--cv-ink);min-height:7mm;
+  font-size:4.7mm;padding:0 1mm 1mm;font-weight:600;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cv-val:empty::after{content:"";display:inline-block}
+
+/* footer strip */
+.cv-foot{margin-top:7mm;width:100%;display:flex;align-items:flex-end;
+  justify-content:space-between;gap:4mm}
+.cv-note{font-size:3.6mm;line-height:1.45;background:#fdf0c8;border-radius:1.5mm;
+  padding:3mm 4mm;max-width:52%;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.cv-note b{display:block;font-size:3.9mm;margin-bottom:.6mm}
+.cv-org{font-size:3.5mm;text-align:right;opacity:.85;line-height:1.5;max-width:44%;
+  position:relative;z-index:3;background:var(--cv-bg);padding-left:2mm}
+
+/* ---- template variants ---- */
+.cv-classic { --cv-ink:#1b2a52; --cv-accent:#5a9367; --cv-bg:#fdf6e9; --cv-band:#1b2a52; --cv-soft:#e9eff8; }
+.cv-liberia { --cv-ink:#0d2c6b; --cv-accent:#c8102e; --cv-bg:#fbfaf6; --cv-band:#0d2c6b; --cv-soft:#e6ecf7; }
+.cv-forest  { --cv-ink:#12403a; --cv-accent:#2f8f6d; --cv-bg:#f2f9f4; --cv-band:#12403a; --cv-soft:#dff0e6; }
+.cv-sunrise { --cv-ink:#6b3410; --cv-accent:#d98324; --cv-bg:#fff7ec; --cv-band:#b35c1e; --cv-soft:#fbe6cd; }
+.cv-plain   { --cv-ink:#1f2937; --cv-accent:#4b5563; --cv-bg:#ffffff; --cv-band:#1f2937; --cv-soft:#eef1f4; }
+.cv-plain::before{border-width:4mm}
+.cv-plain .cv-leaf,.cv-plain .cv-dots,.cv-plain .cv-note,.cv-plain .cv-strip{display:none}
+.cv-plain .cv-emblem{font-size:11mm}
+
+/* author back cover may carry same frame but with slightly muted note */
+.cvart.cv-back .cv-note{background:#e8f0ff}
+.cvart.cv-back .cv-panel{background:rgba(255,255,255,.78)}
+
+/* ---- author portrait ----
+   The photo stands alone on the sheet. Nothing is drawn around it and nothing
+   is painted behind it, so a transparent PNG keeps its own silhouette and a
+   photo that carries its own background is not framed by anything the page
+   added. The ring below is opt-in, from the "Border around the photo" switch. */
+.cv-avatar{margin:3mm 0 2mm;display:grid;place-items:center;background:transparent}
+.cv-avatar img{display:block;width:auto;height:auto;max-width:70mm;max-height:62mm;
+  object-fit:contain;background:transparent;border:0;padding:0;box-shadow:none}
+.cv-avatar.framed img{border:2px solid var(--cv-accent);border-radius:50%;object-fit:cover}
+/* the author's words with the dashed box switched off: the same text on the
+   bare paper, no panel behind it */
+.cv-backtext{width:90%;margin:0 auto;border:0;background:transparent;padding:0 2mm}
+.cv-bio{font-size:4.2mm;line-height:1.5;margin:0 0 3mm}
+.cv-mission{font-size:3.8mm;line-height:1.5;margin:3mm 0 0}
+.cv-facts{margin-top:5mm}
+.cv-contact{max-width:100%;text-align:center;font-size:3.4mm}
+
+/* the cover sheet suppresses the running header and footer bands */
+.page.coverpage{padding:0}
+.page.coverpage .phead,.page.coverpage .pfoot{display:none}
+.page.coverpage .pbody{height:100%;margin:0;padding:0}
+.page.backcover{padding:0}
+.page.backcover .phead,.page.backcover .pfoot{display:none}
+.page.backcover .pbody{height:100%;margin:0;padding:0}
+.page.authorpage{padding:0}
+.page.authorpage .phead,.page.authorpage .pfoot{display:none}
+.page.authorpage .pbody{height:100%;margin:0;padding:0}
+
+@media print{
+  .cvart{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ---- customization session ---- */
+.cvsec{font-size:.68rem;text-transform:uppercase;letter-spacing:1.1px;font-weight:800;
+  color:var(--muted);margin:12px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.cvsec:first-child{margin-top:0}
+.tplgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:4px}
+.tplbtn{border:1.5px solid var(--line);border-radius:9px;background:#fff;cursor:pointer;
+  padding:0;overflow:hidden;transition:.15s;display:block;text-align:center}
+.tplbtn:hover{border-color:#9dbcf0}
+.tplbtn.on{border-color:var(--bleu);box-shadow:0 0 0 2px rgba(11,59,140,.16)}
+.tplsw{height:38px;display:block;position:relative}
+.tplsw i{position:absolute;left:5px;right:5px;top:6px;height:4px;border-radius:2px;display:block}
+.tplsw u{position:absolute;left:9px;right:9px;top:15px;height:14px;border-radius:2px;
+  border:1px dashed rgba(0,0,0,.28);display:block}
+.tplbtn span{display:block;font-size:.66rem;font-weight:700;padding:3px 2px 5px;color:var(--ink);line-height:1.2}
+@media (min-width:1700px){ .tplbtn span{font-size:.76rem} .tplsw{height:46px} }
+
+/* ---- uploaded background photo and logo ---- */
+.cv-bg{position:absolute;inset:7mm;z-index:0;background-size:cover;background-position:center;
+  background-repeat:no-repeat}
+.cv-veil{position:absolute;inset:7mm;z-index:0;background:var(--cv-bg)}
+/* the border band is painted above the photo so the frame stays crisp */
+.cvart.hasbg::before{z-index:3}
+.cvart.hasbg::after{z-index:3}
+.cvart.hasbg .cv-leaf,.cvart.hasbg .cv-dots{opacity:.5}
+.cvart.hasbg .cv-panel{background:rgba(255,255,255,.86);backdrop-filter:saturate(1.1)}
+.cvart.hasbg .cv-org{background:transparent}
+.cv-logo{margin:3mm 0 2mm;display:grid;place-items:center}
+.cv-logo img{max-height:26mm;max-width:62mm;width:auto;height:auto;display:block;
+  object-fit:contain}
+.cv-plain .cv-logo img{max-height:20mm}
+@media print{
+  .cv-bg,.cv-veil,.cv-logo img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ---- image upload controls ---- */
+.upgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:4px}
+.upcell{display:flex;flex-direction:column;gap:5px}
+.upprev{height:56px;border:1.5px dashed var(--line);border-radius:9px;background:#f8fbff;
+  display:grid;place-items:center;overflow:hidden;position:relative}
+.upprev span{font-size:.68rem;color:var(--muted);text-align:center;padding:0 4px}
+.upprev img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.upprev.bgp img{width:100%;height:100%;object-fit:cover}
+.upprev.bgp small{position:absolute;right:3px;bottom:3px;padding:1px 4px;border-radius:4px;
+  background:rgba(10,25,55,.76);color:#fff;font-size:.55rem;font-weight:700}
+.upprev.has{border-style:solid;border-color:#bcd3fb;background:#fff}
+.upbtn{display:block;text-align:center;font-size:.72rem;font-weight:700;cursor:pointer;
+  padding:7px 4px;border:1px solid var(--line);border-radius:8px;background:#f5f9ff;color:var(--bleu)}
+.upbtn:hover{background:#e8f0ff}
+.upbtn input{display:none}
+.uprem{font-size:.68rem;padding:5px;border:1px solid var(--line);border-radius:7px;
+  background:#fff;color:var(--muted);cursor:pointer}
+.uprem:hover{background:#fdf0f0;color:var(--rouge);border-color:#f3c9c9}
+.fadeval{font-size:.75rem;color:var(--bleu);min-width:40px;text-align:right;flex:none}
+#cvFade{flex:1;min-width:0;accent-color:var(--bleu)}
+#fadeRow label{flex:none;white-space:nowrap;font-size:.8rem}
+#fadeRow{gap:9px}
+
+/* ================= duplex print helper (book print sequence) ================= */
+.book-open{overflow:hidden}
+.bookmask{position:fixed;inset:0;z-index:70;background:rgba(9,20,45,.55);
+  display:flex;align-items:flex-start;justify-content:center;padding:5vh 16px 28px;overflow:auto}
+.bookmask[hidden]{display:none}
+.bookmodal{background:#fff;border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 26px 80px rgba(9,20,45,.38);width:100%;max-width:640px;
+  padding:18px 20px 22px}
+.book-head{display:flex;align-items:center;gap:10px}
+.book-head h2{margin:0;font-size:1.08rem;flex:1;display:flex;align-items:center;gap:8px}
+.book-x{border:1px solid var(--line);border-radius:9px;background:#f4f8ff;color:var(--muted);
+  width:34px;height:34px;font-size:.95rem;cursor:pointer;flex:none}
+.book-x:hover{background:#fdeeee;color:var(--rouge);border-color:#f3c9c9}
+.book-sub{margin:6px 0 14px;font-size:.82rem;color:var(--muted)}
+.book-row{display:grid;grid-template-columns:1fr 110px 150px;gap:10px}
+.book-row-mode{grid-template-columns:1fr 1fr;margin-bottom:10px}
+.book-f[hidden]{display:none}
+.summary-note{margin:9px 0 0;font-size:.78rem;color:var(--muted);line-height:1.5}
+.book-f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.book-f label{font-size:.68rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px}
+.book-f input,.book-f select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;
+  font-size:.9rem;width:100%}
+.book-f input:focus,.book-f select:focus{outline:2px solid #bcd3fb;outline-offset:0}
+.book-actions{display:flex;gap:8px;margin:12px 0 4px}
+.book-actions .b1,.book-actions .b2{padding:10px 18px;border:none;border-radius:9px;
+  font-weight:700;font-size:.88rem;cursor:pointer}
+.book-hint{display:none;margin:6px 0 0;font-size:.82rem;color:var(--rouge)}
+.book-hint.show{display:block}
+
+.results{display:none}
+.results.show{display:block}
+.summary{background:linear-gradient(135deg,#eef4ff,#fff6e0);border:1px solid var(--line);
+  border-radius:12px;padding:13px 15px;margin:12px 0}
+.summary h3{margin:0 0 9px;font-size:.9rem}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.summary-item{text-align:center;background:rgba(255,255,255,.75);border-radius:9px;padding:7px 4px}
+.summary-item .number{font-size:1.35rem;font-weight:800;color:var(--bleu)}
+.summary-item .label{font-size:.68rem;color:var(--muted);margin-top:2px}
+
+.sequence-card{border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+.sequence-header{display:flex;justify-content:space-between;align-items:center;
+  gap:8px;margin-bottom:9px;flex-wrap:wrap}
+.sequence-title{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:7px}
+.pass{font-size:.62rem;font-weight:800;letter-spacing:.8px;padding:3px 9px;border-radius:20px}
+.pass-1{background:#fde4e8;color:#c2143a}
+.pass-2{background:#e3eefc;color:#0b3b8c}
+.bk-copy{border:none;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:700;
+  background:#e8f0ff;color:var(--bleu);cursor:pointer}
+.bk-copy:hover{background:#d7e6ff}
+.bk-copy.copied{background:#d9f4e2;color:#0d6b3a}
+.sequence-numbers{font-family:"Courier New",Consolas,monospace;font-size:1.02rem;line-height:1.75;
+  word-break:break-all;color:var(--ink);background:#f4f7fd;border:1px solid var(--line);
+  border-radius:9px;padding:10px 12px;user-select:all}
+.page-count{text-align:right;font-size:.72rem;color:var(--muted);margin-top:6px}
+
+.instructions{background:#fffaf0;border:1px solid #f0e2bd;border-radius:12px;
+  padding:12px 15px;margin-top:12px}
+.instructions h3{margin:0 0 7px;font-size:.84rem;color:#8a6200}
+.instructions ol{margin:0;padding-left:19px;font-size:.8rem;color:var(--muted);line-height:1.75}
+
+.book-list{margin-top:16px}
+.book-list h3{margin:0 0 9px;font-size:.92rem}
+.book-item{border:1px solid var(--line);border-radius:11px;padding:11px 14px;margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fcfdff}
+.book-item:hover{background:#f3f7ff}
+.book-info{min-width:0}
+.book-name{font-weight:700;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-pages{font-size:.74rem;color:var(--muted)}
+.book-actions{display:flex;gap:7px;flex:none}
+.btn-small{border:none;border-radius:8px;padding:6px 13px;font-size:.74rem;font-weight:700;cursor:pointer}
+.btn-view{background:#e3eefc;color:#0b3b8c}
+.btn-view:hover{background:#d7e6ff}
+.btn-delete{background:#fdeeee;color:var(--rouge)}
+.btn-delete:hover{background:#fbdcdc}
+.no-books{text-align:center;padding:18px 10px;color:var(--muted);font-style:italic;font-size:.82rem}
+
+@media(max-width:640px){
+  .book-row{grid-template-columns:1fr 1fr}
+  .book-f:first-child{grid-column:1/-1}
+  .bookmask{padding:3vh 10px 20px}
+  .bookmodal{padding:14px 14px 18px}
+  .sequence-numbers{font-size:.9rem}
+}
+
+/* never print the dialog itself; the sequences are for typing into the
+   printer's page range, not for printing */
+@media print{
+  .bookmask{display:none!important}
+}
+
+/* ============================================================
+   HUMAN CHECK — "Are you human?" (Cloudflare Turnstile)
+   The veil covers the platform until the visitor passes. In quiet mode
+   it sits out of the way at 1px (still rendered, so the widget can mint
+   a fresh token in the background) instead of display:none.
+   ============================================================ */
+.hc-veil{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(9,20,45,.55);backdrop-filter:blur(3px)}
+/* Quiet mode keeps the card at its real size (the widget needs room to run)
+   and simply takes it out of sight and out of the way. */
+.hc-veil.hc-quiet{background:none;backdrop-filter:none;opacity:0;pointer-events:none}
+body.hc-locked{overflow:hidden}
+.hc-card{width:100%;max-width:380px;background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:26px 24px 20px;text-align:center;box-shadow:0 24px 70px rgba(9,20,45,.35)}
+.hc-badge{width:54px;height:54px;margin:0 auto 12px;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#0b3b8c,#1e5fd0);color:#fff}
+.hc-badge .ic{width:1.7rem;height:1.7rem;vertical-align:0}
+.hc-card h2{margin:0 0 6px;font-size:1.25rem;color:var(--ink)}
+.hc-note{margin:0 0 16px;font-size:.86rem;color:var(--muted);line-height:1.5}
+/* the Turnstile widget is drawn here */
+.hc-slot{min-height:66px;display:flex;align-items:center;justify-content:center}
+.hc-skip{margin-top:14px;padding:6px;border:none;background:none;color:var(--bleu);font-size:.82rem;
+  font-weight:600;cursor:pointer;text-decoration:underline;font-family:inherit}
+.hc-skip[hidden]{display:none}
+.hc-foot{margin:14px 0 0;font-size:.72rem;color:var(--muted)}
+@media print{.hc-veil{display:none!important}}
+
+/* ============================================================
+   AI TUTOR PANEL — floating chat with Groq (Llama 3 70B)
+   ============================================================ */
+
+/* Floating action button */
+.ai-fab{position:fixed;bottom:22px;right:22px;z-index:60;display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#0b3b8c,#1e5fd0);color:#fff;border:none;border-radius:50px;
+  padding:12px 20px;font-size:.92rem;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 24px rgba(11,59,140,.35);transition:all .2s;font-family:inherit}
+.ai-fab[hidden]{display:none}
+.ai-fab:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(11,59,140,.45)}
+.ai-fab.open{background:linear-gradient(135deg,#d3242e,#e84057);box-shadow:0 6px 24px rgba(211,36,46,.35)}
+.ai-fab-ico{font-size:1.3rem;line-height:1}
+/* Emmanuel's portrait, used wherever the drawn robot icon would otherwise sit */
+.ai-avatar{display:block;border-radius:50%;object-fit:cover;object-position:50% 15%;
+  background:#dbe6f7;flex:none}
+img.ai-fab-ico{width:30px;height:30px;box-shadow:0 0 0 2px rgba(255,255,255,.55)}
+img.ai-head-ico{width:32px;height:32px;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+img.ai-welcome-img{width:76px;height:76px;margin:0 auto;box-shadow:0 3px 14px rgba(11,59,140,.22)}
+img.ai-msg-img{width:26px;height:26px}
+.ai-fab-lab{white-space:nowrap}
+
+/* Chat panel */
+.ai-panel{position:fixed;bottom:78px;right:22px;z-index:61;width:400px;max-width:calc(100vw - 32px);
+  height:560px;max-height:calc(100vh - 110px);background:#fff;border:1px solid var(--line);
+  border-radius:16px;box-shadow:0 16px 60px rgba(9,20,45,.25);display:flex;flex-direction:column;
+  overflow:hidden;font-size:.88rem}
+.ai-panel[hidden]{display:none}
+
+/* Header */
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:13px 15px;background:linear-gradient(135deg,#0b3b8c,#1e5fd0);color:#fff;flex:none}
+.ai-head-left{display:flex;align-items:center;gap:10px;min-width:0}
+.ai-head-ico{font-size:1.4rem;flex:none}
+.ai-head-txt{min-width:0}
+.ai-head-txt b{display:block;font-size:.92rem;line-height:1.2}
+.ai-head-sub{font-size:.7rem;opacity:.82;display:block}
+.ai-head-right{display:flex;gap:5px;flex:none}
+.ai-btn-icon{width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.15);color:#fff;cursor:pointer;font-size:.82rem;
+  display:grid;place-items:center;transition:.15s;font-family:inherit}
+.ai-btn-icon:hover{background:rgba(255,255,255,.3)}
+
+/* Chat body */
+.ai-body{flex:1;overflow-y:auto;padding:14px 15px;display:flex;flex-direction:column;gap:12px;
+  background:#f8faff}
+
+/* Welcome screen */
+.ai-welcome{text-align:center;padding:20px 10px}
+.ai-welcome-ico{font-size:2.8rem;margin-bottom:8px;line-height:1}
+.ai-welcome h3{margin:0 0 8px;font-size:1.05rem;color:var(--ink)}
+.ai-welcome p{margin:0 0 16px;font-size:.82rem;color:var(--muted);line-height:1.5}
+.ai-suggestions{display:flex;flex-direction:column;gap:7px}
+.ai-sug{display:block;width:100%;text-align:left;padding:10px 13px;border:1px solid var(--line);
+  border-radius:10px;background:#fff;cursor:pointer;font-size:.82rem;color:var(--ink);
+  font-weight:500;transition:.15s;line-height:1.4;font-family:inherit}
+.ai-sug:hover{background:#eef4ff;border-color:#bcd3fb;color:var(--bleu)}
+
+/* Messages */
+.ai-msg{display:flex;gap:8px;max-width:92%}
+.ai-msg-user{align-self:flex-end}
+.ai-msg-assistant{align-self:flex-start}
+.ai-msg-ico{flex:none;font-size:1.05rem;line-height:1;margin-top:2px}
+.ai-bubble{padding:10px 14px;border-radius:14px;line-height:1.55;font-size:.85rem;
+  word-wrap:break-word;overflow-wrap:break-word}
+.ai-msg-user .ai-bubble{background:var(--bleu);color:#fff;border-bottom-right-radius:4px}
+.ai-msg-assistant .ai-bubble{background:#fff;border:1px solid var(--line);color:var(--ink);
+  border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.ai-bubble p{margin:0 0 8px}
+.ai-bubble p:last-child{margin-bottom:0}
+.ai-bubble b{color:inherit}
+.ai-bubble code{background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px;font-size:.84em}
+.ai-msg-user .ai-bubble code{background:rgba(255,255,255,.18)}
+.ai-bubble h3,.ai-bubble h4{margin:6px 0 4px;font-size:.92rem}
+/* a reply that never arrived: a short note plus a way to ask again */
+.ai-bubble.ai-err{background:#fff6f6;border-color:#f3c9cd;color:#7a1f26}
+.ai-retry{display:inline-block;margin-top:8px;margin-left:8px;padding:5px 12px;font:inherit;
+  font-size:.78rem;font-weight:700;color:var(--bleu);background:#fff;border:1px solid var(--line);
+  border-radius:999px;cursor:pointer}
+.ai-retry:hover{background:var(--bleu);color:#fff;border-color:var(--bleu)}
+.ai-li{margin:3px 0;padding-left:4px}
+.ai-n,.ai-b{color:var(--bleu);font-weight:700;margin-right:4px}
+.ai-msg-user .ai-n,.ai-msg-user .ai-b{color:rgba(255,255,255,.85)}
+
+/* Input area */
+.ai-input-wrap{display:flex;align-items:flex-end;gap:8px;padding:10px 12px;
+  border-top:1px solid var(--line);background:#fff;flex:none}
+.ai-input-wrap textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:10px;
+  padding:9px 12px;font-size:.86rem;line-height:1.45;min-height:38px;max-height:120px;
+  font-family:inherit;color:var(--ink);background:#f8fbff;overflow-y:auto}
+.ai-input-wrap textarea:focus{outline:2px solid #bcd3fb;outline-offset:0;border-color:#9dbcf0}
+.ai-send,.ai-stop{width:38px;height:38px;border-radius:10px;border:none;cursor:pointer;
+  font-size:1.1rem;display:grid;place-items:center;flex:none;transition:.15s;font-family:inherit}
+.ai-send{background:var(--bleu);color:#fff}
+.ai-send:hover{background:var(--bleu-l)}
+.ai-stop{background:var(--rouge);color:#fff}
+.ai-stop:hover{filter:brightness(1.1)}
+
+/* Footer */
+.ai-foot{display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  padding:6px 14px 8px;border-top:1px solid var(--line);background:#fcfdff;flex:none}
+.ai-foot-status{font-size:.72rem;color:var(--muted);font-style:italic}
+
+/* Responsive adjustments */
+@media(max-width:640px){
+  .ai-fab{bottom:14px;right:14px;padding:10px 16px;font-size:.84rem}
+  .ai-fab-lab{display:none}
+  .ai-fab{border-radius:50%;width:52px;height:52px;padding:0;justify-content:center}
+  img.ai-fab-ico{width:34px;height:34px}
+  .ai-panel{bottom:72px;right:10px;left:10px;width:auto;height:calc(100vh - 90px);max-height:none}
+}
+
+/* Never print Emmanuel's floating button or chat panel */
+@media print{
+  .ai-fab,.ai-panel{display:none!important}
+}
+
+/* ============ ICONS ============
+   Inline SVG line icons replacing the emoji glyphs the UI used to print.
+   Emoji were inconsistent across devices (and absent on some school PCs and
+   older Android builds); these inherit currentColor and render identically. */
+.icon-sprite{display:none}
+.ic{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em;
+  fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.ic-fill{fill:currentColor;stroke:none}
+.ic .ic-dot{fill:currentColor;stroke:none}
+
+/* ============================================================
+   VOICE READER — pronounce difficult words & read sentences
+   Uses the browser's built-in speech synthesis (offline, no key).
+   A floating button + panel, modelled on the AI tutor, that never
+   appears in the printable/exported session (hidden in @media print).
+   ============================================================ */
+.vr-fab{position:fixed;bottom:22px;left:22px;z-index:60;display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#0d6a6a,#128f8f);color:#fff;border:none;border-radius:50px;
+  padding:12px 20px;font-size:.92rem;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 24px rgba(13,106,106,.35);transition:all .2s;font-family:inherit}
+.vr-fab:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(13,106,106,.45)}
+.vr-fab.open{background:linear-gradient(135deg,#d3242e,#e84057);box-shadow:0 6px 24px rgba(211,36,46,.35)}
+.vr-fab-lab{white-space:nowrap}
+.vr-fab.speaking{animation:vrPulse 1.1s ease-in-out infinite}
+@keyframes vrPulse{0%,100%{box-shadow:0 6px 24px rgba(13,106,106,.35)}50%{box-shadow:0 6px 30px rgba(211,36,46,.55)}}
+
+.vr-panel{position:fixed;bottom:78px;left:22px;z-index:61;width:380px;max-width:calc(100vw - 44px);
+  height:560px;max-height:calc(100vh - 110px);background:#fff;border:1px solid var(--line);
+  border-radius:16px;box-shadow:0 16px 60px rgba(9,20,45,.25);display:flex;flex-direction:column;
+  overflow:hidden;font-size:.88rem}
+.vr-panel[hidden]{display:none}
+
+/* Header */
+.vr-head{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:13px 15px;background:linear-gradient(135deg,#0d6a6a,#128f8f);color:#fff;flex:none}
+.vr-head-txt{min-width:0;display:flex;align-items:center;gap:10px}
+.vr-head-txt .ic{width:1.4rem;height:1.4rem}
+.vr-head-txt b{display:block;font-size:.95rem;line-height:1.2}
+.vr-head-sub{font-size:.7rem;opacity:.84;display:block}
+.vr-x{width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.15);color:#fff;cursor:pointer;font-size:.82rem;
+  display:grid;place-items:center;transition:.15s;font-family:inherit;flex:none}
+.vr-x:hover{background:rgba(255,255,255,.3)}
+
+/* Body */
+.vr-body{flex:1;overflow-y:auto;padding:14px 15px;background:#f8fffc;display:flex;flex-direction:column;gap:14px}
+
+.vr-sec{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.vr-sec-head{font-size:.9rem;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between}
+.vr-sec-head b{color:var(--ink)}
+.vr-pack-name{font-size:.72rem;color:var(--muted);font-weight:400}
+.vr-row{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.vr-row:last-child{margin-bottom:0}
+.vr-row label,.vr-lab{font-size:.78rem;color:var(--muted);width:70px;flex:none}
+.vr-row select{flex:1;padding:7px 9px;border:1px solid var(--line);border-radius:8px;
+  background:#fff;color:var(--ink);font-family:inherit;font-size:.85rem}
+.vr-row input[type=range]{flex:1;accent-color:#0d6a6a}
+.vr-row b{font-size:.72rem;color:var(--muted);min-width:38px;text-align:right}
+
+/* Person segmented control */
+.vr-seg{display:flex;flex:1;gap:4px;background:#eef6f2;border:1px solid var(--line);border-radius:9px;padding:3px}
+.vr-seg button{flex:1;border:none;background:transparent;color:var(--muted);font-size:.8rem;cursor:pointer;
+  padding:6px 4px;border-radius:7px;font-family:inherit;font-weight:600}
+.vr-seg button.on{background:#0d6a6a;color:#fff}
+.vr-seg button:not(.on):hover{background:#fff}
+
+.vr-test{width:100%;padding:8px;border:1px solid var(--line);border-radius:9px;background:transparent;
+  color:#0d6a6a;font-weight:600;cursor:pointer;font-family:inherit;font-size:.82rem}
+.vr-test:hover{background:#eef6f2}
+
+/* Type a word or sentence */
+.vr-txt{display:flex;flex-direction:column;gap:8px}
+.vr-txt label{font-size:.78rem;color:var(--muted)}
+.vr-txt textarea{resize:vertical;border:1px solid var(--line);border-radius:10px;padding:9px 11px;
+  font-family:inherit;font-size:.9rem;color:var(--ink);min-height:52px}
+.vr-txt textarea:focus{outline:2px solid #a9dcc8;outline-offset:0;border-color:#0d6a6a}
+.vr-txt-actions{display:flex;gap:8px;flex-wrap:wrap}
+.vr-txt-actions .b1,.vr-txt-actions .b2,.vr-txt-actions .b3{margin:0;font-size:.85rem;padding:8px 14px;border:none;
+  border-radius:9px;cursor:pointer;font-family:inherit;font-weight:700;display:flex;align-items:center;
+  justify-content:center;transition:.15s}
+.vr-txt-actions .b1:hover{background:var(--bleu-l)}
+.vr-txt-actions .b2:hover{filter:brightness(1.07)}
+.vr-txt-actions .b3{background:#eef6f2;color:#0d6a6a;border:1px solid var(--line);font-size:.82rem;padding:8px 11px}
+.vr-txt-actions .b3:hover{background:#0d6a6a;color:#fff;border-color:#0d6a6a}
+
+/* Reading tabs & lists */
+.vr-tabs{display:flex;gap:6px;margin:0 0 10px}
+.vr-tabs button{flex:1;border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 4px;
+  border-radius:8px;cursor:pointer;font-family:inherit;font-size:.76rem;font-weight:600;white-space:nowrap}
+.vr-tabs button.on{background:#0d6a6a;border-color:#0d6a6a;color:#fff}
+.vr-list{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow-y:auto}
+.vr-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--line);
+  border-radius:50px;background:#fff;color:var(--ink);font-size:.85rem;cursor:pointer;transition:.15s}
+.vr-chip:hover{border-color:#0d6a6a;background:#eef6f2}
+.vr-chip .ic{width:1em;height:1em;color:#0d6a6a}
+.vr-chips{display:flex;flex-wrap:wrap;gap:7px}
+.vr-sent{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;border:1px solid var(--line);
+  border-radius:10px;background:#fff;cursor:pointer;transition:.15s;text-align:left;width:100%}
+.vr-sent:hover{border-color:#0d6a6a;background:#eef6f2}
+.vr-sent .ic{width:1.05rem;height:1.05rem;color:#0d6a6a;margin-top:1px;flex:none}
+.vr-sent .t{flex:1;font-size:.84rem;line-height:1.4;color:var(--ink)}
+
+.vr-passage-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;gap:5px;text-align:left}
+.vr-passage-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.vr-passage-head b{font-size:.82rem;color:var(--ink)}
+.vr-passage-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;border:1px solid #0d6a6a;background:#eef6f2;color:#0d6a6a;font-weight:700;font-size:.76rem;cursor:pointer;transition:.15s;font-family:inherit}
+.vr-passage-btn .ic{width:.9rem;height:.9rem}
+.vr-passage-btn:hover,.vr-passage-btn.vr-active{background:#0d6a6a;color:#fff}
+.vr-passage-txt{font-size:.78rem;line-height:1.4;color:var(--muted);max-height:75px;overflow-y:auto;margin:0;white-space:pre-wrap}
+
+.vr-chip.vr-active,.vr-sent.vr-active,.vr-test.vr-active{border-color:#0d6a6a;background:#0d6a6a;color:#fff}
+.vr-chip.vr-active .ic,.vr-sent.vr-active .ic{color:#fff}
+.vr-sent.vr-active .t{color:#fff}
+
+.vr-sel-pill{position:fixed;z-index:90;background:#0d6a6a;color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:.82rem;font-weight:700;box-shadow:0 4px 18px rgba(0,0,0,.28);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:transform .12s,background .12s;font-family:inherit}
+.vr-sel-pill:hover{transform:scale(1.05);background:#084d4d}
+.vr-sel-pill .ic{width:.95rem;height:.95rem}
+.vr-sel-pill[hidden]{display:none!important}
+
+.vr-empty{color:var(--muted);font-size:.8rem;padding:8px;text-align:center}
+.vr-note{font-size:.72rem;color:var(--muted);line-height:1.5;margin:0}
+.vr-note.vr-note-warn{color:#7a1f26;background:#fff6f6;border:1px solid #f3c9cd;
+  border-radius:8px;padding:6px 8px}
+
+@media(max-width:640px){
+  .vr-fab{bottom:14px;left:14px;padding:10px 16px;font-size:.84rem}
+  .vr-fab-lab{display:none}
+  .vr-fab{border-radius:50%;width:52px;height:52px;padding:0;justify-content:center}
+  .vr-panel{bottom:72px;left:10px;right:10px;width:auto;height:calc(100vh - 90px);max-height:none}
+}
+
+/* Never print the voice reader's floating button or panel */
+@media print{
+  .vr-fab,.vr-panel,.vr-sel-pill,.no-print{display:none!important}
+}
+
+/* ============================================================
+   BACK TO TOP — returns the platform to its header after a long
+   scroll down through the A4 sheets. Floating like the AI tutor
+   and the voice reader, hidden until there is something to go
+   back up from, and never part of the printable session.
+   ============================================================ */
+.btt-fab{position:fixed;bottom:22px;right:22px;z-index:60;width:46px;height:46px;
+  display:grid;place-items:center;background:#fff;color:var(--bleu);
+  border:1px solid #c9dbf6;border-radius:50%;cursor:pointer;
+  box-shadow:0 6px 24px rgba(11,59,140,.28);font-family:inherit;
+  transition:transform .2s,box-shadow .2s,background .2s,color .2s,border-color .2s}
+/* the author display above wins over the user-agent [hidden] rule, so the
+   hidden button has to be hidden here too — exactly as .ai-fab does */
+.btt-fab[hidden]{display:none}
+.btt-fab .ic{width:1.35rem;height:1.35rem}
+.btt-fab:hover{transform:translateY(-2px);color:#fff;border-color:transparent;
+  background:linear-gradient(135deg,#0b3b8c,#1e5fd0);box-shadow:0 8px 30px rgba(11,59,140,.45)}
+.btt-fab:active{transform:translateY(0)}
+.btt-fab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+/* the AI tutor's button owns the corner, so this one stands above it */
+.btt-fab.btt-stacked{bottom:84px}
+
+@media(max-width:640px){
+  .btt-fab{bottom:14px;right:14px;width:52px;height:52px}
+  /* the tutor's button is a 52px circle at bottom:14px on a phone */
+  .btt-fab.btt-stacked{bottom:76px}
+}
+@media(prefers-reduced-motion:reduce){
+  .btt-fab{transition:none}
+}
+
+/* Never print the back-to-top button */
+@media print{
+  .btt-fab{display:none!important}
+}
+
+/* Offline teaching workspace — intentionally outside the A4 print surface. */
+.teaching-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f1f7f5;border:1px solid #cbded7;border-radius:12px;padding:16px;margin:0 0 20px;color:#173e35}
+.teaching-toolbar>div{flex:1;min-width:180px}.teaching-toolbar strong,.teaching-toolbar span{display:block}.teaching-toolbar span{font-size:12px;margin-top:4px;color:#587167}
+.teaching-dialog{width:min(860px,calc(100vw - 28px));max-height:90dvh;border:1px solid #cbded7;border-radius:16px;padding:24px;color:#17324d;background:#fbfcfe;box-shadow:0 24px 90px #12203a55;overflow:auto}
+.teaching-dialog::backdrop{background:#10243e99;backdrop-filter:blur(3px)}
+.tw-header{display:flex;justify-content:space-between;gap:16px;align-items:center}.tw-header h2{margin:4px 0 16px;font-size:26px}.tw-eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:800;color:#347566;margin:0}.tw-tabs,.tw-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.tw-tabs{padding-bottom:14px;border-bottom:1px solid #dde5ee}.tw-tabs [aria-pressed=true]{background:#174f42;color:white;border-color:#174f42}
+.tw-status{background:#eaf3ef;color:#225d4c;border-radius:8px;padding:12px;font-size:13px;line-height:1.5}.tw-status.error{background:#fff0ed;color:#9b3426}.tw-field{display:block;font-size:12px;font-weight:650;margin:12px 0;color:#44546a}.tw-field input,.tw-field textarea,.tw-field select{display:block;width:100%;box-sizing:border-box;margin-top:6px;border:1px solid #c7d3e0;border-radius:7px;background:white;color:#17324d;padding:10px;font:inherit;font-size:14px;font-weight:400}.tw-field textarea{min-height:86px;resize:vertical;line-height:1.5}.tw-field input:focus,.tw-field textarea:focus,.tw-field select:focus{outline:2px solid #347566;outline-offset:2px}.tw-card{padding:18px;border:1px solid #d9e2eb;border-radius:10px;background:#fff;margin:14px 0}.tw-card h3{font-size:15px;margin:0 0 12px}.tw-grid{display:grid;grid-template-columns:1.1fr .8fr .8fr 1.1fr;align-items:center;gap:14px;border-bottom:1px solid #e0e6ef}.tw-total{font-weight:750;padding:12px;background:#edf2fa;border-radius:8px}.teaching-dialog .b2{cursor:pointer;white-space:normal}.teaching-dialog button:disabled{opacity:.45;cursor:not-allowed}.teaching-dialog fieldset{border:1px solid #d9e2eb;border-radius:8px;margin:16px 0;padding:14px}.teaching-dialog legend{font-size:13px;font-weight:700}.teaching-dialog .hint{line-height:1.65}
+.cover-text-options{margin:18px 0;border-top:1px solid #dbe3ec;padding-top:12px}.cover-text-options summary{cursor:pointer;font-weight:700;font-size:12px;line-height:1.5}.tw-cover-row{display:flex;gap:5px;align-items:center}.tw-cover-row input{min-width:0}.tw-cover-row button{padding:8px;border:1px solid #ccd8d4;border-radius:5px;background:#eef5f1;color:#245d4e;cursor:pointer;font-size:11px}.tw-cover-row input[data-automatic=false]{border-color:#347566;background:#f3faf6}.cv-lab{overflow-wrap:anywhere}.cv-school,.cv-motto,.cv-t1,.cv-t2,.cv-sub,.cv-org,.cv-val{overflow-wrap:anywhere}.cv-t1{line-height:1.08}
+@media(max-width:600px){.teaching-dialog{padding:16px}.tw-grid{grid-template-columns:1fr 1fr}.tw-grid>strong{grid-column:1/-1;margin-top:12px}.tw-header h2{font-size:21px}.tw-card{padding:12px}.teaching-toolbar .b2{flex:1;font-size:12px}.teaching-toolbar>div{flex-basis:100%}}
+@media print{.teaching-toolbar,.teaching-dialog{display:none!important}}
+.cv-content{width:100%;height:100%;min-height:0;display:flex;flex-direction:column;align-items:center;transform-origin:top center;position:relative;z-index:2}.cv-content>*{flex-shrink:0}.cv-lab{white-space:normal;max-width:46%;letter-spacing:.15mm}.cv-val{white-space:normal;overflow:visible;text-overflow:clip}.cv-t2{max-width:100%}
+.teaching-toolbar .b2,.teaching-dialog .b2{appearance:none;border:1px solid #c8d8d2;border-radius:8px;background:#fff;color:#245b4e;padding:10px 14px;font:600 13px/1.3 "Segoe UI",system-ui,sans-serif;cursor:pointer;transition:background .15s,border-color .15s;min-height:38px}
+.teaching-toolbar .b2:hover,.teaching-dialog .b2:hover{background:#edf6f1;border-color:#8eb5a6;filter:none}.teaching-dialog .tw-tabs .b2[aria-pressed=true],.teaching-dialog .b2.tw-primary{background:#195e4c;border-color:#195e4c;color:#fff}.teaching-dialog .b2.tw-primary:hover{background:#104d3d}.teaching-toolbar button:focus-visible,.teaching-dialog button:focus-visible{outline:2px solid #347566;outline-offset:3px}.tw-header{position:sticky;top:-24px;background:#fbfcfe;z-index:4;padding:8px 0}.tw-header #twClose{flex-shrink:0}.tw-tabs{gap:8px}
+.page .cv-t1{font-size:21mm;line-height:1.08;border:0;padding:0;margin:0;color:var(--cv-ink)}.page .cv-t1.long{font-size:14mm}.page .cv-t1.xlong{font-size:10.5mm}
+@media(max-width:600px){.tw-header{top:-16px}.teaching-dialog .b2{font-size:12px;padding:9px 11px}.teaching-toolbar .b2{padding:10px;font-size:12px}}
+
+/* ============================================================
+   HAMBURGER LAYOUT CONTROL
+   The header hamburger arranges the layout on every screen.
+   Desktop / laptop: collapsing hides the settings sidebar and
+   lets the pack stretch across the full width; opening restores
+   the two-column arrangement. On touch the panel already slides
+   open via `body.panel-open`, so this only applies above 980px.
+   ============================================================ */
+@media (min-width:981px){
+  body.panel-closed .wrap{grid-template-columns:1fr}
+  body.panel-closed .panel{display:none}
+}
+@media (max-width:640px){
+  .menu-btn{width:40px;height:40px;border-radius:10px}
+}
+
+/* ============================================================
+   COVER DESIGNER
+   Colours, emblem, title scale and the show/hide switches for
+   the designed cover, plus the Kindergarten template and its
+   artwork. Everything here is additive: a template that is left
+   alone looks exactly as it did before.
+   ============================================================ */
+.cvart{--cv-ts:1}
+.cv-t1,.page .cv-t1{font-size:calc(21mm * var(--cv-ts))}
+.cv-t1.long,.page .cv-t1.long{font-size:calc(14mm * var(--cv-ts))}
+.cv-t1.xlong,.page .cv-t1.xlong{font-size:calc(10.5mm * var(--cv-ts))}
+.cv-t2{font-size:calc(11mm * var(--cv-ts))}
+
+/* Kindergarten: bright, warm and rounded, to sit with the KG cover artwork */
+.cv-kg { --cv-ink:#1f4d3a; --cv-accent:#e0662b; --cv-bg:#fffaf0; --cv-band:#2f6f4f; --cv-soft:#fdeecf; }
+.cv-kg::after{border-radius:6mm;opacity:.6}
+.cv-kg .cv-t1{letter-spacing:.2mm}
+.cv-kg .cv-panel{border-radius:7mm;border-width:1.8px}
+.cv-kg .cv-emblem{font-size:19mm}
+.cv-kg .cv-em-svg{width:17mm;height:17mm}
+.cv-kg .cv-note{background:#fff1d6}
+
+/* colour pickers: one cell per colour, with an Auto button that hands the
+   colour back to the chosen template */
+.des-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:6px}
+.des-col{display:block;font-size:.72rem;font-weight:700;color:var(--ink)}
+.des-col>span:first-child{display:block;margin-bottom:3px}
+.des-col.off{opacity:.5}
+.des-sw{display:flex;align-items:center;gap:5px}
+.des-sw input[type=color]{flex:none;width:38px;height:32px;padding:2px;border:1px solid var(--line);
+  border-radius:8px;background:#fff;cursor:pointer}
+.des-sw input[type=color]:disabled{cursor:not-allowed}
+.des-sw input[data-automatic=false]{border-color:#347566;box-shadow:0 0 0 2px rgba(52,117,102,.18)}
+.des-sw button{flex:1;min-width:0;padding:7px 4px;border:1px solid #ccd8d4;border-radius:6px;
+  background:#eef5f1;color:#245d4e;font-size:.66rem;font-weight:700;cursor:pointer}
+.des-sw button:hover{background:#e2f0e9}
+.des-sw button:disabled{cursor:not-allowed;opacity:.5}
+.des-reset{display:block;width:100%;margin:8px 0 2px;padding:9px 10px;border:1px solid var(--line);
+  border-radius:8px;background:#fff;color:var(--bleu);font-size:.72rem;font-weight:700;cursor:pointer}
+.des-reset:hover{background:#f0f6ff}
+
+/* show / hide switches for each cover element */
+.des-chks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 8px;margin-bottom:2px}
+.des-chks .chk{margin:0}
+.des-chks .chk.off{opacity:.5}
+.des-chks .chk span{font-size:.72rem}
+@media (max-width:420px){ .des-cols,.des-chks{grid-template-columns:1fr} }
+
+/* ============================================================
+   HEADER & FOOTER CUSTOMIZATION
+   Two surfaces share the same control pattern:
+
+   1) The PRINTED sheet header & footer (.phead / .pfoot) — the
+      running head and the page-numbered footer that appear on
+      every A4 sheet, in print, in PDF and in the Word export.
+
+   2) The PLATFORM chrome header (.top) — the blue bar at the top
+      of the page — and the new PLATFORM footer (.botfoot) sitting
+      below the .wrap.
+
+   Each control writes into the same shape (on/off + show/hide per
+   element + custom text + font size + colour), so a section that
+   is left alone renders exactly as it did before.
+   ============================================================ */
+
+/* --- platform footer --- */
+.botfoot{background:linear-gradient(135deg,#0b3b8c,#1e5fd0);color:#fff;
+  padding:10px 20px;font-size:.78rem;position:relative}
+.botfoot::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;
+  background:linear-gradient(90deg,var(--bleu) 33%,#fff 33% 66%,var(--rouge) 66%)}
+.botfoot-in{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.botfoot-l,.botfoot-r{opacity:.92}
+.botfoot-l b{font-weight:800;letter-spacing:.4px}
+.botfoot-r{font-size:.72rem;opacity:.8}
+@media(max-width:640px){.botfoot-in{flex-direction:column;align-items:flex-start;gap:3px}.botfoot-r{font-size:.68rem}}
+
+/* the chrome header can be hidden entirely: the platform still works
+   because the panel toggle and the export bar live inside the .wrap */
+body.plat-hd-off .top{display:none!important}
+
+/* the new chrome footer is hidden by default; toggled on by the
+   Platform header & footer designer */
+body.plat-ft-off .botfoot{display:none!important}
+body.plat-hd-off .menu-btn{display:none!important}
+
+/* master enable/disable of the printed sheet header/footer */
+body.sheet-hf-off .page .phead,
+body.sheet-hf-off .page .pfoot{display:none!important}
+
+/* finer per-element switches on the printed sheet: an element is hidden
+   if its data attribute reads "false". JS sets the attribute on <body>. */
+body[data-phdr="false"] .page .phead{display:none!important}
+body[data-pftr="false"] .page .pfoot{display:none!important}
+body[data-phdr-l="false"] .page .phead .phdr-l{display:none!important}
+body[data-phdr-r="false"] .page .phead .phdr-r{display:none!important}
+body[data-pftr-l="false"] .page .pfoot .pftr-l{display:none!important}
+body[data-pftr-r="false"] .page .pfoot .pftr-r{display:none!important}
+body[data-pftr-pg="false"] .page .pfoot .pftr-pg{display:none!important}
+
+/* the per-element switches in the designer: a section "off" dims and
+   disables its controls so the user can see what is currently active */
+.hf-row.off{opacity:.5}
+.hf-row.off input,.hf-row.off select,.hf-row.off button{pointer-events:none}
+
+/* designer panel layout — reuses des-* classes where possible */
+.hf-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:6px}
+.hf-grid .row{margin-bottom:4px}
+.hf-grid .row label{font-size:.82rem;color:var(--ink);font-weight:600}
+.hf-grid .row input[type=text]{width:100%;box-sizing:border-box;padding:7px 9px;
+  border:1px solid var(--line);border-radius:8px;background:#f8fbff;color:var(--ink);font-size:.85rem}
+.hf-grid .row input[type=text]:focus{outline:2px solid #bcd3fb;outline-offset:0;border-color:#9dbcf0}
+.hf-grid .row input[type=range]{flex:1;accent-color:var(--bleu)}
+.hf-grid .row select{padding:7px 9px;border:1px solid var(--line);border-radius:8px;
+  background:#f8fbff;color:var(--ink);font-size:.85rem;width:100%}
+.hf-grid .row input[type=color]{width:38px;height:32px;padding:2px;border:1px solid var(--line);
+  border-radius:8px;background:#fff;cursor:pointer;flex:none}
+.hf-grid .row b{font-size:.75rem;color:var(--bleu);min-width:40px;text-align:right;flex:none}
+
+.hf-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+@media (max-width:420px){.hf-pair{grid-template-columns:1fr}}
+
+.hf-sec-cap{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 4px}
+.hf-sec-cap b{font-size:.86rem;color:var(--ink)}
+.hf-sec-cap .hf-onoff{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted)}
+
+.hf-tog{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;font-size:.82rem;font-weight:700;color:var(--ink)}
+.hf-tog input{accent-color:var(--bleu);width:16px;height:16px}
+
+.hf-auto{flex:1;min-width:0;padding:7px 4px;border:1px solid #ccd8d4;border-radius:6px;
+  background:#eef5f1;color:#245d4e;font-size:.72rem;font-weight:700;cursor:pointer}
+.hf-auto:hover{background:#e2f0e9}
+
+/* a small "preview" of the running header/footer so the user can see
+   what their choices produce before they click Generate */
+.hf-preview{background:#f4f7fd;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+  font-size:.72rem;color:var(--ink);margin:6px 0 4px;line-height:1.45}
+.hf-preview .pv-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.hf-preview .pv-hd{border-bottom:1px solid var(--bleu-l);padding-bottom:4px;margin-bottom:4px}
+.hf-preview .pv-hd span:first-child{color:var(--bleu);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.hf-preview .pv-ft{border-top:1px solid var(--bleu-l);padding-top:4px;margin-top:4px}
+.hf-preview .pv-ft span:last-child{color:var(--bleu);font-weight:700}
+.hf-preview.dim{opacity:.45}
+
+.hf-saved-tag{display:inline-block;font-size:.66rem;color:#0d6b3a;background:#d9f4e2;
+  border-radius:20px;padding:2px 8px;font-weight:700;margin-left:6px;vertical-align:middle}
+
+/* hide the platform chrome footer / header elements via the new
+   designer-driven switches as well as the body classes above */
+body[data-phdr-on="false"] .top{display:none!important}
+body[data-pftr-on="false"] .botfoot{display:none!important}
+
+/* the live preview blocks inside the platform designer: they mirror the
+   on-screen chrome so a colour or font-size change is visible immediately.
+   The top preview takes the same gradient + font size as the real .top,
+   and the bottom preview mirrors #botFoot. */
+.plat-preview{background:linear-gradient(135deg,#0b3b8c,#1e5fd0);color:#fff;
+  padding:9px 12px;border-radius:9px;margin:6px 0 4px;font-size:.85rem;line-height:1.35}
+.plat-preview.bot{font-size:.78rem}
+.plat-pv-inner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.plat-pv-title{font-size:.95rem;font-weight:800}
+.plat-pv-sub{font-size:.72rem;opacity:.86}
+.plat-pv-l b{font-weight:800;letter-spacing:.3px}
+.plat-pv-r{font-size:.72rem;opacity:.8}
+
+/* ============================================================
+   Usage & privacy panel (usage.js) — a small local tally that
+   proves the platform is used. Kept deliberately plain: it sits
+   inside the settings dropdowns and prints nothing.
+   ============================================================ */
+.usg-summary{margin:8px 0 6px;padding:8px 10px;border:1px solid #dbe4f2;border-radius:10px;background:#f7faff;font-size:.8rem}
+.usg-summary .usg-off{color:#6b7280;margin:0}
+.usg-tbl{width:100%;border-collapse:collapse;font-size:.8rem}
+.usg-tbl td{padding:3px 0;border-bottom:1px dashed #e3eaf6}
+.usg-tbl td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.usg-meta{margin:6px 0 0;color:#6b7280;font-size:.72rem}
+.usg-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}

@@ -729,18 +729,32 @@
       t.study.forEach(function (b, i) {
         out.push(b);
         (insertAt[i] || []).forEach(function (e) {
-          out.push({ k: "p", t: "**Worked example \u2014 " + stripTags(e.name) + ":** " + e.ex.q });
-          out.push({ k: "num", items: e.ex.steps });
-          out.push({ k: "p", t: "**Answer:** " + e.ex.a });
+          if (subj === "ma") {
+            /* Mathematics, all grades: the example problem and the answer
+               each go inside a blue label */
+            out.push({ k: "lab", tag: e.name, t: e.ex.q });
+            out.push({ k: "num", items: e.ex.steps });
+            out.push({ k: "lab", tag: "Answer", ans: 1, t: e.ex.a });
+          } else {
+            out.push({ k: "p", t: "**Worked example \u2014 " + stripTags(e.name) + ":** " + e.ex.q });
+            out.push({ k: "num", items: e.ex.steps });
+            out.push({ k: "p", t: "**Answer:** " + e.ex.a });
+          }
         });
       });
       var rest = exItems.filter(function (e) { return e.at < 0; });
       if (rest.length) {
         out.push({ k: "h3", t: "Worked Examples \u2014 Remaining New Words" });
         rest.forEach(function (e) {
-          out.push({ k: "p", t: "**" + stripTags(e.name) + ":** " + e.ex.q });
-          out.push({ k: "num", items: e.ex.steps });
-          out.push({ k: "p", t: "**Answer:** " + e.ex.a });
+          if (subj === "ma") {
+            out.push({ k: "lab", tag: e.name, t: e.ex.q });
+            out.push({ k: "num", items: e.ex.steps });
+            out.push({ k: "lab", tag: "Answer", ans: 1, t: e.ex.a });
+          } else {
+            out.push({ k: "p", t: "**" + stripTags(e.name) + ":** " + e.ex.q });
+            out.push({ k: "num", items: e.ex.steps });
+            out.push({ k: "p", t: "**Answer:** " + e.ex.a });
+          }
         });
       }
 
@@ -794,11 +808,21 @@
     if (w.length) {
       out.push({ k: "h3", t: "3 \u00b7 Worked examples" });
       w.slice(0, 3).forEach(function (v, i) {
-        out.push({ k: "p", t: "Example " + (i + 1) + ": " + v.q });
-        if (v.steps.length) {
-          out.push({ k: "num", items: v.steps });
+        if (subj === "ma") {
+          /* Mathematics, all grades: the example problem and the answer
+             each go inside a blue label */
+          out.push({ k: "lab", tag: "Example " + (i + 1), t: v.q });
+          if (v.steps.length) {
+            out.push({ k: "num", items: v.steps });
+          }
+          out.push({ k: "lab", tag: "Answer", ans: 1, t: v.a });
+        } else {
+          out.push({ k: "p", t: "Example " + (i + 1) + ": " + v.q });
+          if (v.steps.length) {
+            out.push({ k: "num", items: v.steps });
+          }
+          out.push({ k: "instr", t: "Answer: " + v.a });
         }
-        out.push({ k: "instr", t: "Answer: " + v.a });
       });
     }
 
@@ -1925,6 +1949,12 @@
       case "h3": return "<h3" + (b.c ? ' class="ctr"' : "") + ">" + rich(b.t) + "</h3>";
       case "p": return "<p class=\"" + (b.i ? "it " : "") + (b.c ? "ctr " : "") + (b.big ? "cbig" : "") + "\">" + rich(b.t) + "</p>";
       case "instr": return '<p class="instr">' + rich(b.t) + "</p>";
+      /* a blue label around a worked example problem or its answer: the tag
+         (the term, "Example n" or "Answer") sits in a blue pill beside the
+         text, on a light blue card — Mathematics, all grades */
+      case "lab": return '<div class="exlab' + (b.ans ? " exlab-a" : "") + '">' +
+        '<span class="exlab-tag">' + esc(b.tag || "Example") + "</span>" +
+        '<span class="exlab-t">' + rich(b.t) + "</span></div>";
       /* A contents list whose entries carry a page number (see toc.js) is laid
          out as a table of contents: the entry on the left, dotted leaders
          running to the number of the page it begins on, in the right margin. */
@@ -2687,6 +2717,10 @@
         case "h3": body += para(b.t, { b: true, sz: 30, color: "12203A", before: 140, after: 70, align: b.c ? "center" : null }); break;
         case "p": body += para(b.t, { sz: b.big ? 34 : 28, i: !!b.i, b: !!b.big, align: b.c ? "center" : null }); break;
         case "instr": body += para(b.t, { sz: 26, i: true, color: "44546A", shade: "F2F6FC" }); break;
+        /* the blue label exports as a light blue shaded paragraph with the tag
+           in bold blue, the closest Word comes to the printed pill + card */
+        case "lab": body += para("**" + (b.tag || "Example") + " —**  " + b.t,
+          { sz: 28, color: "0B3B8C", shade: b.ans ? "DCE8FB" : "E8F0FF", before: 60, after: 60 }); break;
         case "bul":
           /* a contents list carrying page numbers (see toc.js) exports as a real
              table of contents; every other bullet list keeps its plain bullet */

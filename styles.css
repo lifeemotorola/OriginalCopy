@@ -151,6 +151,23 @@ select:focus,input:focus{outline:2px solid #bcd3fb;outline-offset:0}
 .page p.it{font-style:italic;color:#555}
 .page .instr{background:#f2f6fc;border-left:3px solid var(--bleu-l);padding:7px 11px;
   font-style:italic;color:#3d4a63;font-size:.93em;border-radius:0 6px 6px 0}
+/* ---- blue label: the worked example problem and its answer ----
+   Mathematics worked examples (every grade) put the example problem and the
+   answer each inside a blue label: a blue pill naming the line — the term,
+   "Example n" or "Answer" — beside the text, on a light blue card with a blue
+   border, so the example and its answer stand out at a glance. The border,
+   pill text and dark blue text survive even when a browser prints with
+   background graphics switched off; print-color-adjust keeps the fill on. */
+.page .exlab{display:flex;align-items:flex-start;gap:9px;margin:7px 0;padding:7px 11px;
+  background:#e8f0ff;border:1.5px solid var(--bleu-l);border-radius:8px;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page .exlab .exlab-tag{flex:none;display:inline-block;background:var(--bleu);color:#fff;
+  font-weight:800;font-size:.68em;line-height:1.5;letter-spacing:.07em;
+  padding:1px 9px;border-radius:999px;margin-top:1px;white-space:nowrap;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page .exlab .exlab-t{flex:1;min-width:0}
+.page .exlab.exlab-a{background:#dce8fb;border-color:var(--bleu)}
+.page .exlab.exlab-a .exlab-tag{background:var(--bleu-l)}
 .page ol,.page ul{margin:7px 0 7px 22px;padding:0}
 .page li{margin:5px 0}
 /* ---- contents with page numbers ----
@@ -571,6 +588,11 @@ main{ min-width:0; }
 .fold-subpage p { margin:6px 0; }
 .fold-subpage p.it { font-style:italic; color:#555; }
 .fold-subpage .instr { background:#f2f6fc; border-left:3px solid var(--bleu-l); padding:7px 11px; font-style:italic; color:#3d4a63; font-size:.93em; border-radius:0 6px 6px 0; }
+.fold-subpage .exlab { display:flex; align-items:flex-start; gap:9px; margin:7px 0; padding:7px 11px; background:#e8f0ff; border:1.5px solid var(--bleu-l); border-radius:8px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.fold-subpage .exlab .exlab-tag { flex:none; display:inline-block; background:var(--bleu); color:#fff; font-weight:800; font-size:.68em; line-height:1.5; letter-spacing:.07em; padding:1px 9px; border-radius:999px; margin-top:1px; white-space:nowrap; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.fold-subpage .exlab .exlab-t { flex:1; min-width:0; }
+.fold-subpage .exlab.exlab-a { background:#dce8fb; border-color:var(--bleu); }
+.fold-subpage .exlab.exlab-a .exlab-tag { background:var(--bleu-l); }
 .fold-subpage ol, .fold-subpage ul { margin:7px 0 7px 22px; padding:0; }
 .fold-subpage li { margin:5px 0; }
 .fold-subpage ul.toc { list-style:none; margin:9px 0; padding:0; }

@@ -1,0 +1,695 @@
+/* ============================================================
+   Emmanuel — the platform's AI tutor (Groq model via a server-side
+   proxy — the API key never reaches the browser; see worker/)
+   Provides: chat tutor, question generator, explanations
+   "Emmanuel" is the user-facing name of the model; the identifier sent to the
+   API is kept in MODEL below.
+   ============================================================ */
+(function () {
+  "use strict";
+  var $ = function (s) { return document.querySelector(s); };
+
+  /* ---- AI API config ----
+     Requests go to a tiny server-side proxy (a Cloudflare Worker — see
+     worker/groq-proxy.js). The Groq API key lives only in the Worker's
+     secret store; it is NEVER shipped to the browser, so it cannot be
+     scraped from the page or from this file. The proxy also enforces an
+     Origin allowlist and a per-visitor rate limit.
+  */
+  var MODEL = "openai/gpt-oss-120b";     /* API identifier */
+  /* The name shown to users comes from the white-label configuration
+     (brand.js), so a licensee can rename the tutor without editing this
+     file. It falls back to the original name when brand.js is absent. */
+  var MODEL_NAME = (window.APP_BRAND && window.APP_BRAND.tutor) || "Emmanuel";
+
+  /* Emmanuel's portrait. build.sh inlines assets/emmanuel.png as a data URI in
+     window.EMMANUEL_AVATAR so the single-file deliverable stays offline; when
+     running from the unbuilt sources the relative file is used instead. If the
+     picture cannot be loaded every avatar falls back to the drawn robot icon. */
+  var AVATAR_SRC = window.EMMANUEL_AVATAR || "assets/emmanuel.png";
+
+  function avatarHTML(cls) {
+    return '<img class="ai-avatar ' + cls + '" src="' + AVATAR_SRC + '" alt="' + MODEL_NAME + '">';
+  }
+  /* swap any portrait that fails to load for the drawn icon it replaced */
+  function wireAvatars(root) {
+    if (!root) return;
+    var imgs = root.querySelectorAll("img.ai-avatar");
+    Array.prototype.forEach.call(imgs, function (img) {
+      img.onerror = function () {
+        var span = document.createElement("span");
+        span.className = img.className.replace("ai-avatar", "").trim();
+        span.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-ai"/></svg>';
+        if (img.parentNode) img.parentNode.replaceChild(span, img);
+      };
+    });
+  }
+  /* ---- Proxy URL resolution ------------------------------------------
+     No API key exists in the client. The app talks to a server-side
+     proxy that holds the key:
+
+       1. window.AI_PROXY_URL  — injected by build.sh from $AI_PROXY_URL
+       2. <meta name="ai-proxy-url" content="...">
+       3. Same-origin "/api/chat" — a Cloudflare Pages Function that
+          ships with this repo (functions/api/chat.js). Hosting the
+          site on Cloudflare Pages requires no configuration beyond
+          setting the GROQ_API_KEY secret in the Pages project.
+       4. PROXY_URL below      — set for standalone Worker deployments
+
+     Offline/USB copies (file://) have no proxy; the tutor then shows a
+     friendly "not connected" message and everything else still works.
+     -------------------------------------------------------------------- */
+  var PROXY_URL = "";  /* e.g. "https://liberia-packs-ai.<you>.workers.dev/" */
+
+  function resolveProxyUrl() {
+    if (window.AI_PROXY_URL) return String(window.AI_PROXY_URL).trim();
+    var meta = document.querySelector('meta[name="ai-proxy-url"]');
+    if (meta && meta.content && meta.content.indexOf("__") !== 0) return meta.content.trim();
+    if (/^https?:$/.test(location.protocol)) {
+      /* absolute same-origin path works on domains and Pages sub-paths */
+      return location.origin + "/api/chat";
+    }
+    return PROXY_URL;
+  }
+
+  var proxyUrl = resolveProxyUrl();
+  var chatHistory = [];     /* {role, content}[] */
+  var isOpen = false;
+  var isStreaming = false;
+
+
+  /* ---- system prompt: context-aware ---- */
+  function systemPrompt() {
+    var s = window.PACK_CUR_SUBJECT || "the curriculum";
+    var g = window.PACK_CUR_GRADE || "";
+    var mode = (typeof window.PACK_MODE === "function") ? window.PACK_MODE() : "teacher";
+    return "You are " + MODEL_NAME + ", an expert AI tutor for the Liberian National Curriculum. " +
+      "Your name is " + MODEL_NAME + "; if asked who you are, say you are " + MODEL_NAME + ". " +
+      "You are currently helping with " + s + (g ? ", Grade " + g : "") + ". " +
+      "The user is in " + mode + " mode. " +
+      "Be clear, encouraging, and age-appropriate. " +
+      "Use examples from Liberian context when possible (local names, places, food, culture). " +
+      "For younger grades (1-6), use simpler language. " +
+      "For senior high (10-12), you can be more detailed and academic. " +
+      "When generating questions, format them clearly with numbers. " +
+      "When explaining, break concepts into steps. " +
+      "Keep responses focused — usually 2-4 paragraphs unless asked for more. " +
+      "If the user asks something unrelated to their studies, gently redirect them.";
+  }
+
+  /* ---- human check (non-blocking) -----------------------------------
+     If the platform's "Are you human?" widget (humancheck.js) already has
+     a fresh token, it is attached to the request. Emmanuel never blocks
+     or waits on the human check — questions go out immediately and the
+     tutor works whether or not the check is completed.
+     ------------------------------------------------------------------- */
+  function currentCheckToken() {
+    var hc = window.HUMAN_CHECK;
+    if (!hc || typeof hc.token !== "function") return "";
+    return hc.token() || "";
+  }
+
+  /* ---- AI call (through the server-side proxy) -----------------------
+     Failures come back as a short machine-readable code and nothing else.
+     The proxy's own wording is never repeated in the chat: it talks about
+     hosting, keys and deployment, which is the site owner's business and
+     nobody else's. A failed turn simply disappears again.
+     ------------------------------------------------------------------- */
+  function callGroq(messages, checkToken, ctrl, onChunk, onDone, onFail) {
+    if (!proxyUrl) { onFail({ code: "no_proxy" }); return; }
+    var body = {
+      model: MODEL,
+      messages: messages,
+      temperature: 0.7,
+      max_tokens: 6000,
+      stream: true
+    };
+    /* Checked by the proxy when TURNSTILE_SECRET_KEY is set over there.
+       A Turnstile token is single use, so spend it as it goes out. */
+    if (checkToken) {
+      body.turnstile = checkToken;
+      if (window.HUMAN_CHECK && window.HUMAN_CHECK.consume) window.HUMAN_CHECK.consume(checkToken);
+    }
+    fetch(proxyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+      signal: ctrl.signal
+    }).then(function (resp) {
+      if (!resp.ok) {
+        return resp.text().then(function (t) {
+          /* Only the code travels: "turnstile_required" tells the chat to ask
+             the visitor to check in again. Everything else stays silent. */
+          var code = "";
+          try {
+            var j = JSON.parse(t);
+            if (j && j.error) code = String(j.error.code || "");
+          } catch (e) {}
+          onFail({ code: code });
+        });
+      }
+      var reader = resp.body.getReader();
+      var dec = new TextDecoder();
+      var buf = "";
+      function pump() {
+        reader.read().then(function (r) {
+          if (r.done) { onDone(); return; }
+          buf += dec.decode(r.value, { stream: true });
+          var lines = buf.split("\n");
+          buf = lines.pop();
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line || line === "data: [DONE]") continue;
+            if (line.indexOf("data: ") === 0) {
+              try {
+                var d = JSON.parse(line.slice(6));
+                var delta = d.choices && d.choices[0] && d.choices[0].delta;
+                if (delta && delta.content) onChunk(delta.content);
+              } catch (e) { /* skip bad chunks */ }
+            }
+          }
+          pump();
+        }).catch(function (e) {
+          if (e.name === "AbortError") { onDone(); return; }
+          onFail({ code: "" });
+        });
+      }
+      pump();
+    }).catch(function (e) {
+      if (e.name === "AbortError") { onDone(); return; }
+      onFail({ code: "" });
+    });
+  }
+
+  /* ---- one question at a time ----------------------------------------
+     Every path out of a question — a finished answer, a failure, the
+     visitor pressing stop, or a watchdog giving up — goes through
+     endTurn(). That is what keeps the composer usable: a turn that is
+     already over can never answer twice, and nothing can leave the panel
+     stuck on "Thinking..." with no way back.
+     ------------------------------------------------------------------- */
+  var active = null;              /* the turn in flight, or null when idle */
+
+  var FIRST_TOKEN_WAIT = 30000;   /* nothing at all came back by now */
+  var IDLE_WAIT = 45000;          /* the stream dried up mid-answer */
+  var TOTAL_WAIT = 240000;        /* hard ceiling on one answer */
+
+  /* What the visitor is told when a question cannot be answered. None of
+     it mentions hosting, keys or status codes — that is the site owner's
+     business, not theirs — and it always offers a way forward. */
+  var NOTE_FAIL = "I couldn't reply just now. Please check your connection and try again.";
+  var NOTE_EMPTY = "I didn't catch that. Please ask me again.";
+  var NOTE_SLOW = "That was taking too long, so I stopped waiting. Please try again.";
+  var NOTE_OFFLINE = "The AI tutor is not connected in this copy of the platform. The packs, printing and voice reader all still work offline.";
+
+  function noteFor(info) {
+    var code = (info && info.code) || "";
+    if (code === "no_proxy") return NOTE_OFFLINE;
+    return NOTE_FAIL;
+  }
+
+  /* ---- online / offline ----------------------------------------------
+     Emmanuel is the one part of the platform that needs the internet.
+     When the device reports it is offline the tutor hides itself — the
+     floating button disappears and the panel closes — and every other
+     part of the platform keeps working. The button comes back the moment
+     the connection returns. A question still in flight when the
+     connection drops is ended: whatever has already arrived is kept, an
+     empty answer is replaced with a note, and nothing may sit on
+     "Thinking...".
+     -------------------------------------------------------------------- */
+  var NOTE_CONN = "The connection dropped while I was replying. I'll be back when you're online — the packs, printing and voice reader all still work.";
+
+  function isOnline() {
+    if (typeof navigator === "undefined") return true;  /* e.g. the unit-test sandbox */
+    return navigator.onLine !== false;
+  }
+
+  function setOnlineUI(online) {
+    var fab = $("#aiFab"), p = $("#aiPanel");
+    if (online) {
+      if (fab) fab.hidden = false;
+      return;
+    }
+    /* a turn still in flight must end before the tutor hides itself */
+    var turn = active;
+    if (turn) {
+      var had = !!(turn.bubble && turn.bubble._raw);
+      try { if (turn.ctrl) turn.ctrl.abort(); } catch (e) {}
+      if (had) keepAnswer(turn);
+      endTurn(turn);
+      if (!had && turn.bubble) {
+        var b = turn.bubble;
+        b.className = "ai-bubble ai-err";
+        b.innerHTML = "";
+        var t = document.createElement("span");
+        t.textContent = NOTE_CONN;
+        b.appendChild(t);
+        var body = $("#aiBody");
+        if (body) body.scrollTop = body.scrollHeight;
+      }
+    }
+    isOpen = false;
+    if (p) p.hidden = true;
+    if (fab) { fab.hidden = true; fab.classList.remove("open"); }
+  }
+
+  function wireOnlineEvents() {
+    if (typeof window.addEventListener !== "function") return;
+    window.addEventListener("offline", function () { setOnlineUI(false); });
+    window.addEventListener("online", function () { setOnlineUI(true); });
+  }
+
+  function newTurn(bubble, userText) {
+    return {
+      ctrl: null, timers: [], bubble: bubble, userText: userText,
+      dead: false, retried: false
+    };
+  }
+
+  function clearTurnTimers(turn) {
+    if (!turn) return;
+    for (var i = 0; i < turn.timers.length; i++) clearTimeout(turn.timers[i]);
+    turn.timers = [];
+  }
+
+  function endTurn(turn) {
+    if (turn) { turn.dead = true; clearTurnTimers(turn); }
+    isStreaming = false;
+    showStreaming(false);
+    setStatus("");
+    if (active === turn) active = null;
+    window._aiAbort = null;
+  }
+
+  /* Keep whatever the tutor managed to say before the turn ended. */
+  function keepAnswer(turn) {
+    if (!turn || !turn.bubble || !turn.bubble._raw) return;
+    chatHistory.push({ role: "assistant", content: turn.bubble._raw });
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-16);
+  }
+
+  /* ---- markdown-lite renderer ---- */
+  function renderMd(text) {
+    var s = text
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+      .replace(/\*([^*]+)\*/g, "<i>$1</i>")
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+    /* numbered lists */
+    s = s.replace(/^(\d+)\.\s+(.+)$/gm, '<div class="ai-li"><span class="ai-n">$1.</span> $2</div>');
+    /* bullet lists */
+    s = s.replace(/^[-•]\s+(.+)$/gm, '<div class="ai-li"><span class="ai-b">•</span> $1</div>');
+    /* paragraphs */
+    s = s.replace(/\n\n+/g, '</p><p>');
+    s = s.replace(/\n/g, "<br>");
+    s = "<p>" + s + "</p>";
+    s = s.replace(/<p><\/p>/g, "");
+    /* headers */
+    s = s.replace(/<p>### (.+?)(<br>|<\/p>)/g, '<h4>$1</h4>$2');
+    s = s.replace(/<p>## (.+?)(<br>|<\/p>)/g, '<h3>$1</h3>$2');
+    return s;
+  }
+
+  /* ---- chat panel DOM ---- */
+  function buildPanel() {
+    if ($("#aiPanel")) return;
+
+    /* Floating toggle button */
+    var fab = document.createElement("button");
+    fab.id = "aiFab";
+    fab.className = "ai-fab";
+    fab.innerHTML = avatarHTML("ai-fab-ico") + '<span class="ai-fab-lab">' + MODEL_NAME + '</span>';
+    fab.title = "Open " + MODEL_NAME + ", the AI tutor";
+    fab.onclick = togglePanel;
+    wireAvatars(fab);
+    document.body.appendChild(fab);
+
+    /* Chat panel */
+    var panel = document.createElement("div");
+    panel.id = "aiPanel";
+    panel.className = "ai-panel";
+    panel.hidden = true;
+    panel.innerHTML =
+      '<div class="ai-head">' +
+        '<div class="ai-head-left">' +
+          avatarHTML("ai-head-ico") +
+          '<div class="ai-head-txt">' +
+            '<b>' + MODEL_NAME + '</b>' +
+            '<span class="ai-head-sub">AI tutor · Liberian National Curriculum</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ai-head-right">' +
+          '<button class="ai-btn-icon" id="aiNewChat" title="New chat"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></button>' +
+          '<button class="ai-btn-icon" id="aiClose" title="Close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="ai-body" id="aiBody">' +
+        '<div class="ai-welcome" id="aiWelcome">' +
+          '<div class="ai-welcome-ico">' + avatarHTML("ai-welcome-img") + '</div>' +
+          '<h3>Hello! I\'m ' + MODEL_NAME + ', your AI tutor</h3>' +
+          '<p>I can help you with any subject in the Liberian curriculum. Try asking me to:</p>' +
+          '<div class="ai-suggestions">' +
+            '<button class="ai-sug" data-q="Explain the key concepts in the current study notes in simple terms"><svg class="ic" aria-hidden="true"><use href="#i-em-book"/></svg> Explain the study notes</button>' +
+            '<button class="ai-sug" data-q="Generate 10 practice questions for this subject and grade"><svg class="ic" aria-hidden="true"><use href="#i-pencil"/></svg> Generate practice questions</button>' +
+            '<button class="ai-sug" data-q="Create a short quiz with 5 multiple choice questions"><svg class="ic" aria-hidden="true"><use href="#i-help"/></svg> Create a quiz</button>' +
+            '<button class="ai-sug" data-q="Give me a real-world example from Liberia that relates to this topic"><svg class="ic" aria-hidden="true"><use href="#i-sub-ss"/></svg> Give a Liberian example</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="ai-input-wrap">' +
+        '<textarea id="aiInput" placeholder="Ask a question about your studies..." rows="1"></textarea>' +
+        '<button class="ai-send" id="aiSend" title="Send"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg></button>' +
+        '<button class="ai-stop" id="aiStop" title="Stop" style="display:none">⏹</button>' +
+      '</div>' +
+      '<div class="ai-foot">' +
+        '<span class="ai-foot-status" id="aiStatus"></span>' +
+      '</div>';
+    wireAvatars(panel);
+    document.body.appendChild(panel);
+    wirePanel();
+  }
+
+  function togglePanel() {
+    isOpen = !isOpen;
+    var p = $("#aiPanel"), f = $("#aiFab");
+    if (p) p.hidden = !isOpen;
+    if (f) f.classList.toggle("open", isOpen);
+    if (isOpen) {
+      var inp = $("#aiInput");
+      if (inp) setTimeout(function () { inp.focus(); }, 100);
+    }
+  }
+
+  function setStatus(txt) {
+    var s = $("#aiStatus");
+    if (s) s.textContent = txt || "";
+  }
+
+  function addMessage(role, content) {
+    var body = $("#aiBody");
+    if (!body) return null;
+    /* hide welcome on first message */
+    var w = $("#aiWelcome");
+    if (w) w.style.display = "none";
+
+    var msg = document.createElement("div");
+    msg.className = "ai-msg ai-msg-" + role;
+    if (role !== "user") {
+      var av = document.createElement("span");
+      av.className = "ai-msg-ico";
+      av.innerHTML = avatarHTML("ai-msg-img");
+      wireAvatars(av);
+      msg.appendChild(av);
+    }
+    var bubble = document.createElement("div");
+    bubble.className = "ai-bubble";
+    if (role === "user") {
+      bubble.textContent = content;
+    } else {
+      bubble.innerHTML = renderMd(content);
+    }
+    msg.appendChild(bubble);
+    body.appendChild(msg);
+    body.scrollTop = body.scrollHeight;
+    return bubble;
+  }
+
+  function appendToBubble(bubble, text) {
+    if (!bubble) return;
+    bubble._raw = (bubble._raw || "") + text;
+    bubble.innerHTML = renderMd(bubble._raw);
+    var body = $("#aiBody");
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  function send() {
+    var inp = $("#aiInput");
+    if (!inp) return;
+    var text = inp.value.trim();
+    if (!text) return;
+    if (isStreaming) {
+      setStatus("Wait for the reply to finish — or press Stop to ask something else.");
+      return;
+    }
+    inp.value = "";
+    inp.style.height = "auto";
+    submit(text, false);
+  }
+
+  /* Sends one message. */
+  function submit(text, retry) {
+    if (isStreaming) return;
+
+    if (!retry) addMessage("user", text);
+    chatHistory.push({ role: "user", content: text });
+
+    var msgs = [{ role: "system", content: systemPrompt() }].concat(chatHistory);
+    var bubble = addMessage("assistant", "");
+
+    isStreaming = true;
+    showStreaming(true);
+    setStatus("Thinking...");
+
+    var turn = newTurn(bubble, text);
+    active = turn;
+
+    var token = currentCheckToken();
+    startRequest(msgs, token, turn);
+  }
+
+  /* Sends the request and watches it. Three watchdogs, one timer: if
+     nothing arrives at all, if the stream dries up half way through, or
+     if the whole answer simply takes too long, the turn is ended and the
+     visitor is told — the panel can no longer sit on "Thinking...". */
+  function startRequest(msgs, token, turn) {
+    if (turn.dead) return;
+    var ctrl = new AbortController();
+    turn.ctrl = ctrl;
+    window._aiAbort = ctrl;
+
+    var idle = null;
+    function armIdle(ms) {
+      if (idle) clearTimeout(idle);
+      idle = setTimeout(function () { giveUp(NOTE_SLOW); }, ms);
+    }
+    function giveUp(note) {
+      if (turn.dead) return;
+      if (idle) { clearTimeout(idle); idle = null; }
+      try { ctrl.abort(); } catch (e) {}
+      endTurn(turn);
+      /* Whatever arrived before we gave up is worth keeping. */
+      if (turn.bubble && turn.bubble._raw) keepAnswer(turn);
+      else if (note) showFailure(turn, note, true);
+    }
+
+    armIdle(FIRST_TOKEN_WAIT);
+    turn.timers.push(setTimeout(function () { giveUp(""); }, TOTAL_WAIT));
+
+    callGroq(msgs, token, ctrl,
+      function (chunk) {
+        if (turn.dead) return;
+        setStatus("Typing...");
+        appendToBubble(turn.bubble, chunk);
+        armIdle(IDLE_WAIT);
+      },
+      function () {
+        if (turn.dead) return;
+        if (idle) { clearTimeout(idle); idle = null; }
+        endTurn(turn);
+        if (turn.bubble && turn.bubble._raw) keepAnswer(turn);
+        else showFailure(turn, NOTE_EMPTY, true);
+      },
+      function (info) {
+        if (turn.dead) return;
+        if (idle) { clearTimeout(idle); idle = null; }
+        endTurn(turn);
+        if (turn.bubble && turn.bubble._raw) { keepAnswer(turn); return; }
+        if (window.console && console.warn) {
+          console.warn("[Emmanuel] request failed:", (info && info.code) || "unknown");
+        }
+        showFailure(turn, noteFor(info), info && info.code !== "no_proxy");
+      }
+    );
+  }
+
+  /* A question that got no answer is answered with a short note and a way
+     to try again, instead of the reply quietly disappearing. */
+  function showFailure(turn, note, retryable) {
+    var bubble = turn && turn.bubble;
+    if (turn) dropLastUserMessage(turn.userText);
+    if (!bubble) return;
+    bubble.className = "ai-bubble ai-err";
+    bubble.innerHTML = "";
+    var txt = document.createElement("span");
+    txt.textContent = note || NOTE_FAIL;
+    bubble.appendChild(txt);
+    if (retryable !== false) {
+      var again = document.createElement("button");
+      again.className = "ai-retry";
+      again.type = "button";
+      again.textContent = "Try again";
+      again.onclick = function () {
+        if (isStreaming) return;
+        var row = bubble.parentNode;
+        if (row && row.parentNode) row.parentNode.removeChild(row);
+        submit(turn.userText, true);
+      };
+      bubble.appendChild(again);
+    }
+    var body = $("#aiBody");
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  /* A question the tutor never answered should not linger in its memory. */
+  function dropLastUserMessage(text) {
+    var last = chatHistory[chatHistory.length - 1];
+    if (last && last.role === "user" && last.content === text) chatHistory.pop();
+  }
+
+  function showStreaming(on) {
+    var s = $("#aiSend"), t = $("#aiStop");
+    if (s) s.style.display = on ? "none" : "";
+    if (t) t.style.display = on ? "" : "none";
+  }
+
+  function stopStream() {
+    var turn = active;
+    if (turn) {
+      try { if (turn.ctrl) turn.ctrl.abort(); } catch (e) {}
+    }
+    if (window._aiAbort) {
+      try { window._aiAbort.abort(); } catch (e) {}
+    }
+    /* Whatever had already been written stays on screen; the composer
+       comes back whether or not the browser ever reports the abort. */
+    if (turn) keepAnswer(turn);
+    endTurn(turn);
+    setStatus("Stopped.");
+  }
+
+  function newChat() {
+    /* A turn that is still running would carry its answer into the fresh
+       chat, so end it first — this also frees the composer. */
+    var turn = active;
+    if (turn) {
+      try { if (turn.ctrl) turn.ctrl.abort(); } catch (e) {}
+      endTurn(turn);
+    }
+    chatHistory = [];
+    var body = $("#aiBody");
+    if (body) {
+      body.innerHTML = "";
+      var w = document.createElement("div");
+      w.className = "ai-welcome";
+      w.id = "aiWelcome";
+      w.innerHTML =
+        '<div class="ai-welcome-ico"><svg class="ic" aria-hidden="true"><use href="#i-ai"/></svg></div>' +
+        '<h3>Chat cleared!</h3>' +
+        '<p>Ask me anything about the Liberian curriculum.</p>' +
+        '<div class="ai-suggestions">' +
+          '<button class="ai-sug" data-q="Explain the key concepts in the current study notes in simple terms"><svg class="ic" aria-hidden="true"><use href="#i-em-book"/></svg> Explain the study notes</button>' +
+          '<button class="ai-sug" data-q="Generate 10 practice questions for this subject and grade"><svg class="ic" aria-hidden="true"><use href="#i-pencil"/></svg> Generate practice questions</button>' +
+          '<button class="ai-sug" data-q="Create a short quiz with 5 multiple choice questions"><svg class="ic" aria-hidden="true"><use href="#i-help"/></svg> Create a quiz</button>' +
+          '<button class="ai-sug" data-q="Give me a real-world example from Liberia that relates to this topic"><svg class="ic" aria-hidden="true"><use href="#i-sub-ss"/></svg> Give a Liberian example</button>' +
+        '</div>';
+      body.appendChild(w);
+      wireSuggestionClicks();
+    }
+    setStatus("");
+  }
+
+  function wirePanel() {
+    var closeBtn = $("#aiClose");
+    if (closeBtn) closeBtn.onclick = togglePanel;
+
+    var newBtn = $("#aiNewChat");
+    if (newBtn) newBtn.onclick = newChat;
+
+    var sendBtn = $("#aiSend");
+    if (sendBtn) sendBtn.onclick = send;
+
+    var stopBtn = $("#aiStop");
+    if (stopBtn) stopBtn.onclick = stopStream;
+
+    var inp = $("#aiInput");
+    if (inp) {
+      inp.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+      });
+      inp.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 120) + "px";
+      });
+    }
+
+    wireSuggestionClicks();
+  }
+
+  function wireSuggestionClicks() {
+    document.querySelectorAll(".ai-sug").forEach(function (btn) {
+      btn.onclick = function () {
+        var q = btn.getAttribute("data-q");
+        var inp = $("#aiInput");
+        if (inp && q) { inp.value = q; send(); }
+      };
+    });
+  }
+
+  /* ---- explain / generate / quiz helpers, callable from anywhere ----
+     While the device is offline the tutor is hidden, so these entry
+     points stay silent instead of opening a panel that cannot answer. */
+  window.AI_EXPLAIN = function (text) {
+    if (!isOnline()) return;
+    if (!isOpen) togglePanel();
+    var inp = $("#aiInput");
+    if (inp) {
+      inp.value = "Please explain this in simple terms:\n\n" + text;
+      send();
+    }
+  };
+
+  /* ---- "Generate Questions" — called from rendered pages ---- */
+  window.AI_GENERATE_QUESTIONS = function (subject, grade, topic, count) {
+    if (!isOnline()) return;
+    if (!isOpen) togglePanel();
+    var inp = $("#aiInput");
+    if (inp) {
+      inp.value = "Generate " + (count || 10) + " practice questions about " +
+        (topic || subject) + " for Grade " + grade +
+        ". Mix question types: short answer, multiple choice, and true/false. Include answers at the end.";
+      send();
+    }
+  };
+
+  /* ---- "Quiz Me" ---- */
+  window.AI_QUIZ = function (subject, grade, topic) {
+    if (!isOnline()) return;
+    if (!isOpen) togglePanel();
+    var inp = $("#aiInput");
+    if (inp) {
+      inp.value = "Create a 5-question multiple choice quiz about " +
+        (topic || subject) + " for Grade " + grade +
+        ". Each question should have 4 options (A-D). Show the answers at the very end only.";
+      send();
+    }
+  };
+
+  /* mirrors what the browser's offline event does — exposed for tests */
+  window._aiSetOnline = function (online) { setOnlineUI(!!online); };
+
+  /* ---- init ---- */
+  function init() {
+    buildPanel();
+    wireOnlineEvents();
+    if (!isOnline()) setOnlineUI(false);  /* start offline: the tutor stays hidden */
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

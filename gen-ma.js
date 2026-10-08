@@ -772,9 +772,10 @@
       { k: "instr", t: "Read each worked example with your teacher. Then solve it again in your exercise book, step by step, without looking." }
     ];
     sel.forEach(function (v) {
-      b.push({ k: "p", t: "**" + v.t + "** — " + v.ex.q });
+      /* the example problem and its answer, each inside a blue label */
+      b.push({ k: "lab", tag: v.t, t: v.ex.q });
       b.push({ k: "num", items: v.ex.steps });
-      b.push({ k: "instr", t: "Answer: " + v.ex.a });
+      b.push({ k: "lab", tag: "Answer", ans: 1, t: v.ex.a });
       b.push({ k: "space" });
     });
     return { blocks: b, key: sel.map(function (v) { return v.t + " — " + v.ex.a; }) };
@@ -805,9 +806,10 @@
       { k: "instr", t: "Read each example with your teacher. Copy it, then use the same method in the exercises that follow." }
     ];
     t.worked.forEach(function (w, i) {
-      b.push({ k: "p", t: "Example " + (i + 1) + ":  " + w.q });
+      /* the example problem and its answer, each inside a blue label */
+      b.push({ k: "lab", tag: "Example " + (i + 1), t: w.q });
       b.push({ k: "num", items: w.steps });
-      b.push({ k: "p", t: "Answer:  " + w.a });
+      b.push({ k: "lab", tag: "Answer", ans: 1, t: w.a });
       b.push({ k: "space" });
     });
     return { blocks: b, key: [] };

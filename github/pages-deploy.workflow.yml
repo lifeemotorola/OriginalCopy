@@ -1,0 +1,59 @@
+name: Build & deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build index.html with the AI proxy URL and the human-check key
+        # AI_PROXY_URL is the public URL of the deployed Cloudflare Worker
+        # (worker/groq-proxy.js); TURNSTILE_SITE_KEY is the public site key of
+        # the "Are you human?" widget. Neither is a secret — set both under
+        # Settings → Secrets and variables → Actions → Variables.
+        # The Groq key itself lives only in the Worker (wrangler secret).
+        env:
+          AI_PROXY_URL: ${{ vars.AI_PROXY_URL }}
+          TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY }}
+        run: |
+          if [ -z "$AI_PROXY_URL" ]; then
+            echo "::warning::AI_PROXY_URL is not set — the AI tutor stays unavailable until it is"
+          else
+            echo "AI proxy: $AI_PROXY_URL"
+          fi
+          if [ -z "$TURNSTILE_SITE_KEY" ]; then
+            echo "::notice::TURNSTILE_SITE_KEY is not set — the 'Are you human?' check stays switched off"
+          fi
+          bash build.sh
+      - name: Stage the site
+        run: |
+          mkdir -p _site
+          cp index.html manifest.webmanifest sw.js book.html book.js _site/
+          cp -r assets _site/assets
+          cp index.html _site/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

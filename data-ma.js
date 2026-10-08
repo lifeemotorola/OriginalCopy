@@ -10,7 +10,7 @@
      challenge[] {q, a}                        reasoning / multi-step questions
 
    Every unit also carries study[] — the course text of the unit, written out
-   as a block list (h3 / p / bul / num / table / rule) that follows the
+   as a block list (h3 / p / bul / num / table / fig / rule) that follows the
    CONTENTS column of the guide it comes from, with the guide page range of
    each unit recorded in a comment above its list. Where the guide's
    activities column works an example (the family of 10 of Period IV Grade 1,
@@ -44,6 +44,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Union of Sets Is Addition"},
     {k:"p", t:"**Union** means putting two sets together to make one bigger set. Putting sets together is the same as **adding**. The union of a set of 3 boys and a set of 2 girls is a set of 5 children."},
+    {k:"fig", f:"venn-disjoint", cap:"The two **real circles** hold separate groups; together, the sets make the whole class."},
     {k:"num", items:["Set A = {3 boys}.", "Set B = {2 girls}.", "Union: put them together.", "3 + 2 = 5 children."]},
     {k:"rule"},
     {k:"h3", t:"Subsets and Subtraction"},
@@ -125,6 +126,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Numbers on a Number Line"},
     {k:"p", t:"A **number line** is a straight line with numbers marked in order. It helps us to count, to compare and to add and subtract."},
+    {k:"fig", f:"counting-line", cap:"Count each equally spaced step; the red point marks **6**."},
     {k:"p", t:"**Worked example:** on the number line from 30 to 40, the number 36 lies between 35 and 37. To add 3 to 36, start at 36 and hop forward three spaces: 37, 38, 39, so 36 + 3 = 39. To subtract 4 from 40, hop back four spaces: 36."},
     {k:"rule"},
     {k:"h3", t:"Addition and Subtraction Facts up to 40"},
@@ -355,6 +357,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Telling Time"},
     {k:"p", t:"A **clock** shows the time of day. The short hand tells the **hour** and the long hand tells the **minutes**. We read times such as 7 o'clock, 8 o'clock and 12 o'clock."},
+    {k:"fig", f:"clock", cap:"An analogue clock shows **8:15**—the minute hand points to the 3."},
     {k:"p", t:"The day is divided into times: **morning** (when we wake and go to school), **noon** (middle of the day), **afternoon**, **evening** (when the sun goes down) and **night** (when we sleep). School begins in the morning and ends in the afternoon."},
     {k:"rule"},
     {k:"h3", t:"Counting Liberian Money"},
@@ -426,6 +429,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Circles"},
     {k:"p", t:"A **circle** is a round shape with **no corners** and **no straight sides**. The rim of a cup, a coin and the face of a clock are circles."},
+    {k:"fig", f:"shapes", cap:"A coin, tile, doorway and roof show familiar objects with **circle, square, rectangle and triangle** shapes."},
     {k:"rule"},
     {k:"h3", t:"Drawing Shapes"},
     {k:"p", t:"Use a straight edge to draw triangles and rectangles and your hand to draw circles. Draw each shape, name it, and tell how many sides and corners it has."},
@@ -494,6 +498,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Disjoint Sets"},
     {k:"p", t:"Two sets are **disjoint** when they have **no common elements** — no member belongs to both sets. The set of boys and the set of girls in a class are disjoint: no one is both a boy and a girl."},
+    {k:"fig", f:"venn-disjoint", cap:"Disjoint sets have **no shared members**: the two circles do not overlap."},
     {k:"p", t:"The set of mangoes and the set of oranges on a table are disjoint. But the set of boys and the set of the whole class are not disjoint, because every boy is also in the class."},
     {k:"rule"},
     {k:"h3", t:"Number Sequences"},
@@ -858,6 +863,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Circular Shapes"},
     {k:"p", t:"A **circle** is round, with no straight sides and no corners. Everything that is round like the rim of a cup or the face of a clock is circular in shape."},
+    {k:"fig", f:"shapes", cap:"Look for plane shapes in real objects: a circle on a plate, a rectangle in a door, and a triangle in a roof."},
     {k:"rule"},
     {k:"h3", t:"Quadrilaterals"},
     {k:"p", t:"A **quadrilateral** is any shape with **4 straight sides**. Squares, rectangles, and shapes with four sides of different lengths are all quadrilaterals. Their simple properties — number of sides and corners — can be told and compared."}
@@ -942,6 +948,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Union and Intersection of Sets"},
     {k:"p", t:"The **union** of two sets is the new set formed by combining all their elements; union is like **addition**. The **intersection** is the set of elements common to both sets. Sets with **no common elements** are **disjoint**."},
+    {k:"fig", f:"venn2", cap:"In this class example, the overlap **A ∩ B** is counted once when finding **A ∪ B**."},
     {k:"bul", items:["Union: Set A = {2, 4, 6}, Set B = {1, 3, 5}; A ∪ B = {1, 2, 3, 4, 5, 6}.","Intersection: Set C = {2, 3, 4}, Set D = {4, 5, 6}; C ∩ D = {4}.","Disjoint: {boys} and {girls} have no common elements."]},
     {k:"rule"},
     {k:"h3", t:"Subsets and the Universal Set"},
@@ -1172,6 +1179,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Equivalent Fractions"},
     {k:"p", t:"**Equivalent fractions** name the same amount with different denominators: 1/2 = 2/4 = 3/6. Multiply (or divide) the numerator and denominator by the same number to change a fraction into an equivalent one."},
+    {k:"fig", f:"fraction-bars", cap:"The same shaded length shows **1/2 = 2/4 = 3/6**."},
     {k:"bul", items:["1/2 = 2/4 = 4/8", "1/3 = 2/6 = 3/9", "2/4 = 1/2", "4/8 = 1/2"]},
     {k:"rule"},
     {k:"h3", t:"Comparing Fractions"},
@@ -1330,6 +1338,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Reading Graphs"},
     {k:"p", t:"A **graph** shows information as pictures. Read and interpret **bar graphs, line graphs and pie charts (circle graphs)**: look at the title, the labels and the heights or sizes of the bars, lines and slices."},
+    {k:"fig", f:"bargraph", cap:"The bars compare real classroom survey counts; read each height against the numbered scale."},
     {k:"rule"},
     {k:"h3", t:"Mean, Mode, Median and Average"},
     {k:"p", t:"These statistics describe a set of data:"},
@@ -1804,6 +1813,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Parts of a Circle"},
     {k:"p", t:"A **circle** is a round figure. Its parts are the **centre** (middle point), the **radius** (from the centre to the edge), the **diameter** (across the centre, two radii) and the **circumference** (the distance around)."},
+    {k:"fig", f:"circle-c", cap:"A circle has a **centre**, a **radius**, a **diameter** and a curved circumference."},
     {k:"p", t:"Trace and cut out a paper circle, then fold it in halves to identify the centre and the diameters."},
     {k:"rule"},
     {k:"h3", t:"Solid Figures"},
@@ -2227,6 +2237,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Circumference of a Circle"},
     {k:"p", t:"The **circumference** is the distance around a circle. Circumference = π × diameter (about 22/7 or 3.14 × diameter). Find the circumference of a circle using its diameter: a circle of diameter 14 cm has circumference 22/7 × 14 = 44 cm."},
+    {k:"fig", f:"circle-c", cap:"A circular wheel travels one circumference in one full turn: **C = πd = 2πr**."},
     {k:"rule"},
     {k:"h3", t:"Multi-Step Problems"},
     {k:"p", t:"Solve problems involving **two different operations**: find the perimeter of a rectangle and then the cost of fencing it, or measure a figure, find its area, and share the work among groups. Work step by step and check each step."}
@@ -2310,6 +2321,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Constructing and Reading Graphs"},
     {k:"p", t:"Construct and read **bar graphs, line graphs, pictographs and circle graphs** (pie charts). Collect data about favourite colours and display it on a bar graph. Make a graph table and chart first, then draw the graph with a ruler."},
+    {k:"fig", f:"bargraph", cap:"A bar graph turns a simple classroom survey into a picture that can be compared at a glance."},
     {k:"rule"},
     {k:"h3", t:"Probability"},
     {k:"p", t:"**Probability** tells how likely an event is. Collect different stoppers, place them in a bag and predict which stopper is **more likely** to be picked: the stopper with more copies in the bag has a greater chance."}
@@ -2382,6 +2394,7 @@ const MA_CURRICULUM = [
     {k:"rule"},
     {k:"h3", t:"Intersection and Union of Sets"},
     {k:"p", t:"The **intersection** (∩) is the set of members in **both** sets. The **union** (∪) is the set of **all** members of both sets, each written once. Draw Venn diagrams of union and intersection relations."},
+    {k:"fig", f:"venn2", cap:"A Venn diagram uses **two overlapping circles** to show the intersection and the union."},
     {k:"num", items:["A = {1, 2, 3, 4}, B = {3, 4, 5, 6}.","A ∩ B = {3, 4} — the members in both.","A ∪ B = {1, 2, 3, 4, 5, 6} — all members.","Draw two overlapping circles inside a rectangle to show this."]},
     {k:"rule"},
     {k:"h3", t:"Replacement Sets"},

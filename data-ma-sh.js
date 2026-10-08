@@ -9,7 +9,7 @@
      · word[] {q,a} · challenge[] {q,a} · activities[] · materials[] · assessment[]
 
    Every unit also carries study[] — the course text of the unit, written out
-   as a block list (h3 / p / bul / num / table / rule) that follows the CONTENTS
+   as a block list (h3 / p / bul / num / table / fig / rule) that follows the CONTENTS
    column of the guide it comes from, with the guide page range of each unit
    recorded in a comment above its list.
 
@@ -53,6 +53,7 @@ const MA_CURRICULUM_SH = [
     {k:"rule"},
     {k:"h3", t:"Venn Diagrams"},
     {k:"p", t:"A **Venn diagram** draws the universal set ξ as a rectangle and the sets inside it as circles. The **intersection** A ∩ B is the overlap of the two circles — the members in BOTH sets. The **union** A ∪ B is everything inside either circle — the members of A or B or both, each written once. Two sets are **disjoint** when their circles do not touch, and the **complement** A′ is the part of the rectangle outside circle A."},
+    {k:"fig", f:"venn3", cap:"These three **overlapping circles** divide a universal set into regions for set operations."},
     {k:"p", t:"To count the union, use **n(A ∪ B) = n(A) + n(B) − n(A ∩ B)**: the members of the overlap were counted twice, so they must be subtracted once. For three sets the same idea gives n(A ∪ B ∪ C) = n(A) + n(B) + n(C) − n(A ∩ B) − n(A ∩ C) − n(B ∩ C) + n(A ∩ B ∩ C)."},
     {k:"rule"},
     {k:"h3", t:"Properties of Set Operations"},
@@ -407,6 +408,7 @@ const MA_CURRICULUM_SH = [
     {k:"rule"},
     {k:"h3", t:"Right-Angled Triangles and Pythagoras"},
     {k:"p", t:"In a right-angled triangle the **hypotenuse** is the longest side, opposite the right angle. **Pythagoras' theorem** states that the square on the hypotenuse equals the sum of the squares on the other two sides: **c² = a² + b²**."},
+    {k:"fig", f:"right-triangle", cap:"A real ladder leaned against a wall gives a right triangle and the relation **a² + b² = c²**."},
     {k:"p", t:"**Worked example:** a triangle has legs 9 cm and 12 cm; c² = 81 + 144 = 225, so c = √225 = **15 cm**. Whole-number triples such as (3, 4, 5), (5, 12, 13) and (9, 12, 15) are called **Pythagorean triples**."},
     {k:"rule"},
     {k:"h3", t:"Polygons and Quadrilaterals"},
@@ -905,6 +907,7 @@ const MA_CURRICULUM_SH = [
     {k:"rule"},
     {k:"h3", t:"Frequency Tables and Graphs"},
     {k:"p", t:"A **frequency table** lists each value with its frequency, and for grouped or continuous data it uses **class intervals** (for example 20–29, 30–39). The data can then be displayed as a **bar chart** (discrete data, bars with gaps), a **histogram** (continuous grouped data, no gaps), or a **pie chart** (parts of a whole — multiply each fraction by 360°)."},
+    {k:"fig", f:"bargraph", cap:"A classroom survey becomes a bar graph: compare categories by their **heights**."},
     {k:"p", t:"For grouped data, the **class mark** is the midpoint of the class, and the estimated mean is **Σfx ÷ Σf**, where f is the frequency of a class and x its class mark."},
     {k:"rule"},
     {k:"h3", t:"Measures of Central Tendency"},
@@ -1423,6 +1426,7 @@ const MA_CURRICULUM_SH = [
     /* ---- course text: Semester Two, Period IV — Mensuration (guide p. 28) ---- */
     {k:"h3", t:"The Circle as a Locus"},
     {k:"p", t:"A **locus** is the path traced by a point moving under a given condition. A **circle** is the locus of all points at a fixed distance — the **radius** — from a fixed point — the **centre**. The **diameter** is a chord through the centre, equal to twice the radius. The **circumference** is the distance all the way round: **C = 2πr = πd**, and the area is **A = πr²**."},
+    {k:"fig", f:"circle-c", cap:"Every point on the circumference is the same distance **r** from the centre."},
     {k:"rule"},
     {k:"h3", t:"Parts of a Circle"},
     {k:"bul", items:["**Radius** — from the centre to the circumference.","**Diameter** — a chord through the centre, d = 2r.","**Chord** — a straight line joining two points on the circle.","**Arc** — part of the circumference.","**Sector** — the region between two radii and an arc.","**Segment** — the region between a chord and an arc.","**Tangent** — a line that touches the circle at exactly one point."]},
@@ -1520,6 +1524,7 @@ const MA_CURRICULUM_SH = [
     {k:"rule"},
     {k:"h3", t:"Heights and Distances"},
     {k:"p", t:"Draw a right-angled triangle from the problem, label the known angle and side, choose the ratio that links them to the unknown, and solve."},
+    {k:"fig", f:"right-triangle", cap:"A line of sight and the ground make a right triangle for finding a tree’s height."},
     {k:"p", t:"**Worked example:** from a point 40 m from the foot of a mast, the angle of elevation of the top is 32°. Height is opposite and 40 m is adjacent, so tan 32° = h/40; h = 40 × 0.6249 ≈ **25.0 m**."},
     {k:"rule"},
     {k:"h3", t:"Angles of Elevation and Depression"},
@@ -1596,6 +1601,7 @@ const MA_CURRICULUM_SH = [
     /* ---- course text: Semester Two, Period VI — Probability (guide pp. 31–32) ---- */
     {k:"h3", t:"Probability and the Probability Scale"},
     {k:"p", t:"The **probability** of an event is the number of favourable outcomes divided by the total number of equally likely outcomes: **P(E) = favourable ÷ total**. Probability is measured on a scale from **0 (impossible)** to **1 (certain)**; all probabilities lie between, and probabilities of a complete set of outcomes add to 1. An **event** is one outcome or a group of outcomes, and the **sample space** is the set of all possible outcomes."},
+    {k:"fig", f:"probability-tree", cap:"Two coin tosses show how independent probabilities multiply along a path."},
     {k:"rule"},
     {k:"h3", t:"Relative Frequency"},
     {k:"p", t:"When outcomes are not equally likely, estimate the probability by **relative frequency**: the number of times the event occurs divided by the number of trials. The more trials, the better the estimate. Relative frequency can be a probability estimate, but it is not an exact probability."},
@@ -2320,6 +2326,7 @@ const MA_CURRICULUM_SH = [
     {k:"rule"},
     {k:"h3", t:"Venn Diagrams for Logic"},
     {k:"p", t:"Sets make logic visible. The statement *all T are G* means the T circle is entirely inside the G circle — T ⇒ G — and the part of G outside T shows that the converse does not follow. The statement *no T are G* means disjoint circles. The **three-set Venn diagram** with eight regions is the truth table in picture form: the region inside set A and outside sets B and C corresponds to the row A = T, B = F, C = F."},
+    {k:"fig", f:"venn-subset", cap:"“All T are G” means the **T circle lies inside G**; the T circle is contained within G."},
     {k:"p", t:"**Worked example — show that 'All teachers are graduates' is drawn as one circle inside another:** being a teacher guarantees being a graduate, teachers ⇒ graduates; the reverse is not guaranteed because the graduates' circle is larger, so the converse does not follow."}
   ],
   focus:["Statements and their truth values","Open and closed statements","Negation","Conjunction, disjunction and implication","Converse, inverse and contrapositive","Equivalent implications","Validity of arguments","Venn diagrams for logic"],
@@ -2751,6 +2758,7 @@ const MA_CURRICULUM_SH = [
     {k:"rule"},
     {k:"h3", t:"Venn Diagrams for Two and Three Sets"},
     {k:"p", t:"Draw the universal set as a rectangle and each set as a circle; three circles divide the rectangle into eight regions, each answering one yes/no combination of membership. Fill the overlaps first — start with the region in all three sets, then the two-set overlaps, then the single sets, and finally the outside region. Only when every region is filled can the required counts be read."},
+    {k:"fig", f:"venn3", cap:"Each real circle represents one set; shaded-looking overlaps are the intersections."},
     {k:"rule"},
     {k:"h3", t:"Union, Intersection, Complement and Disjoint Sets"},
     {k:"p", t:"The **union** A ∪ B holds every member of A or B; the **intersection** A ∩ B holds the members common to both; the **complement** A′ holds everything in ξ not in A; and disjoint sets have A ∩ B = ∅. The counting formula is **n(A ∪ B) = n(A) + n(B) − n(A ∩ B)**."},

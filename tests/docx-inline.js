@@ -397,6 +397,22 @@ test("an entity written on purpose to be seen is still seen", () => {
     assert(foot.includes("Page ") && foot.includes(" of "), "the page-number field text moved");
   });
 
+  group("4b. Figures degrade gracefully in Word");
+
+  const figureOut = await exportParts([
+    { k: "fig", f: "bond-types", cap: "Four **real bond types** shown as diagrams." },
+    { k: "fig", f: "venn2" }
+  ]);
+  test("a figure becomes its centred italic caption, not a broken image", () => {
+    assert(figureOut.seen.includes("Four real bond types shown as diagrams."), figureOut.seen);
+    assert(figureOut.seen.includes("Illustration: venn2"), "caption-only fallback missing when no caption is supplied");
+    assert(!figureOut.doc.includes("<svg"), "SVG markup leaked into Word XML");
+    const p = paraOf(figureOut.doc, "Four ");
+    assert(/<w:jc w:val="center"\/>/.test(p), "the figure caption is not centred");
+    assert(/<w:i\/>/.test(runOf(figureOut.doc, "Four ")), "the figure caption is not italic");
+    assert(/<w:b\/>/.test(runOf(figureOut.doc, "real bond types")), "caption markup lost its bold emphasis");
+  });
+
   group("5. The sheet and the Word file read the same");
 
   const PARITY = [
@@ -569,6 +585,9 @@ test("an entity written on purpose to be seen is still seen", () => {
     assert(!index.includes("function plainA("), "index.html still strips the author markup instead of rendering it");
     assert(index.includes("return inlineSegs(s).map(function (g)"),
            "index.html still carries the screen-only bold replace");
+    assert(index.includes("window.FIG = FIG;"), "the offline figure registry is missing from index.html");
+    assert(index.includes('case "fig": return figHtml(b);'), "the screen figure renderer is missing from index.html");
+    assert(index.includes('f:"bond-types"'), "the reference-matched chemistry figure block is missing from index.html");
   });
 
   console.log(bad ? `\n${bad} check(s) failed` : "\nall inline-markup checks passed");

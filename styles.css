@@ -168,6 +168,13 @@ select:focus,input:focus{outline:2px solid #bcd3fb;outline-offset:0}
 .page .exlab .exlab-t{flex:1;min-width:0}
 .page .exlab.exlab-a{background:#dce8fb;border-color:var(--bleu)}
 .page .exlab.exlab-a .exlab-tag{background:var(--bleu-l)}
+/* Hand-drawn lesson figures stay inside a single printed sheet. The vector
+   artwork remains sharp in print and carries no external image dependency. */
+.page figure.fig,.fold-subpage figure.fig{display:block;width:100%;max-width:700px;margin:10px auto 12px;padding:6px 8px 5px;
+  background:#fbfdff;border:1px solid #d9e3ee;border-radius:8px;text-align:center;
+  break-inside:avoid;page-break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page figure.fig svg,.fold-subpage figure.fig svg{display:block;width:100%;height:auto;max-height:88mm;margin:0 auto;overflow:hidden}
+.page figure.fig figcaption,.fold-subpage figure.fig figcaption{margin:4px 0 0;color:#394a5f;font-size:.9em;line-height:1.35}
 .page ol,.page ul{margin:7px 0 7px 22px;padding:0}
 .page li{margin:5px 0}
 /* ---- contents with page numbers ----

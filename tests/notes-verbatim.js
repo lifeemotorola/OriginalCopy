@@ -30,6 +30,9 @@ const sandbox = { window: {}, console };
 sandbox.window.UNIT_NOTES = undefined;
 vm.createContext(sandbox);
 vm.runInContext(slice, sandbox);
+/* The same offline figure registry used by build.sh: DOM-less tests exercise
+   real SVG output rather than accepting caption-only fallback. */
+vm.runInContext(fs.readFileSync(path.join(root, "figures.js"), "utf8"), sandbox, { filename: "figures.js" });
 
 /* Common data sources. data-en.js and data-eg.js are loaded once below and
    shared by the English and Phonics checks, because const declarations cannot
@@ -800,8 +803,15 @@ for (const subj of SUBJECTS) {
     if (!blocks.length) { console.error("FAIL: empty notes for", subj.name, u.grade, u.period); bad++; continue; }
     const html = blocks.map(b => chk.blockHtml(b)).join("\n");
 
-    /* every study block must be rendered (verbatim) */
+    /* every study block must be rendered (verbatim); a figure block must
+       resolve to inline SVG and a rich-text caption, entirely offline. */
     for (const b of u.study) {
+      if (b.k === "fig") {
+        const drawn = chk.blockHtml(b);
+        if (!/<svg\b/.test(drawn)) { console.error("FAIL: figure SVG missing:", subj.name, u.grade, u.period, b.f); bad++; }
+        if (!/<figcaption>/.test(drawn)) { console.error("FAIL: figure caption missing:", subj.name, u.grade, u.period, b.f); bad++; }
+        if (/\*\*/.test(drawn)) { console.error("FAIL: raw bold markup in figure caption:", b.f); bad++; }
+      }
       if (b.k === "h3" && !html.includes("<h3>" + b.t.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</h3>")) {
         console.error("FAIL: heading missing:", subj.name, u.grade, u.period, b.t); bad++;
       }

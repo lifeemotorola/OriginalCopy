@@ -1687,6 +1687,18 @@
     }).join("");
   }
 
+  /* ---- offline drawn curriculum figures ----
+     figures.js returns one self-contained SVG string per figure key. Keeping
+     the lookup here lets a missing library degrade to a useful caption-only
+     block rather than breaking the notes or the browser-less test harness. */
+  function figHtml(b) {
+    var library = (typeof window !== "undefined" && window.FIG) ? window.FIG : null;
+    var draw = library && typeof library[b.f] === "function" ? library[b.f](b) : "";
+    var cap = b.cap ? "<figcaption>" + rich(b.cap) + "</figcaption>" : "";
+    if (!draw && !cap) return "";
+    return '<figure class="fig">' + draw + cap + "</figure>";
+  }
+
   /* ---- designed cover artwork ----
      Builds a full-sheet cover from the chosen template. Everything is inline
      CSS and SVG, so it renders identically offline and in print. The cover
@@ -1988,6 +2000,7 @@
         }).join("") + "</tbody></table>";
       case "lines": { var o = ""; for (var i = 0; i < b.n; i++) o += '<div class="wl"></div>'; return o; }
       case "space": return '<div class="sp"></div>';
+      case "fig": return figHtml(b);
       case "rule": return "<hr>";
       case "covart": return coverArtHtml(b);
       case "author": return authorCoverHtml(b);
@@ -2757,6 +2770,10 @@
         }
         case "lines": for (var j = 0; j < b.n; j++) body += para("_______________________________________________________________", { sz: 28, after: 160, color: "AAAAAA" }); break;
         case "space": body += para("", { sz: 18 }); break;
+        /* SVG figures cannot be rasterised by this hand-built offline Word
+           exporter; preserve the figure's lesson in Word as a centred caption. */
+        case "fig": body += para(b.cap || ("Illustration: " + (b.f || "course figure")),
+          { sz: 26, i: true, color: "53677D", align: "center", before: 40, after: 80 }); break;
         case "rule": body += para("", { border: true, sz: 10 }); break;
         case "covart": {
           /* Word cannot reproduce the CSS artwork, so the same information is

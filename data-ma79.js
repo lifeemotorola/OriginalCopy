@@ -6,7 +6,7 @@
      · word[] {q,a} · challenge[] {q,a} · activities[] · materials[] · assessment[]
 
    Every unit also carries study[] — the course text of the unit, written out
-   as a block list (h3 / p / bul / num / table / rule) that follows the
+   as a block list (h3 / p / bul / num / table / fig / rule) that follows the
    CONTENTS column of the guide it comes from, with the guide page range of
    each unit recorded in a comment above its list. Where the guide's
    activities column works an example (the sets of Period I, the constructions
@@ -64,6 +64,7 @@ const MA_CURRICULUM_79 = [
     {k:"rule"},
     {k:"h3", t:"Describing and Writing Sets"},
     {k:"p", t:"A **set** is a well-defined collection of objects, numbers or ideas. The objects in a set are called its **members** or **elements**."},
+    {k:"fig", f:"venn2", cap:"A Venn diagram draws each set as a **real circle** inside the universal-set rectangle."},
     {k:"p", t:"There are two ways to describe a set:"},
     {k:"num", items:["By its **defining property** — describing the members in words, e.g. A = {months of the year}.","By **listing** the members inside curly brackets { } and separating them with commas, e.g. S = {0, 1, 2, ..., 26}."]},
     {k:"p", t:"**Note:** a set is always named with a capital letter, and each member is written only once, however many times it occurs in the collection."},
@@ -496,10 +497,12 @@ const MA_CURRICULUM_79 = [
     /* ---- course text: Semester Two, Period VI — Co-ordinate Geometry (pages 16-17) ---- */
     {k:"h3", t:"Integers on the Number Line"},
     {k:"p", t:"A **number line** is a straight line with numbers placed at equal spaces along it. Zero sits in the middle, the positive integers run to the right and the negative integers run to the left. Every integer has a position, and the further left a number is, the smaller it is: −7 is less than −2."},
+    {k:"fig", f:"numberline", cap:"Zero separates negative and positive values; each tick is one equal step."},
     {k:"p", t:"**Worked example:** a well is 15 m deep and a bucket is lowered 9 m. Measured from ground level, the bucket is at **−9 m**."},
     {k:"rule"},
     {k:"h3", t:"The Rectangular Co-ordinate System"},
     {k:"p", t:"The **co-ordinate plane** (written R²) is made by two number lines crossing at right angles. The horizontal line is the **x-axis** and the vertical line is the **y-axis**; they cross at the **origin**, written (0, 0)."},
+    {k:"fig", f:"coordinate-plane", cap:"The horizontal and vertical number lines meet at the origin; locate **(3, 2)**."},
     {k:"p", t:"Every point is named by an ordered pair **(x, y)**: the x value tells how far **along** (right if positive, left if negative) and the y value tells how far **up** (up if positive, down if negative). Along first, then up."},
     {k:"p", t:"The two axes divide the plane into four **quadrants**, numbered anticlockwise from the upper right:"},
     {k:"table", head:["Quadrant","Sign of x","Sign of y","Example"], rows:[["First","+","+","(3, 4)"],["Second","−","+","(−3, 4)"],["Third","−","−","(−2, −5)"],["Fourth","+","−","(6, −4)"]]},
@@ -1033,6 +1036,7 @@ const MA_CURRICULUM_79 = [
     {k:"rule"},
     {k:"h3", t:"Histograms"},
     {k:"p", t:"A **histogram** is a bar graph for **continuous or grouped** data. The bars are drawn next to each other with **no gaps**, because the groups follow on from one another, and the **area** of each bar (not just its height) represents the frequency."},
+    {k:"fig", f:"histogram", cap:"The bars **touch** because the mark intervals are continuous grouped data."},
     {k:"num", items:["Group the data into equal classes, for example 1-10, 11-20, 21-30.","Draw a horizontal axis for the classes and a vertical axis for the frequency.","Draw a bar for each class touching the next, and label both axes and give the graph a title."]},
     {k:"p", t:"A **bar graph** (with gaps) is used for data in separate categories, such as favourite sport; a **histogram** (no gaps) is used for grouped numbers, such as the ages of malaria patients at a clinic."},
     {k:"rule"},
@@ -1051,6 +1055,7 @@ const MA_CURRICULUM_79 = [
     {k:"rule"},
     {k:"h3", t:"Probability of Simple, Independent and Dependent Events"},
     {k:"p", t:"The **probability** of an event is a number from 0 (impossible) to 1 (certain): **P(event) = number of favourable outcomes ÷ total number of possible outcomes**."},
+    {k:"fig", f:"probability-tree", cap:"For two fair coin tosses, multiply the **1/2** chances along each branch."},
     {k:"num", items:["A fair die is rolled. P(getting a 5) = **1/6**, and P(getting an even number) = 3/6 = **1/2**.","A bag holds 4 red and 6 blue beads. P(red) = 4/10 = **2/5**.","P(not happening) = 1 − P(happening), so P(not red) = 1 − 2/5 = **3/5**."]},
     {k:"p", t:"**Independent events** do not affect each other: tossing a coin twice gives P(head, then head) = 1/2 × 1/2 = **1/4**. **Dependent events** do affect each other: if one red bead is taken out and **not** replaced, P(red, then red) = 4/10 × 3/9 = **2/15**, because only 3 red beads are left out of 9."},
     {k:"p", t:"Probability is used on health data too: if 15 out of 300 patients at a clinic test positive for malaria, the probability that a patient chosen at random has malaria is 15/300 = **1/20**."},
@@ -1123,6 +1128,7 @@ const MA_CURRICULUM_79 = [
     /* ---- course text: Semester One, Period I — Two-Set Problems (pages 37-38) and Arithmetic (pages 39-40) ---- */
     {k:"h3", t:"Two-Set Problems"},
     {k:"p", t:"A **two-set problem** gives information about two sets and asks how many are in each part. The surest way to solve it is to draw a **Venn diagram**: a rectangle for the **universal set** and two overlapping circles for the sets."},
+    {k:"fig", f:"venn2", cap:"Put the shared pupils in the **overlap** first; the diagram then makes each remaining count visible."},
     {k:"p", t:"First write the number in the **overlap** (the intersection), then the numbers in the rest of each circle, and last the number outside both circles but still inside the rectangle."},
     {k:"p", t:"**Worked example:** in a class of 40 pupils, 25 play football, 18 play kickball and 7 play both."},
     {k:"num", items:["Put 7 in the overlap.","Football only: 25 − 7 = 18.","Kickball only: 18 − 7 = 11.","At least one game: 18 + 7 + 11 = 36.","Neither game: 40 − 36 = 4."]},
@@ -1474,6 +1480,7 @@ const MA_CURRICULUM_79 = [
     /* ---- course text: Semester Two, Period V — Trigonometry and Measurement (pages 49-50) ---- */
     {k:"h3", t:"The Pythagorean Theorem"},
     {k:"p", t:"In a right-angled triangle the square on the **hypotenuse** — the longest side, opposite the right angle — equals the sum of the squares on the other two sides: **c² = a² + b²**."},
+    {k:"fig", f:"right-triangle", cap:"The ladder, wall and ground form a **3–4–5 right triangle**."},
     {k:"num", items:["Find the hypotenuse when the other sides are 9 cm and 12 cm: c² = 81 + 144 = 225, so c = **15 cm**.","Find a shorter side when the hypotenuse is 13 cm and the other side is 5 cm: a² = 169 − 25 = 144, so a = **12 cm**."]},
     {k:"p", t:"**Applications:** a ladder 5 m long resting 3 m from the foot of a wall reaches √(25 − 9) = **4 m** up the wall. A rectangular field 40 m by 30 m has a diagonal path of √(1 600 + 900) = √2 500 = **50 m**."},
     {k:"p", t:"A set of three whole numbers that fits the theorem is a **Pythagorean triple**: 3-4-5, 5-12-13, 8-15-17 and 7-24-25, and any multiple of them, such as 6-8-10."},

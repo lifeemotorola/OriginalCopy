@@ -93,11 +93,15 @@
       titleOf: function (t) { return t.title; },
       file: function (g) { return "Physics_Grade" + g + "_Workbook.docx"; }
     },
+    /* Economics gets the same exercise treatment as Mathematics, Physics and
+       Chemistry: calculations with all working shown, word problems, challenge
+       questions and the enquiry project (the investigation sheet of the
+       sciences) on top of the full Social-Studies sheet set. */
     ec: {
       label: "Economics", icon: "sub-ec", accent: "#1f5f7a",
       curriculum: function () { return EC_CURRICULUM; },
       engine: function () { return GEN_SS; },
-      defaults: ["terms", "match", "cloze", "tf", "short", "mcq", "worked", "sort", "map", "casestudy", "apply"],
+      defaults: ["terms", "match", "cloze", "tf", "short", "mcq", "worked", "word", "challenge", "sort", "map", "casestudy", "project", "apply"],
       titleOf: function (t) { return t.title; },
       file: function (g) { return "Economics_Grade" + g + "_Workbook.docx"; }
     },
